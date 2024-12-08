@@ -1,13 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_travelta/constants/colors.dart';
-<<<<<<< HEAD:lib/view/Auth/login_screen.dart
-import 'package:flutter_travelta/view/Auth/forget_password_screen.dart';
-import 'package:flutter_travelta/view/screens/home_screen.dart'; // Import for SVG
-=======
 import 'package:flutter_travelta/view/screens/Auth/forget_password_screen.dart';
 import 'package:flutter_travelta/view/screens/Auth/sign_up_screen.dart';
->>>>>>> fe1b5db7602780c7d7f75b616cda2c64a4998890:lib/view/screens/Auth/login_screen.dart
+import 'package:flutter_travelta/view/screens/home_screen.dart'; // Import for SVG
 
 class LoginScreen extends StatelessWidget {
   const LoginScreen({super.key});
