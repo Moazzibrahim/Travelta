@@ -3,8 +3,8 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_travelta/constants/colors.dart';
 import 'package:flutter_travelta/view/screens/operation/operation_screen.dart';
 
-class AdminDashboard extends StatelessWidget {
-  const AdminDashboard({super.key});
+class AdminHomeScreen extends StatelessWidget {
+  const AdminHomeScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -41,25 +41,25 @@ class AdminDashboard extends StatelessWidget {
               context: context,
               svgPath: "assets/images/Frame 1261154914.svg",
               label: "Operation",
-              targetScreen: OperationScreen(),
+              targetScreen: const OperationScreen(),
             ),
             _buildDashboardCard(
               context: context,
               svgPath: "assets/images/Frame 1261154914 (1).svg",
               label: "Request",
-              targetScreen: OperationScreen(),
+              targetScreen: const OperationScreen(),
             ),
             _buildDashboardCard(
               context: context,
               svgPath: "assets/images/Frame 1261154914 (2).svg",
               label: "New Booking",
-              targetScreen: OperationScreen(),
+              targetScreen: const OperationScreen(),
             ),
             _buildDashboardCard(
               context: context,
               svgPath: "assets/images/Frame 1261154914 (3).svg",
               label: "Booking Payment",
-              targetScreen: OperationScreen(),
+              targetScreen: const OperationScreen(),
             ),
           ],
         ),
