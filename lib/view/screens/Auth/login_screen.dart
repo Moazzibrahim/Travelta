@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_travelta/constants/colors.dart';
 import 'package:flutter_travelta/view/screens/Auth/forget_password_screen.dart';
-import 'package:flutter_travelta/view/screens/Auth/sign_up_screen.dart';
+import 'package:flutter_travelta/view/screens/Auth/admin_details_screen.dart';
 
 class LoginScreen extends StatelessWidget {
   const LoginScreen({super.key});
@@ -150,7 +150,7 @@ class LoginScreen extends StatelessWidget {
                         Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => const SignUpScreen()));
+                                builder: (context) => const AdminDetailsScreen()));
                       },
                       child: RichText(
                         text: TextSpan(
