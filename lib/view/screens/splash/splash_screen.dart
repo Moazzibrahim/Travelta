@@ -3,7 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart'; // Import for SVG
 import 'package:flutter_travelta/constants/colors.dart';
-import 'package:flutter_travelta/view/Auth/login_screen.dart';
+import 'package:flutter_travelta/view/screens/Auth/login_screen.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
