@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_travelta/constants/colors.dart';
-import 'package:flutter_travelta/view/Auth/forget_password_screen.dart'; // Import for SVG
+import 'package:flutter_travelta/view/Auth/forget_password_screen.dart';
+import 'package:flutter_travelta/view/screens/home_screen.dart'; // Import for SVG
 
 class LoginScreen extends StatelessWidget {
   const LoginScreen({super.key});
@@ -122,7 +123,8 @@ class LoginScreen extends StatelessWidget {
                         Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => const ForgotPasswordScreen()));
+                                builder: (context) =>
+                                    const ForgotPasswordScreen()));
                       },
                       child: Text(
                         "Forgot Password ?",
@@ -138,7 +140,12 @@ class LoginScreen extends StatelessWidget {
                     width: double.infinity,
                     height: 50,
                     child: ElevatedButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => AdminDashboard()));
+                      },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: mainColor,
                         shape: RoundedRectangleBorder(
