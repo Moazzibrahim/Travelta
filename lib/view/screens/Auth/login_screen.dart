@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_travelta/constants/colors.dart';
-import 'package:flutter_travelta/view/Auth/forget_password_screen.dart'; // Import for SVG
+import 'package:flutter_travelta/view/screens/Auth/forget_password_screen.dart';
+import 'package:flutter_travelta/view/screens/Auth/sign_up_screen.dart';
 
 class LoginScreen extends StatelessWidget {
   const LoginScreen({super.key});
@@ -12,25 +13,9 @@ class LoginScreen extends StatelessWidget {
       backgroundColor: Colors.white,
       body: Stack(
         children: [
-          // Top-Left Decorative Image
-          Positioned(
-            top: 0,
-            left: 0,
-            child: SvgPicture.asset(
-              'assets/images/vector.svg', // Replace with your image path
-              width: 150,
-              height: 150,
-            ),
-          ),
-          // Bottom-Right Decorative Image
-          Positioned(
-            bottom: 0,
-            right: 0,
-            child: SvgPicture.asset(
-              'assets/images/vectors.svg', // Replace with your image path
-              width: 150,
-              height: 150,
-            ),
+          SvgPicture.asset(
+            "assets/images/down.svg",
+            fit: BoxFit.cover,
           ),
           // Main Content
           SingleChildScrollView(
@@ -122,7 +107,8 @@ class LoginScreen extends StatelessWidget {
                         Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => const ForgotPasswordScreen()));
+                                builder: (context) =>
+                                    const ForgotPasswordScreen()));
                       },
                       child: Text(
                         "Forgot Password ?",
@@ -159,22 +145,30 @@ class LoginScreen extends StatelessWidget {
                   const SizedBox(height: 20),
                   // Sign Up
                   Center(
-                    child: RichText(
-                      text: TextSpan(
-                        text: "I Don't Have An Account? ",
-                        style: const TextStyle(
-                            color: Colors.black,
-                            fontSize: 16,
-                            fontWeight: FontWeight.w400),
-                        children: [
-                          TextSpan(
-                            text: "Sign Up",
-                            style: TextStyle(
-                                color: mainColor,
-                                decoration: TextDecoration.underline),
-                            // Add a tap gesture if necessary
-                          ),
-                        ],
+                    child: InkWell(
+                      onTap: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => const SignUpScreen()));
+                      },
+                      child: RichText(
+                        text: TextSpan(
+                          text: "I Don't Have An Account? ",
+                          style: const TextStyle(
+                              color: Colors.black,
+                              fontSize: 16,
+                              fontWeight: FontWeight.w400),
+                          children: [
+                            TextSpan(
+                              text: "Sign Up",
+                              style: TextStyle(
+                                  color: mainColor,
+                                  decoration: TextDecoration.underline),
+                              // Add a tap gesture if necessary
+                            ),
+                          ],
+                        ),
                       ),
                     ),
                   ),
