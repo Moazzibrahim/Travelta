@@ -144,34 +144,34 @@ class LoginScreen extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(height: 20),
-                  Center(
-                    child: InkWell(
-                      onTap: () {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) =>
-                                    const AdminDetailsScreen()));
-                      },
-                      child: RichText(
-                        text: TextSpan(
-                          text: "I Don't Have An Account? ",
-                          style: const TextStyle(
-                              color: Colors.black,
-                              fontSize: 16,
-                              fontWeight: FontWeight.w400),
-                          children: [
-                            TextSpan(
-                              text: "Sign Up",
-                              style: TextStyle(
-                                  color: mainColor,
-                                  decoration: TextDecoration.underline),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ),
+                  // Center(
+                  //   child: InkWell(
+                  //     onTap: () {
+                  //       Navigator.push(
+                  //           context,
+                  //           MaterialPageRoute(
+                  //               builder: (context) =>
+                  //                   const AdminDetailsScreen()));
+                  //     },
+                  //     child: RichText(
+                  //       text: TextSpan(
+                  //         text: "I Don't Have An Account? ",
+                  //         style: const TextStyle(
+                  //             color: Colors.black,
+                  //             fontSize: 16,
+                  //             fontWeight: FontWeight.w400),
+                  //         children: [
+                  //           TextSpan(
+                  //             text: "Sign Up",
+                  //             style: TextStyle(
+                  //                 color: mainColor,
+                  //                 decoration: TextDecoration.underline),
+                  //           ),
+                  //         ],
+                  //       ),
+                  //     ),
+                  //   ),
+                  // ),
                 ],
               ),
             ),
