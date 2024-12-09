@@ -76,9 +76,24 @@ class _AdminDetailsScreenState extends State<AdminDetailsScreen> {
                       Flexible(
                         flex: 1,
                         child: DropdownButtonFormField<String>(
+                          value: "Mr",
                           items: const [
-                            DropdownMenuItem(value: "Mr", child: Text("Mr")),
-                            DropdownMenuItem(value: "Ms", child: Text("Ms")),
+                            DropdownMenuItem(
+                                value: "Mr",
+                                child: Text(
+                                  "Mr",
+                                  style: TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.w400),
+                                )),
+                            DropdownMenuItem(
+                                value: "Ms",
+                                child: Text(
+                                  "Ms",
+                                  style: TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.w400),
+                                )),
                           ],
                           onChanged: (value) {},
                           decoration: InputDecoration(
@@ -93,7 +108,9 @@ class _AdminDetailsScreenState extends State<AdminDetailsScreen> {
                         flex: 3,
                         child: TextFormField(
                           decoration: InputDecoration(
-                            labelText: 'First Name',
+                            hintText: 'First Name',
+                            hintStyle: const TextStyle(
+                                fontSize: 12, fontWeight: FontWeight.w400),
                             border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(8),
                             ),
@@ -106,7 +123,9 @@ class _AdminDetailsScreenState extends State<AdminDetailsScreen> {
                   // Last name field
                   TextFormField(
                     decoration: InputDecoration(
-                      labelText: 'Last Name',
+                      hintText: 'Last Name',
+                      hintStyle: const TextStyle(
+                          fontSize: 12, fontWeight: FontWeight.w400),
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(8),
                       ),
@@ -127,7 +146,9 @@ class _AdminDetailsScreenState extends State<AdminDetailsScreen> {
                           ],
                         ),
                       ),
-                      labelText: 'Phone',
+                      hintText: 'Phone',
+                      hintStyle: const TextStyle(
+                          fontSize: 12, fontWeight: FontWeight.w400),
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(8),
                       ),
@@ -137,7 +158,9 @@ class _AdminDetailsScreenState extends State<AdminDetailsScreen> {
                   // Email field
                   TextFormField(
                     decoration: InputDecoration(
-                      labelText: 'Email',
+                      hintText: 'Email',
+                      hintStyle: const TextStyle(
+                          fontSize: 12, fontWeight: FontWeight.w400),
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(8),
                       ),

@@ -70,6 +70,9 @@ class _AgencyDetailsScreenState extends State<AgencyDetailsScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             // Stepper indicators
+            const SizedBox(
+              height: 20,
+            ),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
@@ -87,7 +90,9 @@ class _AgencyDetailsScreenState extends State<AgencyDetailsScreen> {
                   // Agency Name Field
                   TextFormField(
                     decoration: InputDecoration(
-                      labelText: 'Agency Name',
+                      hintText: 'Agency Name',
+                      hintStyle: const TextStyle(
+                          fontSize: 12, fontWeight: FontWeight.w400),
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(8),
                       ),
@@ -108,7 +113,9 @@ class _AgencyDetailsScreenState extends State<AgencyDetailsScreen> {
                           ],
                         ),
                       ),
-                      labelText: 'Phone',
+                      hintText: 'Phone',
+                      hintStyle: const TextStyle(
+                          fontSize: 12, fontWeight: FontWeight.w400),
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(8),
                       ),
@@ -118,7 +125,9 @@ class _AgencyDetailsScreenState extends State<AgencyDetailsScreen> {
                   // Email Field
                   TextFormField(
                     decoration: InputDecoration(
-                      labelText: 'Email',
+                      hintText: 'Email',
+                      hintStyle: const TextStyle(
+                          fontSize: 12, fontWeight: FontWeight.w400),
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(8),
                       ),
@@ -136,7 +145,8 @@ class _AgencyDetailsScreenState extends State<AgencyDetailsScreen> {
                     },
                     title: const Text(
                       'Use Same Phone Number And Email ID For Agency Details',
-                      style: TextStyle(fontSize: 14),
+                      style:
+                          TextStyle(fontSize: 11, fontWeight: FontWeight.w400),
                     ),
                     controlAffinity: ListTileControlAffinity.leading,
                   ),
@@ -154,7 +164,8 @@ class _AgencyDetailsScreenState extends State<AgencyDetailsScreen> {
                       children: [
                         const Text(
                           'I Agree To The ',
-                          style: TextStyle(fontSize: 14),
+                          style: TextStyle(
+                              fontSize: 11, fontWeight: FontWeight.w400),
                         ),
                         GestureDetector(
                           onTap: () {
@@ -163,8 +174,9 @@ class _AgencyDetailsScreenState extends State<AgencyDetailsScreen> {
                           child: Text(
                             'Terms And Conditions.',
                             style: TextStyle(
-                              fontSize: 14,
                               color: mainColor,
+                              fontSize: 11,
+                              fontWeight: FontWeight.w400,
                               decoration: TextDecoration.underline,
                             ),
                           ),
@@ -188,7 +200,10 @@ class _AgencyDetailsScreenState extends State<AgencyDetailsScreen> {
                     ),
                     child: const Text(
                       'Next',
-                      style: TextStyle(fontSize: 16, color: Colors.white),
+                      style: TextStyle(
+                          fontSize: 20,
+                          color: Colors.white,
+                          fontWeight: FontWeight.w500),
                     ),
                   ),
                 ],
