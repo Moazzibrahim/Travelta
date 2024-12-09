@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_travelta/constants/colors.dart';
+import 'package:flutter_travelta/view/widgets/appbar_widget.dart';
 
 class OperationScreen extends StatefulWidget {
   const OperationScreen({super.key});
@@ -15,22 +16,11 @@ class _OperationScreenState extends State<OperationScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        centerTitle: true,
-        title: const Text('Operation'
-        ),
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back),
-          onPressed: () {
-            Navigator.pop(context);
-          },
-        ),
-      ),
+      appBar:const CustomAppBar(title: 'Operation'),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
           children: [
-            // First Card
             buildOperationCard(
               index: 0,
               operationId: "OP12345",
@@ -41,7 +31,6 @@ class _OperationScreenState extends State<OperationScreen> {
             ),
             const SizedBox(height: 16.0),
 
-            // Second Card
             buildOperationCard(
               index: 1,
               operationId: "OP12346",
@@ -52,7 +41,6 @@ class _OperationScreenState extends State<OperationScreen> {
             ),
             const SizedBox(height: 16.0),
 
-            // Third Card
             buildOperationCard(
               index: 2,
               operationId: "OP12347",

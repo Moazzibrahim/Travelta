@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_travelta/constants/colors.dart';
+import 'package:flutter_travelta/view/screens/booking%20payment/booking_payment_screen.dart';
 import 'package:flutter_travelta/view/screens/operation/operation_screen.dart';
+import 'package:flutter_travelta/view/screens/request/request_screen.dart';
+
+import 'NewBooking/new_booking_screen.dart';
 
 class AdminHomeScreen extends StatelessWidget {
   const AdminHomeScreen({super.key});
@@ -47,19 +51,19 @@ class AdminHomeScreen extends StatelessWidget {
               context: context,
               svgPath: "assets/images/Frame 1261154914 (1).svg",
               label: "Request",
-              targetScreen: const OperationScreen(),
+              targetScreen: const RequestScreen(),
             ),
             _buildDashboardCard(
               context: context,
               svgPath: "assets/images/Frame 1261154914 (2).svg",
               label: "New Booking",
-              targetScreen: const OperationScreen(),
+              targetScreen: const NewBookingScreen(),
             ),
             _buildDashboardCard(
               context: context,
               svgPath: "assets/images/Frame 1261154914 (3).svg",
               label: "Booking Payment",
-              targetScreen: const OperationScreen(),
+              targetScreen: const BookingPaymentScreen(),
             ),
           ],
         ),
