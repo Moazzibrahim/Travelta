@@ -14,9 +14,11 @@ class LoginScreen extends StatelessWidget {
       backgroundColor: Colors.white,
       body: Stack(
         children: [
-          SvgPicture.asset(
-            "assets/images/down.svg",
-            fit: BoxFit.cover,
+          SizedBox.expand(
+            child: SvgPicture.asset(
+              "assets/images/down.svg",
+              fit: BoxFit.fill,
+            ),
           ),
           // Main Content
           SingleChildScrollView(
@@ -25,8 +27,7 @@ class LoginScreen extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const SizedBox(height: 50), // Add spacing for safe area
-                  // Back Button and Login Title
+                  const SizedBox(height: 50),
                   const Center(
                     child: Text(
                       "Login",
@@ -37,9 +38,7 @@ class LoginScreen extends StatelessWidget {
                       ),
                     ),
                   ),
-
                   const SizedBox(height: 30),
-                  // Welcome Back Text
                   const Text(
                     "Welcome Back",
                     style: TextStyle(
@@ -54,7 +53,6 @@ class LoginScreen extends StatelessWidget {
                     style: TextStyle(fontSize: 16, color: Colors.grey),
                   ),
                   const SizedBox(height: 30),
-                  // Email TextField
                   TextField(
                     decoration: InputDecoration(
                       hintText: "Email",
@@ -73,7 +71,6 @@ class LoginScreen extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(height: 20),
-                  // Password TextField
                   TextField(
                     obscureText: true,
                     decoration: InputDecoration(
@@ -100,7 +97,6 @@ class LoginScreen extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(height: 10),
-                  // Forgot Password
                   Align(
                     alignment: Alignment.centerRight,
                     child: TextButton(
@@ -147,16 +143,15 @@ class LoginScreen extends StatelessWidget {
                       ),
                     ),
                   ),
-
                   const SizedBox(height: 20),
-                  // Sign Up
                   Center(
                     child: InkWell(
                       onTap: () {
                         Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => const AdminDetailsScreen()));
+                                builder: (context) =>
+                                    const AdminDetailsScreen()));
                       },
                       child: RichText(
                         text: TextSpan(
@@ -171,21 +166,9 @@ class LoginScreen extends StatelessWidget {
                               style: TextStyle(
                                   color: mainColor,
                                   decoration: TextDecoration.underline),
-                              // Add a tap gesture if necessary
                             ),
                           ],
                         ),
-                      ),
-                    ),
-                  ),
-                  const SizedBox(height: 15),
-                  // Skip
-                  Center(
-                    child: TextButton(
-                      onPressed: () {},
-                      child: Text(
-                        "Skip",
-                        style: TextStyle(color: mainColor),
                       ),
                     ),
                   ),
