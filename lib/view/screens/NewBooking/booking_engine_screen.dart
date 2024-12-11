@@ -1,15 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_travelta/constants/colors.dart';
+import 'package:flutter_travelta/view/screens/NewBooking/result_booking_screen.dart';
 import 'package:flutter_travelta/view/widgets/appbar_widget.dart';
 
-class BookingPaymentScreen extends StatefulWidget {
-  const BookingPaymentScreen({super.key});
+class BookingEngineScreen extends StatefulWidget {
+  const BookingEngineScreen({super.key});
 
   @override
-  State<BookingPaymentScreen> createState() => _BookingPaymentScreenState();
+  State<BookingEngineScreen> createState() => _BookingEngineScreenState();
 }
 
-class _BookingPaymentScreenState extends State<BookingPaymentScreen> {
+class _BookingEngineScreenState extends State<BookingEngineScreen> {
   DateTime? _checkInDate;
   DateTime? _checkOutDate;
   int _adultsCount = 1;
@@ -29,9 +30,9 @@ class _BookingPaymentScreenState extends State<BookingPaymentScreen> {
         return Theme(
           data: Theme.of(context).copyWith(
             colorScheme: ColorScheme.light(
-              primary: mainColor, 
-              onPrimary: Colors.white, 
-              onSurface: Colors.black, 
+              primary: mainColor,
+              onPrimary: Colors.white,
+              onSurface: Colors.black,
             ),
             textButtonTheme: TextButtonThemeData(
               style: TextButton.styleFrom(
@@ -76,7 +77,7 @@ class _BookingPaymentScreenState extends State<BookingPaymentScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: const CustomAppBar(title: 'BookingPayment'),
+      appBar: const CustomAppBar(title: 'Booking Engine'),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
@@ -231,7 +232,13 @@ class _BookingPaymentScreenState extends State<BookingPaymentScreen> {
                     borderRadius: BorderRadius.circular(8),
                   ),
                 ),
-                onPressed: () {},
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => const ResultBookingScreen()),
+                  );
+                },
                 child: const Text(
                   "Search",
                   style: TextStyle(fontSize: 18, color: Colors.white),
