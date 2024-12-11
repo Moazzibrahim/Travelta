@@ -73,28 +73,26 @@ class RequestScreen extends StatelessWidget {
                       child: Text(
                         'Status:',
                         style: TextStyle(
-                          fontWeight: FontWeight.bold,
+                          fontWeight: FontWeight.w400,
                           fontSize: 16,
                         ),
                       ),
                     ),
-                    Expanded(
-                      child: Container(
-                        padding: const EdgeInsets.symmetric(
-                          vertical: 4.0,
-                          horizontal: 8.0,
-                        ),
-                        decoration: BoxDecoration(
-                          color: statusColor,
-                          borderRadius: BorderRadius.circular(8.0),
-                        ),
-                        child: Text(
-                          status,
-                          style: const TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 14,
-                            color: Colors.black,
-                          ),
+                    Container(
+                      padding: const EdgeInsets.symmetric(
+                        vertical: 4.0,
+                        horizontal: 8.0,
+                      ),
+                      decoration: BoxDecoration(
+                        color: statusColor,
+                        borderRadius: BorderRadius.circular(8.0),
+                      ),
+                      child: Text(
+                        status,
+                        style: const TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 14,
+                          color: Colors.black,
                         ),
                       ),
                     ),
@@ -163,7 +161,7 @@ class RequestScreen extends StatelessWidget {
           child: Text(
             label,
             style: const TextStyle(
-              fontWeight: FontWeight.bold,
+              fontWeight: FontWeight.w400,
               fontSize: 16,
             ),
           ),
@@ -171,7 +169,10 @@ class RequestScreen extends StatelessWidget {
         Expanded(
           child: Text(
             value,
-            style: const TextStyle(fontSize: 16),
+            style: const TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.w400,
+            ),
             overflow: TextOverflow.ellipsis,
           ),
         ),
