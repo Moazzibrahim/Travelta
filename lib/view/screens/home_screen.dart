@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_travelta/constants/colors.dart';
-import 'package:flutter_travelta/view/screens/NewBooking/booking_engine_screen.dart';
+import 'package:flutter_travelta/view/screens/Booking_payment/booking_payment_screen.dart';
 import 'package:flutter_travelta/view/screens/operation/operation_screen.dart';
 import 'package:flutter_travelta/view/screens/request/request_screen.dart';
-
 import 'NewBooking/new_booking_screen.dart';
 
 class AdminHomeScreen extends StatelessWidget {
@@ -63,7 +62,7 @@ class AdminHomeScreen extends StatelessWidget {
               context: context,
               svgPath: "assets/images/Frame 1261154914 (3).svg",
               label: "Booking Payment",
-              targetScreen: const BookingEngineScreen(),
+              targetScreen: const BookingPaymentScreen(),
             ),
           ],
         ),
