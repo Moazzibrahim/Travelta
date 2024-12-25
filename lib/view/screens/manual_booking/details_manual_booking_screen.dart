@@ -131,51 +131,50 @@ class DetailsManualBookingScreen extends StatelessWidget {
   }
 
   Widget _buildTextFieldWithIcon(
-    String label, IconData icon, BuildContext context) {
-  return TextField(
-    readOnly: true,
-    onTap: () async {
-      DateTime? pickedDate = await showDatePicker(
-        context: context,
-        initialDate: DateTime.now(),
-        firstDate: DateTime.now(), // Restrict past dates
-        lastDate: DateTime(2100), // Maximum year selectable
-        builder: (BuildContext context, Widget? child) {
-          return Theme(
-            data: Theme.of(context).copyWith(
-              colorScheme: ColorScheme.light(
-                primary: mainColor, // Header background color
-                onPrimary: Colors.white, // Header text color
-                onSurface: Colors.black, // Body text color
-              ),
-              textButtonTheme: TextButtonThemeData(
-                style: TextButton.styleFrom(
-                  foregroundColor: mainColor, // Button text color
+      String label, IconData icon, BuildContext context) {
+    return TextField(
+      readOnly: true,
+      onTap: () async {
+        DateTime? pickedDate = await showDatePicker(
+          context: context,
+          initialDate: DateTime.now(),
+          firstDate: DateTime.now(), // Restrict past dates
+          lastDate: DateTime(2030), // Maximum year selectable
+          builder: (BuildContext context, Widget? child) {
+            return Theme(
+              data: Theme.of(context).copyWith(
+                colorScheme: ColorScheme.light(
+                  primary: mainColor, // Header background color
+                  onPrimary: Colors.white, // Header text color
+                  onSurface: Colors.black, // Body text color
+                ),
+                textButtonTheme: TextButtonThemeData(
+                  style: TextButton.styleFrom(
+                    foregroundColor: mainColor, // Button text color
+                  ),
                 ),
               ),
-            ),
-            child: child!,
-          );
-        },
-      );
+              child: child!,
+            );
+          },
+        );
 
-      if (pickedDate != null) {
-        String formattedDate = DateFormat('dd MMM yyyy').format(pickedDate);
-        print(
-            'Selected Date: $formattedDate'); // Replace with your logic to display the selected date
-      }
-    },
-    decoration: InputDecoration(
-      labelText: label,
-      suffixIcon: Icon(icon, color: mainColor),
-      border: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(8.0),
-        borderSide: BorderSide(color: mainColor),
+        if (pickedDate != null) {
+          String formattedDate = DateFormat('dd MMM yyyy').format(pickedDate);
+          print(
+              'Selected Date: $formattedDate'); // Replace with your logic to display the selected date
+        }
+      },
+      decoration: InputDecoration(
+        labelText: label,
+        suffixIcon: Icon(icon, color: mainColor),
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(8.0),
+          borderSide: BorderSide(color: mainColor),
+        ),
       ),
-    ),
-  );
-}
-
+    );
+  }
 
   Widget _buildDropdownField(String label) {
     return DropdownButtonFormField<String>(
