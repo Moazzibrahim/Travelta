@@ -9,149 +9,126 @@ class ResultBookingScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: const CustomAppBar(title: 'Result Booking'),
-      body: ListView(
+      body: Padding(
         padding: const EdgeInsets.all(16.0),
-        children: const [
-            HotelCard(
-            imageUrl: 'https://via.placeholder.com/60',
-            hotelName: 'Grand Beach Hotel',
-            price: '\$150 / Night',
-            paymentMethod: 'Cash',
-            rating: '4.5',
+        child: Container(
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(16.0),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withOpacity(0.1),
+                blurRadius: 6.0,
+                offset: const Offset(0, 2),
+              ),
+            ],
           ),
-          SizedBox(height: 16),
-          HotelCard(
-            imageUrl: 'https://via.placeholder.com/60',
-            hotelName: 'Ocean View Resort',
-            price: '\$200 / Night',
-            paymentMethod: 'Credit Card',
-            rating: '4.8',
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class HotelCard extends StatelessWidget {
-  final String imageUrl;
-  final String hotelName;
-  final String price;
-  final String paymentMethod;
-  final String rating;
-
-  const HotelCard({
-    super.key,
-    required this.imageUrl,
-    required this.hotelName,
-    required this.price,
-    required this.paymentMethod,
-    required this.rating,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Card(
-      elevation: 4.0,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(16.0),
-      ),
-      margin: const EdgeInsets.symmetric(vertical: 8.0),
-      child: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              children: [
-                // Profile Image
-                ClipRRect(
-                  borderRadius: BorderRadius.circular(8.0),
-                  child: Image.network(
-                    imageUrl,
-                    width: 80,
-                    height: 80,
-                    fit: BoxFit.cover,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              ListTile(
+                leading: const CircleAvatar(
+                  radius: 30.0,
+                  backgroundImage:
+                      NetworkImage('https://via.placeholder.com/150'),
+                ),
+                title: const Text(
+                  'Grand Beach Hotel',
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 18.0,
                   ),
                 ),
-                const SizedBox(width: 16),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        hotelName,
-                        style: const TextStyle(
-                          fontSize: 20.0,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.black87,
-                        ),
+                subtitle: const Row(
+                  children: [
+                    Text(
+                      'Rating: 4.5',
+                      style: TextStyle(
+                        fontSize: 14.0,
+                        color: Colors.grey,
                       ),
-                      const SizedBox(height: 4),
-                      Text(
-                        'Rating: $rating',
-                        style: const TextStyle(
+                    ),
+                    SizedBox(width: 4),
+                    Icon(
+                      Icons.star,
+                      color: Colors.amber,
+                      size: 16,
+                    ),
+                  ],
+                ),
+                trailing: IconButton(
+                  iconSize: 35,
+                  icon: Icon(
+                    Icons.favorite_border,
+                    color: mainColor,
+                  ),
+                  onPressed: () {},
+                ),
+              ),
+              Padding(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(children: [
+                      Icon(Icons.attach_money, size: 20, color: mainColor),
+                      const SizedBox(width: 8),
+                      const Text(
+                        '150\$ / Night',
+                        style: TextStyle(
                           fontSize: 16.0,
-                          color: Colors.black54,
+                          fontWeight: FontWeight.w600,
                         ),
                       ),
-                    ],
+                    ]),
+                    const SizedBox(height: 15),
+                    Row(
+                      children: [
+                        Icon(Icons.payment, size: 20, color: mainColor),
+                        const SizedBox(width: 8),
+                        const Text(
+                          'Cash',
+                          style: TextStyle(
+                            fontSize: 16.0,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(
+                height: 15,
+              ),
+              SizedBox(
+                width: double.infinity,
+                child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: mainColor,
+                    padding: const EdgeInsets.symmetric(vertical: 16.0),
+                    shape: const RoundedRectangleBorder(
+                      borderRadius: BorderRadius.only(
+                        bottomLeft: Radius.circular(16.0),
+                        bottomRight: Radius.circular(16.0),
+                      ),
+                    ),
+                  ),
+                  onPressed: () {},
+                  child: const Text(
+                    'View Details',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 16.0,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                 ),
-                const Icon(Icons.favorite_border, color: Colors.red),
-              ],
-            ),
-            const SizedBox(height: 16),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Row(
-                  children: [
-                    const Icon(Icons.monetization_on, color: Colors.green),
-                    const SizedBox(width: 8),
-                    Text(
-                      price,
-                      style: const TextStyle(
-                        fontSize: 16.0,
-                        fontWeight: FontWeight.w500,
-                        color: Colors.black87,
-                      ),
-                    ),
-                  ],
-                ),
-                Row(
-                  children: [
-                    const Icon(Icons.payment, color: Colors.blue),
-                    const SizedBox(width: 8),
-                    Text(
-                      paymentMethod,
-                      style: const TextStyle(
-                        fontSize: 16.0,
-                        fontWeight: FontWeight.w500,
-                        color: Colors.black87,
-                      ),
-                    ),
-                  ],
-                ),
-              ],
-            ),
-            const SizedBox(height: 16),
-            ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                backgroundColor: mainColor,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12.0),
-                ),
               ),
-              onPressed: () {
-                // Add action, e.g., navigate to booking details
-              },
-              child: const Text(
-                'View Details',
-                style: TextStyle(fontSize: 16.0, color: Colors.white),
-              ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

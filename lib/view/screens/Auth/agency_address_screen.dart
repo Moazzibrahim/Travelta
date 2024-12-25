@@ -2,8 +2,6 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_travelta/constants/colors.dart';
-import 'package:flutter_travelta/view/screens/Auth/admin_details_screen.dart';
-import 'package:flutter_travelta/view/screens/Auth/agency_details_screen.dart';
 
 class AgencyAddressScreen extends StatefulWidget {
   const AgencyAddressScreen({super.key});
@@ -24,33 +22,7 @@ class _AgencyAddressScreenState extends State<AgencyAddressScreen> {
     'Country 2',
     'Country 3'
   ]; // Example data
-  final List<String> _states = [
-    'State 1',
-    'State 2',
-    'State 3'
-  ]; // Example data
-
-  // Navigation function
-  void _navigateToStep(BuildContext context, int step) {
-    if (_currentStep == step) return; // Prevent navigating to the current step
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) {
-          switch (step) {
-            case 1:
-              return const AdminDetailsScreen();
-            case 2:
-              return const AgencyDetailsScreen();
-            case 3:
-              return const AgencyAddressScreen();
-            default:
-              return const AgencyAddressScreen();
-          }
-        },
-      ),
-    );
-  }
+  final List<String> _states = ['State 1', 'State 2', 'State 3'];
 
   @override
   Widget build(BuildContext context) {
