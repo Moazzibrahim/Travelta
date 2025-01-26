@@ -5,14 +5,16 @@ import 'package:flutter_travelta/constants/colors.dart';
 import 'package:flutter_travelta/view/screens/Auth/admin_details_screen.dart';
 import 'package:flutter_travelta/view/screens/Auth/agency_address_screen.dart';
 
-class AgencyDetailsScreen extends StatefulWidget {
-  const AgencyDetailsScreen({super.key});
+class AgencyDetailsManualBookingScreen extends StatefulWidget {
+  const AgencyDetailsManualBookingScreen({super.key});
 
   @override
-  _AgencyDetailsScreenState createState() => _AgencyDetailsScreenState();
+  _AgencyDetailsManualBookingScreenState createState() =>
+      _AgencyDetailsManualBookingScreenState();
 }
 
-class _AgencyDetailsScreenState extends State<AgencyDetailsScreen> {
+class _AgencyDetailsManualBookingScreenState
+    extends State<AgencyDetailsManualBookingScreen> {
   final int _currentStep = 2;
   bool _useSameDetails = false;
   bool _agreeToTerms = false;
@@ -23,7 +25,7 @@ class _AgencyDetailsScreenState extends State<AgencyDetailsScreen> {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => const AdminDetailsScreen(),
+            builder: (context) => const AdminDetailsManualBookingScreen(),
           ),
         );
         break;
@@ -31,7 +33,7 @@ class _AgencyDetailsScreenState extends State<AgencyDetailsScreen> {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => const AgencyDetailsScreen(),
+            builder: (context) => const AgencyDetailsManualBookingScreen(),
           ),
         );
         break;

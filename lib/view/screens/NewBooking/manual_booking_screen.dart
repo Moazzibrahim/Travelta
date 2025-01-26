@@ -1,123 +1,146 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_travelta/view/screens/NewBooking/manual_booking/details_manual_booking_screen.dart';
+import 'package:flutter_travelta/view/screens/NewBooking/manual_booking/from_manual_booking_screen.dart';
+import 'package:flutter_travelta/view/screens/NewBooking/manual_booking/to_manual_booking_screen.dart';
 import 'package:flutter_travelta/view/widgets/appbar_widget.dart';
-import '../../../constants/colors.dart';
+import 'package:flutter_travelta/constants/colors.dart';
+import 'package:flutter_travelta/view/widgets/stepper_widget.dart';
 
-class ManualBookingScreen extends StatelessWidget {
+class ManualBookingScreen extends StatefulWidget {
   const ManualBookingScreen({super.key});
+
+  @override
+  State<ManualBookingScreen> createState() => _ManualBookingScreenState();
+}
+
+class _ManualBookingScreenState extends State<ManualBookingScreen> {
+  late PageController _pageController;
+  late int currentIndex;
+  String selectedService = '';
+
+  final List<StepData> steps = [
+    StepData(
+      label: "From",
+      screen: FromManualBookingScreen(
+        onServiceSelected: (String) {},
+      ),
+    ),
+    StepData(label: "To", screen: const ToManualBookingScreen()),
+    StepData(label: "Details", screen: const SizedBox()),
+  ];
+
+  @override
+  void initState() {
+    super.initState();
+    _pageController = PageController(initialPage: 0);
+    currentIndex = 0;
+  }
+
+  @override
+  void dispose() {
+    _pageController.dispose();
+    super.dispose();
+  }
+
+  void _updateService(String service) {
+    setState(() {
+      selectedService = service;
+    });
+  }
+
+  void _onStepTapped(int index) {
+    setState(() {
+      currentIndex = index;
+    });
+    _pageController.animateToPage(
+      index,
+      duration: const Duration(milliseconds: 300),
+      curve: Curves.easeInOut,
+    );
+  }
+
+  void _onNext() {
+    if (currentIndex < steps.length - 1) {
+      setState(() { 
+        currentIndex++;
+      });
+      _pageController.nextPage(
+        duration: const Duration(milliseconds: 300),
+        curve: Curves.easeInOut,
+      );
+    }
+  }
+
+  void _onPrevious() {
+    if (currentIndex > 0) {
+      setState(() {
+        currentIndex--;
+      });
+      _pageController.previousPage(
+        duration: const Duration(milliseconds: 300),
+        curve: Curves.easeInOut,
+      );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: const CustomAppBar(title: 'Manual Booking'),
+      appBar: const CustomAppBar(title: "Manual Booking"),
       body: Padding(
-        padding: const EdgeInsets.all(20.0),
+        padding: const EdgeInsets.all(16.0),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            _buildTextField(label: "Name"),
-            const SizedBox(height: 20),
-            _buildTextField(label: "Email"),
-            const SizedBox(height: 20),
-            _buildTextField(label: "Phone Number"),
-            const SizedBox(height: 20),
-            _buildDropdownField(label: "Service Type"),
-            const SizedBox(height: 20),
-            _buildDateField(label: "Start Date"),
-            const SizedBox(height: 20),
-            _buildDateField(label: "End Date"),
-            const SizedBox(height: 20),
-            _buildDropdownField(label: "Payment Method"),
-            const SizedBox(height: 32),
-            const Spacer(),
-            ElevatedButton(
-              onPressed: () {},
-              style: ElevatedButton.styleFrom(
-                backgroundColor: mainColor,
-                padding: const EdgeInsets.symmetric(vertical: 20),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(8),
-                ),
-              ),
-              child: const Text(
-                "Done",
-                style: TextStyle(color: Colors.white),
+            StepperRow(
+              steps: steps,
+              currentIndex: currentIndex,
+              onStepTapped: _onStepTapped,
+            ),
+            const SizedBox(height: 16),
+            Expanded(
+              child: PageView(
+                controller: _pageController,
+                onPageChanged: (index) {
+                  setState(() {
+                    currentIndex = index;
+                  });
+                },
+                children: [
+                  FromManualBookingScreen(onServiceSelected: _updateService),
+                  const ToManualBookingScreen(),
+                  DetailsManualBookingScreen(selectedService: selectedService),
+                ],
               ),
             ),
+            const SizedBox(height: 16),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                ElevatedButton(
+                  onPressed: currentIndex > 0 ? _onPrevious : null,
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: currentIndex > 0 ? mainColor : Colors.grey,
+                  ),
+                  child: const Text(
+                    "Previous",
+                    style: TextStyle(color: Colors.white),
+                  ),
+                ),
+                ElevatedButton(
+                  onPressed: currentIndex < steps.length - 1 ? _onNext : null,
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: currentIndex < steps.length - 1
+                        ? mainColor
+                        : Colors.grey,
+                  ),
+                  child: const Text(
+                    "Next",
+                    style: TextStyle(color: Colors.white),
+                  ),
+                ),
+              ],
+            ),
           ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildTextField({required String label}) {
-    return TextField(
-      enabled: true,
-      decoration: InputDecoration(
-        labelText: label,
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(8),
-        ),
-        enabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(8),
-          borderSide: BorderSide(color: mainColor),
-        ),
-        disabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(8),
-          borderSide: BorderSide(color: mainColor),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildDropdownField({required String label}) {
-    return DropdownButtonFormField<String>(
-      iconDisabledColor: mainColor,
-      iconEnabledColor: mainColor,
-      decoration: InputDecoration(
-        labelText: label,
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(8),
-        ),
-        enabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(8),
-          borderSide: BorderSide(color: mainColor),
-        ),
-        disabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(8),
-          borderSide: BorderSide(color: mainColor),
-        ),
-      ),
-      items: const [
-        DropdownMenuItem(value: "Option 1", child: Text("Option 1")),
-        DropdownMenuItem(value: "Option 2", child: Text("Option 2")),
-      ],
-      onChanged: (value) {},
-    );
-  }
-
-  Widget _buildDateField({required String label}) {
-    return TextField(
-      readOnly: true,
-      enabled: true,
-      decoration: InputDecoration(
-        labelText: label,
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(8),
-        ),
-        enabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(8),
-          borderSide: BorderSide(color: mainColor),
-        ),
-        disabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(8),
-          borderSide: BorderSide(color: mainColor),
-        ),
-        suffixIcon: IconButton(
-          icon: Icon(
-            Icons.calendar_today,
-            color: mainColor,
-          ),
-          onPressed: () {},
         ),
       ),
     );

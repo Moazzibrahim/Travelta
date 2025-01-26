@@ -1,19 +1,16 @@
 class UserModel {
   final User user;
   final String token;
-  final List<Plan> plans;
 
   UserModel({
     required this.user,
     required this.token,
-    required this.plans,
   });
 
   factory UserModel.fromJson(Map<String, dynamic> json) {
     return UserModel(
       user: User.fromJson(json['user']),
       token: json['token'],
-      plans: (json['plans'] as List).map((plan) => Plan.fromJson(plan)).toList(),
     );
   }
 
@@ -21,30 +18,29 @@ class UserModel {
     return {
       'user': user.toJson(),
       'token': token,
-      'plans': plans.map((plan) => plan.toJson()).toList(),
     };
   }
 }
 
 class User {
   final int id;
-  final int? planId;
+  final int planId;
   final String name;
   final String phone;
   final String email;
-  final String? address;
+  final String address;
   final int totalBooking;
   final int totalCommission;
-  final String? startDate;
-  final String? endDate;
-  final String? priceCycle;
+  final String startDate;
+  final String endDate;
+  final String priceCycle;
   final String role;
-  final int? countryId;
-  final int? cityId;
+  final int countryId;
+  final int cityId;
   final int? zoneId;
-  final int? sourceId;
-  final String? createdAt;
-  final String? updatedAt;
+  final int sourceId;
+  final String createdAt;
+  final String updatedAt;
   final String ownerName;
   final String ownerPhone;
   final String ownerEmail;
@@ -54,23 +50,23 @@ class User {
 
   User({
     required this.id,
-    this.planId,
+    required this.planId,
     required this.name,
     required this.phone,
     required this.email,
-    this.address,
+    required this.address,
     required this.totalBooking,
     required this.totalCommission,
-    this.startDate,
-    this.endDate,
-    this.priceCycle,
+    required this.startDate,
+    required this.endDate,
+    required this.priceCycle,
     required this.role,
-    this.countryId,
-    this.cityId,
+    required this.countryId,
+    required this.cityId,
     this.zoneId,
-    this.sourceId,
-    this.createdAt,
-    this.updatedAt,
+    required this.sourceId,
+    required this.createdAt,
+    required this.updatedAt,
     required this.ownerName,
     required this.ownerPhone,
     required this.ownerEmail,
@@ -134,86 +130,6 @@ class User {
       'services': services,
       'status': status,
       'token': token,
-    };
-  }
-}
-
-class Plan {
-  final int id;
-  final String name;
-  final String description;
-  final int userLimit;
-  final int branchLimit;
-  final int periodInDays;
-  final String moduleType;
-  final double price;
-  final String discountType;
-  final double discountValue;
-  final double priceAfterDiscount;
-  final double adminCost;
-  final double branchCost;
-  final String? createdAt;
-  final String? updatedAt;
-  final String type;
-
-  Plan({
-    required this.id,
-    required this.name,
-    required this.description,
-    required this.userLimit,
-    required this.branchLimit,
-    required this.periodInDays,
-    required this.moduleType,
-    required this.price,
-    required this.discountType,
-    required this.discountValue,
-    required this.priceAfterDiscount,
-    required this.adminCost,
-    required this.branchCost,
-    this.createdAt,
-    this.updatedAt,
-    required this.type,
-  });
-
-  factory Plan.fromJson(Map<String, dynamic> json) {
-    return Plan(
-      id: json['id'],
-      name: json['name'],
-      description: json['description'],
-      userLimit: json['user_limit'],
-      branchLimit: json['branch_limit'],
-      periodInDays: json['period_in_days'],
-      moduleType: json['module_type'],
-      price: json['price'].toDouble(),
-      discountType: json['discount_type'],
-      discountValue: json['discount_value'].toDouble(),
-      priceAfterDiscount: json['price_after_discount'].toDouble(),
-      adminCost: json['admin_cost'].toDouble(),
-      branchCost: json['branch_cost'].toDouble(),
-      createdAt: json['created_at'],
-      updatedAt: json['updated_at'],
-      type: json['type'],
-    );
-  }
-
-  Map<String, dynamic> toJson() {
-    return {
-      'id': id,
-      'name': name,
-      'description': description,
-      'user_limit': userLimit,
-      'branch_limit': branchLimit,
-      'period_in_days': periodInDays,
-      'module_type': moduleType,
-      'price': price,
-      'discount_type': discountType,
-      'discount_value': discountValue,
-      'price_after_discount': priceAfterDiscount,
-      'admin_cost': adminCost,
-      'branch_cost': branchCost,
-      'created_at': createdAt,
-      'updated_at': updatedAt,
-      'type': type,
     };
   }
 }

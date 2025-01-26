@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_travelta/constants/colors.dart';
 import 'package:flutter_travelta/view/screens/Booking_payment/booking_payment_screen.dart';
+import 'package:flutter_travelta/view/screens/lead/lead_screen.dart';
 import 'package:flutter_travelta/view/screens/operation/operation_screen.dart';
 import 'package:flutter_travelta/view/screens/request/request_screen.dart';
 import 'NewBooking/new_booking_screen.dart';
@@ -38,7 +39,7 @@ class AdminHomeScreen extends StatelessWidget {
           crossAxisCount: 2,
           crossAxisSpacing: 16,
           mainAxisSpacing: 16,
-          childAspectRatio: 0.7,
+          childAspectRatio: 0.8,
           children: [
             _buildDashboardCard(
               context: context,
@@ -64,6 +65,18 @@ class AdminHomeScreen extends StatelessWidget {
               label: "Booking Payment",
               targetScreen: const BookingPaymentScreen(),
             ),
+            _buildDashboardCard(
+              context: context,
+              svgPath: "assets/images/Segment_x5F_campaign.svg",
+              label: "lead",
+              targetScreen: const LeadScreen(),
+            ),
+            _buildDashboardCard(
+              context: context,
+              svgPath: "assets/images/Frame 1261154914 (3).svg",
+              label: "Booking Payment",
+              targetScreen: const BookingPaymentScreen(),
+            ),
           ],
         ),
       ),
@@ -79,7 +92,7 @@ class AdminHomeScreen extends StatelessWidget {
     return Card(
       color: Colors.white,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-      elevation: 1,
+      elevation: 3,
       child: InkWell(
         onTap: () {
           Navigator.push(

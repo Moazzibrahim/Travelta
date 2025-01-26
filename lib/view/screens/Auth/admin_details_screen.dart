@@ -4,14 +4,16 @@ import 'package:flutter_travelta/view/screens/Auth/agency_address_screen.dart';
 import 'package:flutter_travelta/view/screens/Auth/agency_details_screen.dart';
 import 'package:flutter_travelta/view/widgets/appbar_widget.dart';
 
-class AdminDetailsScreen extends StatefulWidget {
-  const AdminDetailsScreen({super.key});
+class AdminDetailsManualBookingScreen extends StatefulWidget {
+  const AdminDetailsManualBookingScreen({super.key});
 
   @override
-  State<AdminDetailsScreen> createState() => _AdminDetailsScreenState();
+  State<AdminDetailsManualBookingScreen> createState() =>
+      _AdminDetailsManualBookingScreenState();
 }
 
-class _AdminDetailsScreenState extends State<AdminDetailsScreen> {
+class _AdminDetailsManualBookingScreenState
+    extends State<AdminDetailsManualBookingScreen> {
   final int _currentStep = 1;
 
   void _navigateToStep(BuildContext context, int step) {
@@ -20,7 +22,7 @@ class _AdminDetailsScreenState extends State<AdminDetailsScreen> {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => const AdminDetailsScreen(),
+            builder: (context) => const AdminDetailsManualBookingScreen(),
           ),
         );
         break;
@@ -28,7 +30,7 @@ class _AdminDetailsScreenState extends State<AdminDetailsScreen> {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => const AgencyDetailsScreen(),
+            builder: (context) => const AgencyDetailsManualBookingScreen(),
           ),
         );
         break;
