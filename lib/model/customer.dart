@@ -1,4 +1,4 @@
-class LeadModel {
+class Customer {
   final int id;
   final String name;
   final String phone;
@@ -7,7 +7,7 @@ class LeadModel {
   final String createdAt;
   final String? emergencyPhone;
 
-  LeadModel({
+  Customer({
     required this.id,
     required this.name,
     required this.phone,
@@ -17,8 +17,8 @@ class LeadModel {
     this.emergencyPhone,
   });
 
-  factory LeadModel.fromJson(Map<String, dynamic> json) {
-    return LeadModel(
+  factory Customer.fromJson(Map<String, dynamic> json) {
+    return Customer(
       id: json['id'],
       name: json['name'],
       phone: json['phone'],
@@ -30,16 +30,16 @@ class LeadModel {
   }
 }
 
-class LeadsResponse {
-  final List<LeadModel> leads;
+class Customers {
+  final List<dynamic> customers;
 
-  LeadsResponse({required this.leads});
+  Customers({
+    required this.customers,
+  });
 
-  factory LeadsResponse.fromJson(Map<String, dynamic> json) {
-    return LeadsResponse(
-      leads: List<LeadModel>.from(
-        json['leads'].map((lead) => LeadModel.fromJson(lead)),
-      ),
+  factory Customers.fromJson(Map<String, dynamic> json) {
+    return Customers(
+      customers: json['customers'],
     );
   }
 }

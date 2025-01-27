@@ -1,27 +1,27 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_travelta/controllers/leads/leads_provider.dart';
+import 'package:flutter_travelta/constants/colors.dart';
+import 'package:flutter_travelta/controllers/costumer_controller.dart';
+import 'package:flutter_travelta/model/customer.dart';
+import 'package:flutter_travelta/view/widgets/appbar_widget.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
-import 'package:flutter_travelta/constants/colors.dart';
-import 'package:flutter_travelta/view/widgets/appbar_widget.dart';
-import 'package:flutter_travelta/model/leads/lead_model.dart';
 
-class LeadScreen extends StatefulWidget {
-  const LeadScreen({super.key});
+class ClientScreen extends StatefulWidget {
+  const ClientScreen({super.key});
 
   @override
-  LeadScreenState createState() => LeadScreenState();
+  State<ClientScreen> createState() => _ClientScreenState();
 }
 
-class LeadScreenState extends State<LeadScreen> {
-  String searchQuery = "";
+class _ClientScreenState extends State<ClientScreen> {
+  TextEditingController searchController = TextEditingController();
+  String searchQuery = '';
 
   @override
   void initState() {
+    Provider.of<CustomerController>(context, listen: false)
+        .fetchCustomer(context);
     super.initState();
-    // Fetch leads when the widget is initialized
-    final leadsProvider = Provider.of<LeadsProvider>(context, listen: false);
-    leadsProvider.fetchLeads(context);
   }
 
   String formatDate(String dateTime) {
@@ -35,27 +35,27 @@ class LeadScreenState extends State<LeadScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final leadsProvider = Provider.of<LeadsProvider>(context);
-
     return Scaffold(
-      appBar: const CustomAppBar(title: 'Leads'),
+      appBar: const CustomAppBar(title: 'Clients'),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
           children: [
+            // Search Bar
             TextField(
               cursorColor: mainColor,
+              controller: searchController,
               decoration: InputDecoration(
-                labelText: 'Search by name or phone',
+                hintText: 'Search by name or phone number',
+                prefixIcon: const Icon(Icons.search),
                 border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(8.0),
+                  borderRadius: BorderRadius.circular(12),
                   borderSide: BorderSide(color: mainColor),
                 ),
                 focusedBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(8.0),
+                  borderRadius: BorderRadius.circular(12),
                   borderSide: BorderSide(color: mainColor),
                 ),
-                prefixIcon: const Icon(Icons.search),
               ),
               onChanged: (value) {
                 setState(() {
@@ -64,40 +64,45 @@ class LeadScreenState extends State<LeadScreen> {
               },
             ),
             const SizedBox(height: 16),
+            // Customer List
             Expanded(
-              child: leadsProvider.isLoading
-                  ? const Center(child: CircularProgressIndicator())
-                  : leadsProvider.errorMessage != null
-                      ? Center(
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Text(leadsProvider.errorMessage!),
-                              const SizedBox(height: 16),
-                              ElevatedButton(
-                                onPressed: () {
-                                  // Retry fetching leads
-                                  setState(() {
-                                    leadsProvider.fetchLeads(context);
-                                  });
-                                },
-                                child: const Text('Retry'),
-                              ),
-                            ],
-                          ),
-                        )
-                      : ListView.builder(
-                          itemCount: leadsProvider.leads.length,
-                          itemBuilder: (context, index) {
-                            final lead = leadsProvider.leads[index];
-                            if (lead.name.toLowerCase().contains(searchQuery) ||
-                                lead.phone.toLowerCase().contains(searchQuery)) {
-                              return buildLeadCard(lead);
-                            } else {
-                              return const SizedBox.shrink();
-                            }
-                          },
+              child: Consumer<CustomerController>(
+                builder: (context, customerProvider, _) {
+                  if (!customerProvider.isLoaded) {
+                    return Center(
+                      child: CircularProgressIndicator(
+                        color: mainColor,
+                      ),
+                    );
+                  } else {
+                    // Filter the customer list based on the search query
+                    final filteredCustomers = customerProvider.customers
+                        .where((customer) =>
+                            customer.name.toLowerCase().contains(searchQuery) ||
+                            customer.phone
+                                .toLowerCase()
+                                .contains(searchQuery))
+                        .toList();
+
+                    if (filteredCustomers.isEmpty) {
+                      return const Center(
+                        child: Text(
+                          'No clients match your search.',
+                          style: TextStyle(fontSize: 16),
                         ),
+                      );
+                    }
+
+                    return ListView.builder(
+                      itemCount: filteredCustomers.length,
+                      itemBuilder: (context, index) {
+                        final customer = filteredCustomers[index];
+                        return buildLeadCard(customer);
+                      },
+                    );
+                  }
+                },
+              ),
             ),
           ],
         ),
@@ -105,7 +110,7 @@ class LeadScreenState extends State<LeadScreen> {
     );
   }
 
-  Widget buildLeadCard(LeadModel lead) {
+  Widget buildLeadCard(Customer customer) {
     return Container(
       margin: const EdgeInsets.only(bottom: 16.0),
       decoration: BoxDecoration(
@@ -115,15 +120,15 @@ class LeadScreenState extends State<LeadScreen> {
       padding: const EdgeInsets.all(16.0),
       child: Column(
         children: [
-          buildRow('Name:', lead.name),
-          buildRow('Email:', lead.email),
-          buildRow('Phone Number:', lead.phone),
-          buildRow('Role:', 'Lead'),
-          buildRow('Gender:', lead.gender),
-          buildRow('Created At:', formatDate(lead.createdAt)),
+          buildRow('Name:', customer.name),
+          buildRow('Email:', customer.email),
+          buildRow('Phone Number:', customer.phone),
+          buildRow('Role:', 'Customer'),
+          buildRow('Gender:', customer.gender),
+          buildRow('Created At:', formatDate(customer.createdAt)),
           buildRowWithBadge(
             'Emergency Phone:',
-            lead.emergencyPhone ?? 'N/A',
+            customer.emergencyPhone ?? 'N/A',
           ),
         ],
       ),

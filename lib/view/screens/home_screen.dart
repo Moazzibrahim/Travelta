@@ -1,10 +1,13 @@
+// ignore_for_file: deprecated_member_use
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_travelta/constants/colors.dart';
 import 'package:flutter_travelta/view/screens/Booking_payment/booking_payment_screen.dart';
+import 'package:flutter_travelta/view/screens/client/client_screen.dart';
 import 'package:flutter_travelta/view/screens/lead/lead_screen.dart';
 import 'package:flutter_travelta/view/screens/operation/operation_screen.dart';
 import 'package:flutter_travelta/view/screens/request/request_screen.dart';
+import 'package:flutter_travelta/view/screens/suppliers/suppliers_screen.dart';
 import 'NewBooking/new_booking_screen.dart';
 
 class AdminHomeScreen extends StatelessWidget {
@@ -35,49 +38,82 @@ class AdminHomeScreen extends StatelessWidget {
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
-        child: GridView.count(
-          crossAxisCount: 2,
-          crossAxisSpacing: 16,
-          mainAxisSpacing: 16,
-          childAspectRatio: 0.8,
+        child: Column(
           children: [
-            _buildDashboardCard(
-              context: context,
-              svgPath: "assets/images/Frame 1261154914.svg",
-              label: "Operation",
-              targetScreen: const OperationScreen(),
+          Expanded(
+            child: GridView.count(
+              crossAxisCount: 2,
+              crossAxisSpacing: 16,
+              mainAxisSpacing: 16,
+              children: [
+                _buildDashboardCard(
+                  context: context,
+                  svgPath: "assets/images/Frame 1261154914.svg",
+                  label: "Operation",
+                  targetScreen: const OperationScreen(),
+                ),
+                _buildDashboardCard(
+                  context: context,
+                  svgPath: "assets/images/Frame 1261154914 (1).svg",
+                  label: "Request",
+                  targetScreen: const RequestScreen(),
+                ),
+                _buildDashboardCard(
+                  context: context,
+                  svgPath: "assets/images/Frame 1261154914 (2).svg",
+                  label: "New Booking",
+                  targetScreen: const NewBookingScreen(),
+                ),
+                _buildDashboardCard(
+                  context: context,
+                  svgPath: "assets/images/Frame 1261154914 (3).svg",
+                  label: "Booking Payment",
+                  targetScreen: const BookingPaymentScreen(),
+                ),
+                _buildDashboardCard(
+                  context: context,
+                  svgPath: "assets/images/Segment_x5F_campaign.svg",
+                  label: "lead",
+                  targetScreen: const LeadScreen(),
+                ),
+                _buildDashboardCard(
+                  context: context,
+                  svgPath: "assets/images/client.svg",
+                  label: "Client",
+                  targetScreen: const ClientScreen(),
+                ),
+              ],
             ),
-            _buildDashboardCard(
-              context: context,
-              svgPath: "assets/images/Frame 1261154914 (1).svg",
-              label: "Request",
-              targetScreen: const RequestScreen(),
+          ),
+          SizedBox(
+            height: 130,
+            child: GestureDetector(
+              onTap: () {
+                Navigator.of(context).push(
+                  MaterialPageRoute(builder: (ctx)=> const SuppliersScreen())
+                );
+              },
+              child: Card(
+                color: Colors.white,
+                elevation: 3,
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      'Suppliers',
+                      style: TextStyle(
+                        color: mainColor,
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
             ),
-            _buildDashboardCard(
-              context: context,
-              svgPath: "assets/images/Frame 1261154914 (2).svg",
-              label: "New Booking",
-              targetScreen: const NewBookingScreen(),
-            ),
-            _buildDashboardCard(
-              context: context,
-              svgPath: "assets/images/Frame 1261154914 (3).svg",
-              label: "Booking Payment",
-              targetScreen: const BookingPaymentScreen(),
-            ),
-            _buildDashboardCard(
-              context: context,
-              svgPath: "assets/images/Segment_x5F_campaign.svg",
-              label: "lead",
-              targetScreen: const LeadScreen(),
-            ),
-            _buildDashboardCard(
-              context: context,
-              svgPath: "assets/images/Frame 1261154914 (3).svg",
-              label: "Booking Payment",
-              targetScreen: const BookingPaymentScreen(),
-            ),
-          ],
+          ),
+          ]
         ),
       ),
     );
