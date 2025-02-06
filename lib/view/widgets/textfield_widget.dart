@@ -14,6 +14,8 @@ class CustomTextField extends StatelessWidget {
     this.icon,
     this.isNumeric = false,
     this.onChanged,
+    String? initialValue,
+    TextEditingController? controller,
   });
 
   @override
@@ -90,26 +92,26 @@ class AdultDetailsList extends StatelessWidget {
                     labelText: 'Gender',
                     border: OutlineInputBorder(),
                   ),
-                  items: ["Male", "Female"]
+                  items: ["MR", "MRS"]
                       .map((gender) => DropdownMenuItem(
                             value: gender,
                             child: Text(gender),
                           ))
                       .toList(),
-                  value: details[index]["gender"],
-                  onChanged: (value) => onDetailChanged(index, "gender", value),
+                  value: details[index]["title"],
+                  onChanged: (value) => onDetailChanged(index, "title", value),
                 ),
                 const SizedBox(height: 10),
                 CustomTextField(
                   label: 'First Name',
                   onChanged: (value) =>
-                      onDetailChanged(index, "firstName", value),
+                      onDetailChanged(index, "first_name", value),
                 ),
                 const SizedBox(height: 10),
                 CustomTextField(
                   label: 'Last Name',
                   onChanged: (value) =>
-                      onDetailChanged(index, "lastName", value),
+                      onDetailChanged(index, "last_name", value),
                 ),
               ],
             ),
@@ -161,13 +163,13 @@ class ChildDetailsList extends StatelessWidget {
                 CustomTextField(
                   label: 'First Name',
                   onChanged: (value) =>
-                      onDetailChanged(index, "firstName", value),
+                      onDetailChanged(index, "first_name", value),
                 ),
                 const SizedBox(height: 10),
                 CustomTextField(
                   label: 'Last Name',
                   onChanged: (value) =>
-                      onDetailChanged(index, "lastName", value),
+                      onDetailChanged(index, "last_name", value),
                 ),
               ],
             ),

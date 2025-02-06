@@ -1,8 +1,11 @@
 // bus_widget.dart
 import 'package:flutter/material.dart';
+import 'package:flutter_travelta/controllers/manual_booking/data_list_provider.dart';
+import 'package:flutter_travelta/model/manual_booking/bus_model.dart';
 import 'package:flutter_travelta/view/widgets/datepicker_widget.dart';
 import 'package:flutter_travelta/view/widgets/textfield_widget.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 
 class BusWidget extends StatefulWidget {
   const BusWidget({super.key});
@@ -16,17 +19,36 @@ class _BusWidgetState extends State<BusWidget> {
   int childrenNumber = 0;
   final List<Map<String, dynamic>> adultsDetails = [];
   final List<Map<String, dynamic>> childrenDetails = [];
+  BusDetails busDetails = BusDetails();
 
   @override
   Widget build(BuildContext context) {
+    final dataListProvider = Provider.of<DataListProvider>(context);
+    final busDetails = dataListProvider.busDetails;
     return SingleChildScrollView(
       child: Column(
         children: [
-          const CustomTextField(label: 'from'),
+          CustomTextField(
+            label: 'from',
+            onChanged: (value) {
+              setState(() {
+                busDetails.from = value;
+                dataListProvider.saveBusData(busDetails);
+              });
+            },
+          ),
           const SizedBox(
             height: 10,
           ),
-          const CustomTextField(label: 'to'),
+          CustomTextField(
+            label: 'to',
+            onChanged: (value) {
+              setState(() {
+                busDetails.to = value;
+                dataListProvider.saveBusData(busDetails);
+              });
+            },
+          ),
           const SizedBox(
             height: 10,
           ),
@@ -34,7 +56,12 @@ class _BusWidgetState extends State<BusWidget> {
             label: 'Check in',
             icon: Icons.calendar_today,
             dateFormat: DateFormat('dd/MM/yyyy'),
-            onDateSelected: (date) {},
+            onDateSelected: (date) {
+              setState(() {
+                busDetails.checkInDate = date;
+                dataListProvider.saveBusData(busDetails);
+              });
+            },
           ),
           const SizedBox(
             height: 10,
@@ -43,7 +70,12 @@ class _BusWidgetState extends State<BusWidget> {
             label: 'Check out',
             icon: Icons.calendar_today,
             dateFormat: DateFormat('dd/MM/yyyy'),
-            onDateSelected: (date) {},
+            onDateSelected: (date) {
+              setState(() {
+                busDetails.checkOutDate = date;
+                dataListProvider.saveBusData(busDetails);
+              });
+            },
           ),
           const SizedBox(
             height: 10,
@@ -54,6 +86,7 @@ class _BusWidgetState extends State<BusWidget> {
             onChanged: (value) {
               setState(() {
                 adultsNumber = int.tryParse(value) ?? 0;
+                busDetails.adultsNumber = adultsNumber;
                 if (adultsNumber > adultsDetails.length) {
                   adultsDetails.addAll(List<Map<String, dynamic>>.generate(
                     adultsNumber - adultsDetails.length,
@@ -63,6 +96,7 @@ class _BusWidgetState extends State<BusWidget> {
                 } else {
                   adultsDetails.removeRange(adultsNumber, adultsDetails.length);
                 }
+                dataListProvider.saveBusData(busDetails);
               });
             },
           ),
@@ -74,10 +108,22 @@ class _BusWidgetState extends State<BusWidget> {
               onDetailChanged: (index, key, value) {
                 setState(() {
                   adultsDetails[index][key] = value;
+                  busDetails.adultsDetails =
+                      List.from(adultsDetails); // Save to model
+                  dataListProvider.saveBusData(busDetails);
                 });
               },
             ),
-          const CustomTextField(label: 'adults price', isNumeric: true),
+          CustomTextField(
+            label: 'adults price',
+            isNumeric: true,
+            onChanged: (value) {
+              setState(() {
+                busDetails.adultsPrice = double.parse(value);
+                dataListProvider.saveBusData(busDetails);
+              });
+            },
+          ),
           const SizedBox(height: 10),
           CustomTextField(
             label: 'Children number',
@@ -85,6 +131,7 @@ class _BusWidgetState extends State<BusWidget> {
             onChanged: (value) {
               setState(() {
                 childrenNumber = int.tryParse(value) ?? 0;
+                busDetails.childrenNumber = childrenNumber; // Save to model
                 if (childrenNumber > childrenDetails.length) {
                   childrenDetails.addAll(List<Map<String, dynamic>>.generate(
                     childrenNumber - childrenDetails.length,
@@ -94,6 +141,7 @@ class _BusWidgetState extends State<BusWidget> {
                   childrenDetails.removeRange(
                       childrenNumber, childrenDetails.length);
                 }
+                dataListProvider.saveBusData(busDetails);
               });
             },
           ),
@@ -105,20 +153,56 @@ class _BusWidgetState extends State<BusWidget> {
               onDetailChanged: (index, field, value) {
                 setState(() {
                   childrenDetails[index][field] = value;
+                  busDetails.childrenDetails =
+                      List.from(childrenDetails); // Save to model
+                  dataListProvider.saveBusData(busDetails);
                 });
               },
             ),
-          const CustomTextField(label: 'children price', isNumeric: true),
+          CustomTextField(
+            label: 'children price',
+            isNumeric: true,
+            onChanged: (value) {
+              setState(() {
+                busDetails.childrenPrice = double.parse(value);
+                dataListProvider.saveBusData(busDetails);
+              });
+            },
+          ),
           const SizedBox(height: 20),
-          const CustomTextField(label: 'bus name'),
+          CustomTextField(
+            label: 'bus name',
+            onChanged: (value) {
+              setState(() {
+                busDetails.busName = value;
+                dataListProvider.saveBusData(busDetails);
+              });
+            },
+          ),
           const SizedBox(
             height: 10,
           ),
-          const CustomTextField(label: 'bus number plate'),
+          CustomTextField(
+            label: 'bus number plate',
+            onChanged: (value) {
+              setState(() {
+                busDetails.busNumberPlate = value;
+                dataListProvider.saveBusData(busDetails);
+              });
+            },
+          ),
           const SizedBox(
             height: 10,
           ),
-          const CustomTextField(label: 'driver phone'),
+          CustomTextField(
+            label: 'driver phone',
+            onChanged: (value) {
+              setState(() {
+                busDetails.driverPhone = value;
+                dataListProvider.saveBusData(busDetails);
+              });
+            },
+          ),
           const SizedBox(
             height: 10,
           ),

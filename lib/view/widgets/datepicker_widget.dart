@@ -7,6 +7,7 @@ class CustomDatePickerTextField extends StatelessWidget {
   final IconData icon;
   final DateFormat dateFormat;
   final ValueChanged<String> onDateSelected;
+  final bool showTimePickerOption; // Add this flag
 
   const CustomDatePickerTextField({
     super.key,
@@ -14,6 +15,7 @@ class CustomDatePickerTextField extends StatelessWidget {
     required this.icon,
     required this.dateFormat,
     required this.onDateSelected,
+    this.showTimePickerOption = false, // Default is true
   });
 
   @override
@@ -21,6 +23,7 @@ class CustomDatePickerTextField extends StatelessWidget {
     return TextField(
       readOnly: true,
       onTap: () async {
+        // Show date picker
         DateTime? pickedDate = await showDatePicker(
           context: context,
           initialDate: DateTime.now(),
@@ -46,8 +49,32 @@ class CustomDatePickerTextField extends StatelessWidget {
         );
 
         if (pickedDate != null) {
-          String formattedDate = dateFormat.format(pickedDate);
-          onDateSelected(formattedDate);
+          if (showTimePickerOption) {
+            // Show time picker if the flag is true
+            TimeOfDay? pickedTime = await showTimePicker(
+              context: context,
+              initialTime: TimeOfDay.now(),
+            );
+
+            if (pickedTime != null) {
+              // Combine the selected date and time
+              DateTime combinedDateTime = DateTime(
+                pickedDate.year,
+                pickedDate.month,
+                pickedDate.day,
+                pickedTime.hour,
+                pickedTime.minute,
+              );
+
+              // Format and return the combined date and time
+              String formattedDate = dateFormat.format(combinedDateTime);
+              onDateSelected(formattedDate);
+            }
+          } else {
+            // If no time picker, just use the date
+            String formattedDate = dateFormat.format(pickedDate);
+            onDateSelected(formattedDate);
+          }
         }
       },
       decoration: InputDecoration(

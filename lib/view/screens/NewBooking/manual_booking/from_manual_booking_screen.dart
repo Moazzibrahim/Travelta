@@ -61,6 +61,10 @@ class _FromManualBookingScreenState extends State<FromManualBookingScreen> {
 
         final travelData = dataListProvider.travelData;
 
+        if (travelData == null) {
+          return const Center(child: Text("Failed to load travel data"));
+        }
+
         return SingleChildScrollView(
           padding: const EdgeInsets.all(8.0),
           child: Column(
@@ -70,19 +74,20 @@ class _FromManualBookingScreenState extends State<FromManualBookingScreen> {
               const SizedBox(height: 16),
               CustomDropdownField(
                 label: bookingData.selectedServiceId != null
-                    ? bookingData.selectedService!
+                    ? bookingData.selectedService ?? 'Service not selected'
                     : 'Select Service:',
-                items: travelData?.services.map((service) {
-                      return DropdownMenuItem(
-                        value: service.id.toString(),
-                        child: Text(service.serviceName),
-                      );
-                    }).toList() ??
-                    [],
+                items: travelData.services.isEmpty
+                    ? []
+                    : travelData.services.map((service) {
+                        return DropdownMenuItem(
+                          value: service.id.toString(),
+                          child: Text(service.serviceName),
+                        );
+                      }).toList(),
                 onChanged: (value) {
                   if (value != null) {
                     setState(() {
-                      for (var e in travelData!.services) {
+                      for (var e in travelData.services) {
                         if (e.id.toString() == value) {
                           bookingData.selectedService = e.serviceName;
                         }
@@ -90,29 +95,31 @@ class _FromManualBookingScreenState extends State<FromManualBookingScreen> {
                       bookingData.selectedServiceId = value;
                     });
                     widget.onServiceSelected(value);
-                    _updateSuppliers(value, travelData?.services ?? []);
+                    _updateSuppliers(value, travelData.services);
                   }
                 },
               ),
               const SizedBox(height: 16),
               CustomDropdownField(
-                label: bookingData.selectedSupplierId != null
-                    ? bookingData.selectedSupplier!
+                label: bookingData.fromselectedSupplierId != null
+                    ? bookingData.selectedSupplier ?? 'Supplier not selected'
                     : 'Select supplier:',
-                items: filteredSuppliers.map((supplier) {
-                  return DropdownMenuItem(
-                    value: supplier.id.toString(),
-                    child: Text(supplier.agent!),
-                  );
-                }).toList(),
+                items: filteredSuppliers.isEmpty
+                    ? []
+                    : filteredSuppliers.map((supplier) {
+                        return DropdownMenuItem(
+                          value: supplier.id.toString(),
+                          child: Text(supplier.agent),
+                        );
+                      }).toList(),
                 onChanged: (value) {
                   setState(() {
-                    for (var e in travelData!.suppliers) {
+                    for (var e in travelData.suppliers) {
                       if (e.id.toString() == value) {
                         bookingData.selectedSupplier = e.agent;
                       }
                     }
-                    bookingData.selectedSupplierId = value;
+                    bookingData.fromselectedSupplierId = value;
                   });
                 },
               ),
@@ -122,16 +129,15 @@ class _FromManualBookingScreenState extends State<FromManualBookingScreen> {
                 label: bookingData.selectedCurrencyId != null
                     ? bookingData.selectedCurrency!
                     : 'Select currency:',
-                items: travelData?.currencies.map((currency) {
-                      return DropdownMenuItem(
-                        value: currency.id.toString(),
-                        child: Text(currency.name),
-                      );
-                    }).toList() ??
-                    [],
+                items: travelData.currencies.map((currency) {
+                  return DropdownMenuItem(
+                    value: currency.id.toString(),
+                    child: Text(currency.name),
+                  );
+                }).toList(),
                 onChanged: (value) {
                   setState(() {
-                    for (var e in travelData!.currencies) {
+                    for (var e in travelData.currencies) {
                       if (e.id.toString() == value) {
                         bookingData.selectedCurrency = e.name;
                       }
@@ -144,10 +150,10 @@ class _FromManualBookingScreenState extends State<FromManualBookingScreen> {
               CustomTextField(
                 label: 'Cost:',
                 isNumeric: true,
+                initialValue: bookingData.cost.toString(),
                 onChanged: (value) {
                   setState(() {
-                    bookingData.cost = double.tryParse(value) ?? 0.0;
-                    bookingData.calculateFinalPrice();
+                    bookingData.setCost(double.tryParse(value) ?? 0.0);
                   });
                 },
               ),
@@ -164,7 +170,7 @@ class _FromManualBookingScreenState extends State<FromManualBookingScreen> {
                         selectedMarkup: bookingData.selectedMarkup,
                         onPressed: () {
                           setState(() {
-                            bookingData.selectedMarkup = '\$';
+                            bookingData.selectedMarkup = 'value';
                             bookingData.calculateFinalPrice();
                           });
                         },
@@ -175,7 +181,7 @@ class _FromManualBookingScreenState extends State<FromManualBookingScreen> {
                         selectedMarkup: bookingData.selectedMarkup,
                         onPressed: () {
                           setState(() {
-                            bookingData.selectedMarkup = '%';
+                            bookingData.selectedMarkup = 'precentage';
                             bookingData.calculateFinalPrice();
                           });
                         },
@@ -188,10 +194,11 @@ class _FromManualBookingScreenState extends State<FromManualBookingScreen> {
                       child: CustomTextField(
                         label: 'Markup Value:',
                         isNumeric: true,
+                        initialValue: bookingData.markupValue.toString(),
                         onChanged: (value) {
                           setState(() {
-                            bookingData.markupValue =
-                                double.tryParse(value) ?? 0.0;
+                            bookingData
+                                .setMarkupValue(double.tryParse(value) ?? 0.0);
                             bookingData.calculateFinalPrice();
                           });
                         },
@@ -203,47 +210,80 @@ class _FromManualBookingScreenState extends State<FromManualBookingScreen> {
               const SectionTitle(title: 'Tax Details'),
               CustomDropdownField(
                 label: bookingData.selectedCountryId != null
-                    ? bookingData.selectedCountry!
+                    ? bookingData.selectedCountry ?? 'Country not selected'
                     : 'Select country:',
-                items: travelData?.countries.map((country) {
-                      return DropdownMenuItem(
-                        value: country.id.toString(),
-                        child: Text(country.name),
-                      );
-                    }).toList() ??
-                    [],
+                items: travelData.countries.isEmpty
+                    ? []
+                    : travelData.countries.map((country) {
+                        return DropdownMenuItem(
+                          value: country.id.toString(),
+                          child: Text(country.name),
+                        );
+                      }).toList(),
                 onChanged: (value) {
-                  setState(() {
-                    bookingData.selectedCountryId = value;
-                    for (var e in travelData!.countries) {
-                      if (e.id.toString() == value) {
-                        bookingData.selectedCategory = e.name;
+                  if (value != null) {
+                    setState(() {
+                      bookingData.selectedCountryId = value;
+                      for (var e in travelData.countries) {
+                        if (e.id.toString() == value) {
+                          bookingData.selectedCategory = e.name;
+                        }
                       }
-                    }
-                  });
-                  _updateTaxes(value!, travelData?.taxes ?? []);
+                    });
+                    _updateTaxes(value, travelData.taxes);
+                  }
+                },
+              ),
+              CustomDropdownField(
+                label: bookingData.selectedCityId != null
+                    ? bookingData.selectedCity ?? 'select city'
+                    : 'Select city:',
+                items: travelData.cities.isEmpty
+                    ? []
+                    : travelData.cities.map((City city) {
+                        return DropdownMenuItem(
+                          value: city.id.toString(),
+                          child: Text(city.name),
+                        );
+                      }).toList(),
+                onChanged: (value) {
+                  if (value != null) {
+                    setState(() {
+                      bookingData.selectedCityId = value;
+                      for (var e in travelData.cities) {
+                        if (e.id.toString() == value) {
+                          bookingData.selectedCity = e.name;
+                        }
+                      }
+                    });
+                    _updateTaxes(value, travelData.taxes);
+                  }
                 },
               ),
               const SizedBox(height: 16),
               CustomDropdownField(
                 label: bookingData.selectedTaxId != null
-                    ? bookingData.selectedTax!
+                    ? bookingData.selectedTax ?? 'Tax not selected'
                     : 'Select tax:',
-                items: filteredTaxes.map((tax) {
-                  return DropdownMenuItem(
-                    value: tax.id.toString(),
-                    child: Text(tax.name),
-                  );
-                }).toList(),
+                items: filteredTaxes.isEmpty
+                    ? []
+                    : filteredTaxes.map((tax) {
+                        return DropdownMenuItem(
+                          value: tax.id.toString(),
+                          child: Text(tax.name),
+                        );
+                      }).toList(),
                 onChanged: (value) {
-                  setState(() {
-                    bookingData.selectedTaxId = value;
-                    for (var e in travelData!.taxes) {
-                      if (e.id.toString() == value) {
-                        bookingData.selectedTax = e.name;
+                  if (value != null) {
+                    setState(() {
+                      bookingData.selectedTaxId = value;
+                      for (var e in travelData.taxes) {
+                        if (e.id.toString() == value) {
+                          bookingData.selectedTax = e.name;
+                        }
                       }
-                    }
-                  });
+                    });
+                  }
                 },
               ),
               const SizedBox(height: 16),
@@ -254,9 +294,11 @@ class _FromManualBookingScreenState extends State<FromManualBookingScreen> {
                   DropdownMenuItem(value: 'exclude', child: Text('Exclude')),
                 ],
                 onChanged: (value) {
-                  setState(() {
-                    bookingData.selectedTaxType = value;
-                  });
+                  if (value != null) {
+                    setState(() {
+                      bookingData.selectedTaxType = value;
+                    });
+                  }
                 },
               ),
               const SizedBox(height: 32),

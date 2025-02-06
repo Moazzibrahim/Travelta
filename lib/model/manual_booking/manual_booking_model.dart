@@ -2,51 +2,72 @@ class ManualBookingData {
   String? selectedServiceId;
   String? selectedService;
   String? selectedSupplier;
-
-  String? selectedSupplierId;
+  String? selectedcustomer;
+  String? selectedcustomerId;
+  String? fromselectedSupplierId;
   String? selectedCurrencyId;
   String? selectedCurrency;
-
   double cost = 0.0;
   String selectedMarkup = '';
   double markupValue = 0.0;
   double finalPrice = 0.0;
   String? selectedCountryId;
   String? selectedCountry;
-
+  String? selectedCityId;
+  String? selectedCity;
   String? selectedTaxId;
   String? selectedTax;
-
   String? selectedTaxType;
   String? selectedCategory;
-  String? selectedSupplierOrCustomer;
+  String? selectedtoSupplier;
+  String? selectedtoSupplierId;
+  String? selectedtoCustomer;
+  String? selectedtoCustomerId;
 
   void calculateFinalPrice() {
-    if (selectedMarkup == '\$') {
+    if (selectedMarkup == 'value') {
       finalPrice = cost + markupValue;
-    } else if (selectedMarkup == '%') {
+    } else if (selectedMarkup == 'precentage') {
       finalPrice = cost + (cost * (markupValue / 100));
     } else {
       finalPrice = cost;
     }
   }
 
+  void setCost(double newCost) {
+    if (newCost < 0) {
+      throw ArgumentError("Cost cannot be negative.");
+    }
+    cost = newCost;
+    calculateFinalPrice();
+  }
+
+  void setMarkupValue(double newMarkupValue) {
+    if (newMarkupValue < 0) {
+      throw ArgumentError("Markup value cannot be negative.");
+    }
+    markupValue = newMarkupValue;
+    calculateFinalPrice();
+  }
+
   @override
   String toString() {
     return '''
-    ManualBookingData:
+    Service: $selectedService
     Service ID: $selectedServiceId
-    Supplier ID: $selectedSupplierId
+    Supplier: $selectedSupplier
+    Supplier ID: $fromselectedSupplierId
+    Currency: $selectedCurrency
     Currency ID: $selectedCurrencyId
     Cost: $cost
     Markup: $selectedMarkup
     Markup Value: $markupValue
     Final Price: $finalPrice
+    Country: $selectedCountry
     Country ID: $selectedCountryId
+    Tax: $selectedTax
     Tax ID: $selectedTaxId
     Tax Type: $selectedTaxType
-    Selected Category: $selectedCategory
-    Selected Supplier/Customer: $selectedSupplierOrCustomer
-    ''';
+  ''';
   }
 }

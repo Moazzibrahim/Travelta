@@ -10,7 +10,7 @@ class CustomDropdownField extends StatelessWidget {
     super.key,
     required this.label,
     required this.items,
-    this.onChanged,
+    this.onChanged, String? value,
   });
 
   @override

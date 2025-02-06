@@ -1,11 +1,12 @@
-// flight_widget.dart
 import 'dart:developer';
-
 import 'package:flutter/material.dart';
+import 'package:flutter_travelta/controllers/manual_booking/data_list_provider.dart';
+import 'package:flutter_travelta/model/manual_booking/flight_model.dart';
 import 'package:flutter_travelta/view/widgets/datepicker_widget.dart';
 import 'package:flutter_travelta/view/widgets/dropdown_widget.dart';
 import 'package:flutter_travelta/view/widgets/textfield_widget.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 
 class FlightWidget extends StatefulWidget {
   const FlightWidget({super.key});
@@ -19,57 +20,164 @@ class _FlightWidgetState extends State<FlightWidget> {
   int childrenNumber = 0;
   final List<Map<String, dynamic>> adultsDetails = [];
   final List<Map<String, dynamic>> childrenDetails = [];
+  FlightDetails flightDetails = FlightDetails();
+
+  List<String> fromLocations = [];
+  List<String> toLocations = [];
 
   @override
   Widget build(BuildContext context) {
+    final dataListProvider = Provider.of<DataListProvider>(context);
+    final FlightDetails = dataListProvider.busDetails;
+
     return SingleChildScrollView(
       child: Column(
         children: [
           CustomDropdownField(
-            label: 'select flight type:',
+            label: 'Select flight class:',
             items: const [
-              DropdownMenuItem(value: '1', child: Text('1')),
+              DropdownMenuItem(
+                  value: 'Economy Class', child: Text('Economy Class')),
+              DropdownMenuItem(
+                  value: 'First Class', child: Text('First Class')),
+              DropdownMenuItem(
+                  value: 'Business Class', child: Text('Business Class')),
             ],
             onChanged: (value) {
-              log('Selected  flight type: $value');
+              if (value != null) {
+                setState(() {
+                  flightDetails.flightClass = value;
+                  dataListProvider.saveflight(flightDetails);
+                });
+              }
             },
           ),
           const SizedBox(height: 16),
           CustomDropdownField(
-            label: 'select  flight direction:',
+            label: 'Select flight type:',
             items: const [
-              DropdownMenuItem(value: '1', child: Text('1')),
+              DropdownMenuItem(value: 'domestic', child: Text('Domestic')),
+              DropdownMenuItem(
+                  value: 'international', child: Text('International')),
             ],
             onChanged: (value) {
-              log('Selected  flight direction: $value');
+              if (value != null) {
+                setState(() {
+                  flightDetails.flightType = value;
+                  dataListProvider.saveflight(flightDetails);
+                });
+              }
             },
           ),
           const SizedBox(height: 16),
           CustomDropdownField(
-            label: 'select flight class:',
+            label: 'Select flight direction:',
             items: const [
-              DropdownMenuItem(value: '1', child: Text('1')),
+              DropdownMenuItem(value: 'one_way', child: Text('One Way')),
+              DropdownMenuItem(value: 'multi_city', child: Text('Return')),
+              DropdownMenuItem(value: 'round_trip', child: Text('Round')),
             ],
             onChanged: (value) {
-              log('Selected flight class: $value');
+              if (value != null) {
+                setState(() {
+                  flightDetails.flightDirection = value;
+                  dataListProvider.saveflight(flightDetails);
+                });
+              }
             },
           ),
+          const SizedBox(height: 16),
+          if (flightDetails.flightDirection == 'one_way' ||
+              flightDetails.flightDirection == 'multi_city') ...[
+            CustomTextField(
+              label: 'From',
+              onChanged: (value) {
+                setState(() {
+                  flightDetails.fromLocation = value;
+                  dataListProvider.saveflight(flightDetails);
+                });
+              },
+            ),
+            const SizedBox(height: 16),
+            CustomTextField(
+              label: 'To',
+              onChanged: (value) {
+                setState(() {
+                  flightDetails.toLocation = value;
+                  dataListProvider.saveflight(flightDetails);
+                });
+              },
+            ),
+          ],
+          if (flightDetails.flightDirection == 'round_trip') ...[
+            for (int i = 0; i < fromLocations.length; i++) ...[
+              CustomTextField(
+                label: 'From ${i + 1}',
+                onChanged: (value) {
+                  setState(() {
+                    fromLocations[i] = value;
+                    dataListProvider.saveflight(flightDetails);
+                  });
+                },
+              ),
+              const SizedBox(height: 16),
+              CustomTextField(
+                label: 'To ${i + 1}',
+                onChanged: (value) {
+                  setState(() {
+                    toLocations[i] = value;
+                    dataListProvider.saveflight(flightDetails);
+                  });
+                },
+              ),
+              const SizedBox(height: 16),
+            ],
+            ElevatedButton(
+              onPressed: () {
+                setState(() {
+                  fromLocations.add('');
+                  toLocations.add('');
+                  dataListProvider.saveflight(flightDetails);
+                });
+              },
+              child: const Text('Add another location'),
+            ),
+          ],
           const SizedBox(height: 16),
           CustomDatePickerTextField(
-            label: 'Check in',
+            showTimePickerOption: true,
+            label: 'departure Date & Time',
             icon: Icons.calendar_today,
             dateFormat: DateFormat('dd/MM/yyyy'),
-            onDateSelected: (date) {},
+            onDateSelected: (date) {
+              setState(() {
+                flightDetails.checkInDate = date;
+                dataListProvider.saveflight(flightDetails);
+              });
+            },
           ),
-          const SizedBox(
-            height: 10,
-          ),
+          const SizedBox(height: 10),
+          CustomDatePickerTextField(
+              showTimePickerOption: true,
+              label: 'Arrival Date & Time',
+              icon: Icons.calendar_today,
+              dateFormat: DateFormat('dd/MM/yyyy HH:mm'),
+              onDateSelected: (dateTimeString) {
+                DateTime parsedDate =
+                    DateFormat('dd/MM/yyyy HH:mm').parse(dateTimeString);
+                setState(() {
+                  flightDetails.arrivalDate = parsedDate;
+                  dataListProvider.saveflight(flightDetails);
+                });
+              }),
+          const SizedBox(height: 10),
           CustomTextField(
-            label: 'Adults number',
+            label: 'Adults Number',
             isNumeric: true,
             onChanged: (value) {
               setState(() {
                 adultsNumber = int.tryParse(value) ?? 0;
+                flightDetails.adultsNumber = adultsNumber;
                 if (adultsNumber > adultsDetails.length) {
                   adultsDetails.addAll(List<Map<String, dynamic>>.generate(
                     adultsNumber - adultsDetails.length,
@@ -79,6 +187,7 @@ class _FlightWidgetState extends State<FlightWidget> {
                 } else {
                   adultsDetails.removeRange(adultsNumber, adultsDetails.length);
                 }
+                dataListProvider.saveflight(flightDetails);
               });
             },
           ),
@@ -90,16 +199,28 @@ class _FlightWidgetState extends State<FlightWidget> {
               onDetailChanged: (index, key, value) {
                 setState(() {
                   adultsDetails[index][key] = value;
+                  flightDetails.adultsDetails = List.from(adultsDetails);
+                  dataListProvider.saveflight(flightDetails);
                 });
               },
             ),
-          const CustomTextField(label: 'adults price', isNumeric: true),
           CustomTextField(
-            label: 'Children number',
+            label: 'Adults Price',
+            isNumeric: true,
+            onChanged: (value) {
+              setState(() {
+                flightDetails.adultsPrice = int.tryParse(value);
+                dataListProvider.saveflight(flightDetails);
+              });
+            },
+          ),
+          CustomTextField(
+            label: 'Children Number',
             isNumeric: true,
             onChanged: (value) {
               setState(() {
                 childrenNumber = int.tryParse(value) ?? 0;
+                flightDetails.childrenNumber = childrenNumber;
                 if (childrenNumber > childrenDetails.length) {
                   childrenDetails.addAll(List<Map<String, dynamic>>.generate(
                     childrenNumber - childrenDetails.length,
@@ -109,6 +230,7 @@ class _FlightWidgetState extends State<FlightWidget> {
                   childrenDetails.removeRange(
                       childrenNumber, childrenDetails.length);
                 }
+                dataListProvider.saveflight(flightDetails);
               });
             },
           ),
@@ -120,23 +242,61 @@ class _FlightWidgetState extends State<FlightWidget> {
               onDetailChanged: (index, field, value) {
                 setState(() {
                   childrenDetails[index][field] = value;
+                  flightDetails.childrenDetails = List.from(childrenDetails);
+                  dataListProvider.saveflight(flightDetails);
                 });
               },
             ),
-          const CustomTextField(label: 'children price', isNumeric: true),
-          const SizedBox(height: 20),
-          const CustomTextField(label: 'infant number', isNumeric: true),
-          const SizedBox(height: 20),
-          const CustomTextField(
-            label: 'airline',
+          CustomTextField(
+            label: 'Children Price',
+            isNumeric: true,
+            onChanged: (value) {
+              setState(() {
+                flightDetails.childrenPrice = int.tryParse(value);
+                dataListProvider.saveflight(flightDetails);
+              });
+            },
           ),
           const SizedBox(height: 20),
-          const CustomTextField(
-            label: 'ticket number',
+          CustomTextField(
+            label: 'Infant Number',
+            isNumeric: true,
+            onChanged: (value) {
+              setState(() {
+                flightDetails.infantNumber = int.tryParse(value);
+                dataListProvider.saveflight(flightDetails);
+              });
+            },
           ),
           const SizedBox(height: 20),
-          const CustomTextField(
+          CustomTextField(
+            label: 'Airline',
+            onChanged: (value) {
+              setState(() {
+                flightDetails.airline = value;
+                dataListProvider.saveflight(flightDetails);
+              });
+            },
+          ),
+          const SizedBox(height: 20),
+          CustomTextField(
+            label: 'Ticket Number',
+            onChanged: (value) {
+              setState(() {
+                flightDetails.ticketNumber = value;
+                dataListProvider.saveflight(flightDetails);
+              });
+            },
+          ),
+          const SizedBox(height: 20),
+          CustomTextField(
             label: 'Ref BNR',
+            onChanged: (value) {
+              setState(() {
+                flightDetails.refBNR = value;
+                dataListProvider.saveflight(flightDetails);
+              });
+            },
           ),
         ],
       ),

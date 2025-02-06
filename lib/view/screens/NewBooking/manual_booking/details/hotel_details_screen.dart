@@ -1,7 +1,12 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
+import 'package:flutter_travelta/controllers/manual_booking/data_list_provider.dart';
+import 'package:flutter_travelta/model/manual_booking/hotel_model.dart';
 import 'package:flutter_travelta/view/widgets/datepicker_widget.dart';
 import 'package:flutter_travelta/view/widgets/textfield_widget.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 
 class HotelWidget extends StatefulWidget {
   const HotelWidget({super.key});
@@ -13,21 +18,43 @@ class HotelWidget extends StatefulWidget {
 class HotelWidgetState extends State<HotelWidget> {
   int roomQuantity = 0;
   int adultsNumber = 0;
-  int childrenNumber = 0; // Added children number field
+  int childrenNumber = 0;
   final List<String> roomTypes = ["Single", "Double", "Suite", "Deluxe"];
-  final List<String?> selectedRoomTypes = [];
-  final List<Map<String, dynamic>> adultsDetails = [];
-  final List<Map<String, dynamic>> childrenDetails =
-      []; // List to store children details
+  List<String?> selectedRoomTypes = [];
+  List<Map<String, dynamic>> adultsDetails = [];
+  List<Map<String, dynamic>> childrenDetails = [];
+
+  HotelModel hotelModel = HotelModel();
 
   void handleRoomTypeChanged(int index, String? value) {
     setState(() {
       selectedRoomTypes[index] = value;
+      hotelModel.selectedRoomTypes = List.from(selectedRoomTypes);
+    });
+  }
+
+  void handleAdultDetailChanged(int index, String key, dynamic value) {
+    setState(() {
+      adultsDetails[index][key] = value;
+      hotelModel.adultsDetails = List.from(adultsDetails);
+      Provider.of<DataListProvider>(context, listen: false)
+          .saveHotelData(hotelModel);
+    });
+  }
+
+  void handleChildDetailChanged(int index, String key, dynamic value) {
+    setState(() {
+      childrenDetails[index][key] = value;
+      hotelModel.childrenDetails = List.from(childrenDetails);
+      Provider.of<DataListProvider>(context, listen: false)
+          .saveHotelData(hotelModel);
     });
   }
 
   @override
   Widget build(BuildContext context) {
+    final dataListProvider = Provider.of<DataListProvider>(context);
+    final HotelModel = dataListProvider.hotelData;
     return SingleChildScrollView(
       child: Column(
         children: [
@@ -36,60 +63,70 @@ class HotelWidgetState extends State<HotelWidget> {
               SectionTitle(title: 'Hotel Details'),
             ],
           ),
-          const SizedBox(
-            height: 10,
+          const SizedBox(height: 10),
+          CustomTextField(
+            label: 'Hotel Name',
+            onChanged: (value) {
+              setState(() {
+                hotelModel.hotelName = value;
+                dataListProvider.saveHotelData(hotelModel);
+              });
+            },
           ),
-          const CustomTextField(label: 'Hotel Name'),
-          const SizedBox(
-            height: 10,
-          ),
+          const SizedBox(height: 10),
           CustomDatePickerTextField(
             label: 'Check in',
             icon: Icons.calendar_today,
             dateFormat: DateFormat('dd/MM/yyyy'),
-            onDateSelected: (date) {},
+            onDateSelected: (date) {
+              setState(() {
+                hotelModel.checkInDate = date;
+                dataListProvider.saveHotelData(hotelModel);
+              });
+            },
           ),
-          const SizedBox(
-            height: 10,
-          ),
+          const SizedBox(height: 10),
           CustomDatePickerTextField(
             label: 'Check out',
             icon: Icons.calendar_today,
             dateFormat: DateFormat('dd/MM/yyyy'),
-            onDateSelected: (date) {},
+            onDateSelected: (date) {
+              setState(() {
+                hotelModel.checkOutDate = date;
+                dataListProvider.saveHotelData(hotelModel);
+              });
+            },
           ),
-          const SizedBox(
-            height: 10,
-          ),
-          const CustomTextField(label: 'Hotel Address'),
-          const SizedBox(
-            height: 10,
-          ),
-          const CustomTextField(
+          const SizedBox(height: 10),
+          CustomTextField(
             label: 'Total night',
             isNumeric: true,
+            onChanged: (value) {
+              setState(() {
+                hotelModel.totalNights = int.tryParse(value);
+                dataListProvider.saveHotelData(hotelModel);
+              });
+            },
           ),
-          const SizedBox(
-            height: 10,
-          ),
+          const SizedBox(height: 10),
           CustomTextField(
             label: 'Room quantity',
             isNumeric: true,
             onChanged: (value) {
               setState(() {
                 roomQuantity = int.tryParse(value) ?? 0;
+                hotelModel.roomQuantity = roomQuantity;
+
                 if (roomQuantity > selectedRoomTypes.length) {
                   selectedRoomTypes.addAll(List<String?>.filled(
                       roomQuantity - selectedRoomTypes.length, null));
-                } else {
-                  selectedRoomTypes.removeRange(
-                      roomQuantity, selectedRoomTypes.length);
+                } else if (roomQuantity < selectedRoomTypes.length) {
+                  selectedRoomTypes =
+                      selectedRoomTypes.sublist(0, roomQuantity);
                 }
+                hotelModel.selectedRoomTypes = List.from(selectedRoomTypes);
               });
             },
-          ),
-          const SizedBox(
-            height: 20,
           ),
           if (roomQuantity > 0)
             RoomDetailsCard(
@@ -98,7 +135,6 @@ class HotelWidgetState extends State<HotelWidget> {
               selectedRoomTypes: selectedRoomTypes,
               onRoomTypeChanged: handleRoomTypeChanged,
             ),
-
           const SizedBox(height: 20),
           CustomTextField(
             label: 'Adults number',
@@ -106,15 +142,18 @@ class HotelWidgetState extends State<HotelWidget> {
             onChanged: (value) {
               setState(() {
                 adultsNumber = int.tryParse(value) ?? 0;
+                hotelModel.adultsNumber = adultsNumber;
+
                 if (adultsNumber > adultsDetails.length) {
-                  adultsDetails.addAll(List<Map<String, dynamic>>.generate(
+                  adultsDetails.addAll(List.generate(
                     adultsNumber - adultsDetails.length,
                     (_) =>
                         {"gender": null, "firstName": null, "lastName": null},
                   ));
-                } else {
-                  adultsDetails.removeRange(adultsNumber, adultsDetails.length);
+                } else if (adultsNumber < adultsDetails.length) {
+                  adultsDetails = adultsDetails.sublist(0, adultsNumber);
                 }
+                hotelModel.adultsDetails = List.from(adultsDetails);
               });
             },
           ),
@@ -123,29 +162,25 @@ class HotelWidgetState extends State<HotelWidget> {
             AdultDetailsList(
               count: adultsNumber,
               details: adultsDetails,
-              onDetailChanged: (index, key, value) {
-                setState(() {
-                  adultsDetails[index][key] = value;
-                });
-              },
+              onDetailChanged: handleAdultDetailChanged,
             ),
-
-          // Added section for children
           CustomTextField(
             label: 'Children number',
             isNumeric: true,
             onChanged: (value) {
               setState(() {
                 childrenNumber = int.tryParse(value) ?? 0;
+                hotelModel.childrenNumber = childrenNumber;
+
                 if (childrenNumber > childrenDetails.length) {
-                  childrenDetails.addAll(List<Map<String, dynamic>>.generate(
+                  childrenDetails.addAll(List.generate(
                     childrenNumber - childrenDetails.length,
                     (_) => {"age": null},
                   ));
-                } else {
-                  childrenDetails.removeRange(
-                      childrenNumber, childrenDetails.length);
+                } else if (childrenNumber < childrenDetails.length) {
+                  childrenDetails = childrenDetails.sublist(0, childrenNumber);
                 }
+                hotelModel.childrenDetails = List.from(childrenDetails);
               });
             },
           ),
@@ -154,11 +189,7 @@ class HotelWidgetState extends State<HotelWidget> {
             ChildDetailsList(
               count: childrenNumber,
               details: childrenDetails,
-              onDetailChanged: (index, field, value) {
-                setState(() {
-                  childrenDetails[index][field] = value;
-                });
-              },
+              onDetailChanged: handleChildDetailChanged,
             ),
         ],
       ),
