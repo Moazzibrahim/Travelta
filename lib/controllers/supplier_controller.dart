@@ -59,7 +59,7 @@ class SupplierController with ChangeNotifier{
     final loginProvider = Provider.of<LoginProvider>(context, listen: false);
     final token = loginProvider.token;
 
-    final response = await http.post(Uri.parse('https://travelta.online/agent/supplier'),
+    final response = await http.post(Uri.parse('https://travelta.online/agent/supplier/add'),
     headers: {
       'Authorization': 'Bearer $token',
       'Content-Type': 'application/json',
@@ -79,6 +79,8 @@ class SupplierController with ChangeNotifier{
       showCustomSnackBar(context, 'Supplier added successfully');
     }else{
       log('Failed to add supplier. Status Code: ${response.statusCode}');
+      log('Failed to add supplier. Status Code: ${response.body}');
+      showCustomSnackBar(context, 'something went wrong');
     }
   }
 }

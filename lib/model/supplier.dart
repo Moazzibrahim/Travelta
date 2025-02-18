@@ -22,23 +22,26 @@ class Supplier {
       });
 
   factory Supplier.fromJson(Map<String, dynamic> json) {
-    return Supplier(
-      name: json['name'],
-      id: json['id'],
-      adminName: json['admin_name'],
-      adminPhone: json['admin_phone'],
-      adminEmail: json['admin_email'],
-      email: json['emails'] is List 
-    ? List<String>.from(json['emails']) 
-    : [json['emails']],
-      phone: json['phones'] is List 
-    ? List<String>.from(json['phones']) 
-    : [json['phones']],
-      emergencyPhone: json['emergency_phone'] ?? 'N/A',
-      services: List<Service>.from(
-          json['services'].map((service) => Service.fromJson(service))),
-    );
+  return Supplier(
+    name: json['name']?.toString() ?? '',
+    id: json['id'] is int ? json['id'] : int.tryParse(json['id'].toString()) ?? 0,
+    adminName: json['admin_name']?.toString() ?? '',
+    adminPhone: json['admin_phone']?.toString() ?? '',
+    adminEmail: json['admin_email']?.toString() ?? '',
+    email: json['emails'] is List 
+        ? List<String>.from(json['emails'].map((e) => e.toString())) 
+        : [json['emails'].toString()],
+    phone: json['phones'] is List 
+        ? List<String>.from(json['phones'].map((p) => p.toString())) 
+        : [json['phones'].toString()],
+    emergencyPhone: json['emergency_phone']?.toString() ?? 'N/A',
+    services: (json['services'] as List<dynamic>?)
+            ?.map((service) => Service.fromJson(service))
+            .toList() ??
+        [],
+  );
 }
+
 }
 
 class Service {

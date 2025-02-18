@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_travelta/constants/colors.dart';
 import 'package:flutter_travelta/controllers/supplier_controller.dart';
 import 'package:flutter_travelta/view/widgets/appbar_widget.dart';
-import 'package:flutter_travelta/view/widgets/custom_snackbar.dart';
 import 'package:provider/provider.dart';
 
 class AddSupplierScreen extends StatefulWidget {
@@ -15,8 +14,8 @@ class AddSupplierScreen extends StatefulWidget {
 }
 
 class _AddSupplierScreenState extends State<AddSupplierScreen> {
-  String selectedService = '';
-  int? selectedIds;
+  List<String> selectedServices = [];
+  List<int> selectedIds = [];
   final _formKey = GlobalKey<FormState>();
   final TextEditingController agentController = TextEditingController();
   final TextEditingController adminNameController = TextEditingController();
@@ -34,6 +33,16 @@ class _AddSupplierScreenState extends State<AddSupplierScreen> {
   void removeDynamicField(List<TextEditingController> controllers, int index) {
     setState(() {
       controllers.removeAt(index);
+    });
+  }
+
+  void removeService(String service) {
+    setState(() {
+      int index = selectedServices.indexOf(service);
+      if (index != -1) {
+        selectedServices.removeAt(index);
+        selectedIds.removeAt(index);
+      }
     });
   }
 
@@ -66,6 +75,7 @@ class _AddSupplierScreenState extends State<AddSupplierScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                const SizedBox(height: 10),
                 buildTextField("Agent", "Enter agent name", agentController),
                 const SizedBox(height: 16),
                 buildTextField(
@@ -81,25 +91,48 @@ class _AddSupplierScreenState extends State<AddSupplierScreen> {
                   builder: (context, supplierController, _) {
                     final services = supplierController.services;
 
-                    return DropdownButtonFormField<String>(
-                      decoration: InputDecoration(
-                        labelText: 'Select Service',
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(8),
+                    return Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        DropdownButtonFormField<String>(
+                          decoration: InputDecoration(
+                            labelText: 'Select Service',
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(8),
+                              borderSide: BorderSide(color: mainColor),
+                            ),
+                            focusedBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(8),
+                              borderSide: BorderSide(color: mainColor),
+                            ),
+                          ),
+                          items: services.map((service) {
+                            return DropdownMenuItem<String>(
+                              value: service.name,
+                              child: Text(service.name),
+                            );
+                          }).toList(),
+                          onChanged: (value) {
+                            setState(() {
+                              if (!selectedServices.contains(value)) {
+                                selectedServices.add(value!);
+                                selectedIds.add(services.firstWhere((s) => s.name == value).id);
+                              }
+                            });
+                          },
                         ),
-                      ),
-                      items: services.map((service) {
-                        return DropdownMenuItem<String>(
-                          value: service.name,
-                          child: Text(service.name),
-                        );
-                      }).toList(),
-                      onChanged: (value) {
-                        setState(() {
-                          selectedService = value!;
-                          // selectedIds.add(services.firstWhere((service) => service.name == value).id);
-                        });
-                      },
+                        const SizedBox(height: 10),
+                        Wrap(
+                          spacing: 8,
+                          children: selectedServices.map((service) {
+                            return Chip(
+                              label: Text(service),
+                              onDeleted: () => removeService(service),
+                              deleteIcon: const Icon(Icons.close, size: 16),
+                            );
+                          }).toList(),
+                        ),
+                      ],
                     );
                   },
                 ),
@@ -110,7 +143,27 @@ class _AddSupplierScreenState extends State<AddSupplierScreen> {
                 const SizedBox(height: 24),
                 ElevatedButton(
                   onPressed: (){
+                    if (_formKey.currentState!.validate()) {
+                        var agent =  agentController.text;
+                        var adminName = adminNameController.text;
+                        var adminPhone = adminPhoneController.text;
+                        var adminEmail =  adminEmailController.text;
+                        var emails = emailControllers.map((controller) => controller.text).toList();
+                        var phones = phoneControllers.map((controller) => controller.text).toList();
+                        var services =  selectedIds;
 
+                        // log('emails: $emails');
+                      Provider.of<SupplierController>(context, listen: false).addSupplier(
+                        context,
+                        agent: agent,
+                        adminName: adminName,
+                        adminEmail: adminEmail,
+                        adminPhone: adminPhone,
+                        emails: emails,
+                        phones: phones,
+                        selectedIds: services,
+                      );
+                    }
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: mainColor,

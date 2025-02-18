@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_travelta/controllers/Auth/login_provider.dart';
+import 'package:flutter_travelta/controllers/booking_engine_controller.dart';
+import 'package:flutter_travelta/controllers/booking_list_controller.dart';
 import 'package:flutter_travelta/controllers/costumer_controller.dart';
 import 'package:flutter_travelta/controllers/leads/leads_provider.dart';
 import 'package:flutter_travelta/controllers/manual_booking/data_list_provider.dart';
@@ -17,6 +19,8 @@ void main() {
         ChangeNotifierProvider(create: (_) => DataListProvider()),
         ChangeNotifierProvider(create: (_) => CustomerController()),
         ChangeNotifierProvider(create: (_) => SupplierController()),
+        ChangeNotifierProvider(create: (_) => BookingEngineController()),
+        ChangeNotifierProvider(create: (_) => BookingListController()),
       ],
       child: const MyApp(),
     ),
