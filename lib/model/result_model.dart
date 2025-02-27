@@ -24,8 +24,7 @@ class ResultModel {
       required this.hotelFacilities,
       required this.hotelFeatures,
       required this.hotelPolicies,
-      required this.hotelAcceptedCards
-      });
+      required this.hotelAcceptedCards});
 
   factory ResultModel.fromJson(Map<String, dynamic> json) {
     return ResultModel(
@@ -36,12 +35,17 @@ class ResultModel {
       hotelId: json['hotel_id'],
       countryName: json['country'],
       cityName: json['city'],
-      hotelFacilities: List<HotelFacilities>.from(json['hotel_facilities'].map((facility) => HotelFacilities.fromJson(facility))),
+      hotelFacilities: List<HotelFacilities>.from(json['hotel_facilities']
+          .map((facility) => HotelFacilities.fromJson(facility))),
       availableRooms: List<AvailableRooms>.from(
           json['available_rooms'].map((room) => AvailableRooms.fromJson(room))),
-      hotelFeatures: List<HotelFeatures>.from(json['hotel_features'].map((feature) => HotelFeatures.fromJson(feature))),
-      hotelPolicies: List<HotelPolicies>.from(json['hotel_policies'].map((policy) => HotelPolicies.fromJson(policy))),
-      hotelAcceptedCards: List<HotelAcceptedCards>.from(json['hotel_accepted_cards'].map((card) => HotelAcceptedCards.fromJson(card))),
+      hotelFeatures: List<HotelFeatures>.from(json['hotel_features']
+          .map((feature) => HotelFeatures.fromJson(feature))),
+      hotelPolicies: List<HotelPolicies>.from(json['hotel_policies']
+          .map((policy) => HotelPolicies.fromJson(policy))),
+      hotelAcceptedCards: List<HotelAcceptedCards>.from(
+          json['hotel_accepted_cards']
+              .map((card) => HotelAcceptedCards.fromJson(card))),
     );
   }
 }
@@ -65,7 +69,8 @@ class HotelFeatures {
   final String name;
   final String description;
 
-  HotelFeatures({required this.id, required this.name, required this.description});
+  HotelFeatures(
+      {required this.id, required this.name, required this.description});
 
   factory HotelFeatures.fromJson(Map<String, dynamic> json) {
     return HotelFeatures(
@@ -81,7 +86,8 @@ class HotelPolicies {
   final String title;
   final String description;
 
-  HotelPolicies({required this.id, required this.title, required this.description});
+  HotelPolicies(
+      {required this.id, required this.title, required this.description});
 
   factory HotelPolicies.fromJson(Map<String, dynamic> json) {
     return HotelPolicies(
@@ -125,15 +131,17 @@ class AvailableRooms {
   final Room room;
 
   AvailableRooms(
-      {required this.id, required this.availableQuantity, required this.room, required this.roomType});
+      {required this.id,
+      required this.availableQuantity,
+      required this.room,
+      required this.roomType});
 
   factory AvailableRooms.fromJson(Map<String, dynamic> json) {
     return AvailableRooms(
-      id: json['room_id'],
-      availableQuantity: json['available_quantity'],
-      room: Room.fromJson(json['room_details']),
-      roomType: json['room_type']
-    );
+        id: json['room_id'],
+        availableQuantity: json['available_quantity'],
+        room: Room.fromJson(json['room_details']),
+        roomType: json['room_type']);
   }
 }
 
@@ -169,8 +177,7 @@ class Room {
       required this.priceType,
       required this.price,
       required this.gallery,
-      required this.roomFeatures
-      });
+      required this.roomFeatures});
 
   factory Room.fromJson(Map<String, dynamic> json) {
     return Room(
@@ -181,8 +188,10 @@ class Room {
       description: json['description'],
       priceType: json['price_type'],
       price: json['price'].toDouble(),
-      gallery: List<Gallery>.from(json['gallery'].map((gallery) => Gallery.fromJson(gallery))),
-      roomFeatures: List<RoomFeatures>.from(json['amenity'].map((room) => RoomFeatures.fromJson(room))),
+      gallery: List<Gallery>.from(
+          json['gallery'].map((gallery) => Gallery.fromJson(gallery))),
+      roomFeatures: List<RoomFeatures>.from(
+          json['amenity'].map((room) => RoomFeatures.fromJson(room))),
     );
   }
 }
@@ -193,10 +202,17 @@ class Gallery {
   final int roomId;
   final int status;
 
-  Gallery({required this.thumbUrl, required this.id, required this.roomId,required this.status});
+  Gallery(
+      {required this.thumbUrl,
+      required this.id,
+      required this.roomId,
+      required this.status});
 
-  factory Gallery.fromJson(Map<String, dynamic> json) =>
-      Gallery(thumbUrl: json['thumbnail_link'], id: json['id'], roomId: json['room_id'],status: json['status']);
+  factory Gallery.fromJson(Map<String, dynamic> json) => Gallery(
+      thumbUrl: json['thumbnail_link'],
+      id: json['id'],
+      roomId: json['room_id'],
+      status: json['status']);
 }
 
 class RoomFeatures {
@@ -205,8 +221,6 @@ class RoomFeatures {
 
   RoomFeatures({required this.id, required this.name});
 
-  factory RoomFeatures.fromJson(Map<String,dynamic> json)=> RoomFeatures(id: json['id'], name: json['name']);
+  factory RoomFeatures.fromJson(Map<String, dynamic> json) =>
+      RoomFeatures(id: json['id'], name: json['name']);
 }
-
-
-

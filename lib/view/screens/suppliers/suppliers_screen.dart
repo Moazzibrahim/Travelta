@@ -20,7 +20,8 @@ class _SuppliersScreenState extends State<SuppliersScreen> {
   void initState() {
     super.initState();
     _searchController = TextEditingController();
-    Provider.of<SupplierController>(context, listen: false).fetchSuppliers(context);
+    Provider.of<SupplierController>(context, listen: false)
+        .fetchSuppliers(context);
   }
 
   @override
@@ -33,32 +34,35 @@ class _SuppliersScreenState extends State<SuppliersScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-      leading: IconButton(
-        icon: Icon(Icons.arrow_back_ios, color: mainColor),
-        onPressed: () => Navigator.pop(context),
-      ),
-      title: const Text(
-        'Suppliers',
-        style: TextStyle(
-          color: Colors.black,
-          fontWeight: FontWeight.w600,
-          fontSize: 24,
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back_ios, color: mainColor),
+          onPressed: () => Navigator.pop(context),
         ),
-      ),
-      actions: [
-        IconButton(
-          icon: Icon(Icons.add, color: mainColor,size: 30,),
-          onPressed: () {
-            Navigator.of(context).push(
-              MaterialPageRoute(builder: (ctx)=> const AddSupplierScreen())
-            );
-          },
+        title: const Text(
+          'Suppliers',
+          style: TextStyle(
+            color: Colors.black,
+            fontWeight: FontWeight.w600,
+            fontSize: 24,
+          ),
         ),
-      ],
-      backgroundColor: Colors.transparent,
-      elevation: 0,
-      centerTitle: true,
-    ),
+        actions: [
+          IconButton(
+            icon: Icon(
+              Icons.add,
+              color: mainColor,
+              size: 30,
+            ),
+            onPressed: () {
+              Navigator.of(context).push(MaterialPageRoute(
+                  builder: (ctx) => const AddSupplierScreen()));
+            },
+          ),
+        ],
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        centerTitle: true,
+      ),
       body: Column(
         children: [
           Padding(
@@ -101,9 +105,12 @@ class _SuppliersScreenState extends State<SuppliersScreen> {
                   );
                 } else {
                   // Filter suppliers based on the search query
-                  final filteredSuppliers = supplierProvider.suppliers.where((supplier) {
+                  final filteredSuppliers =
+                      supplierProvider.suppliers.where((supplier) {
                     return supplier.name.toLowerCase().contains(_searchQuery) ||
-                        supplier.emergencyPhone!.toLowerCase().contains(_searchQuery);
+                        supplier.emergencyPhone!
+                            .toLowerCase()
+                            .contains(_searchQuery);
                   }).toList();
 
                   if (filteredSuppliers.isEmpty) {

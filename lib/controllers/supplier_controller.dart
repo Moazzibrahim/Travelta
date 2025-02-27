@@ -9,7 +9,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_travelta/controllers/Auth/login_provider.dart';
 import 'package:provider/provider.dart';
 
-class SupplierController with ChangeNotifier{
+class SupplierController with ChangeNotifier {
   List<Supplier> _suppliers = [];
   List<Supplier> get suppliers => _suppliers;
 
@@ -21,33 +21,41 @@ class SupplierController with ChangeNotifier{
 
   Future<void> fetchSuppliers(BuildContext context) async {
     try {
-    final loginProvider = Provider.of<LoginProvider>(context, listen: false);
-    final token = loginProvider.token;
+      final loginProvider = Provider.of<LoginProvider>(context, listen: false);
+      final token = loginProvider.token;
 
-    final response = await http.get(Uri.parse('https://travelta.online/agent/supplier'),
-    headers: {
-      'Authorization': 'Bearer $token',
-      'Content-Type': 'application/json',
-      'accept': 'application/json',
-    }
-    );
-    if(response.statusCode == 200){
-      final responseData = json.decode(response.body);
-      Suppliers suppliers = Suppliers.fromJson(responseData);
-      _suppliers = suppliers.suppliers.map((e) => Supplier.fromJson(e),).toList();
-      Services services = Services.fromJson(responseData);
-      _services = services.services.map((e) => Service.fromJson(e),).toList();
-      _isLoaded = true;
-      notifyListeners();
-    }else{
-      log('Failed to fetch suppliers. Status Code: ${response.statusCode}');
-    }
+      final response = await http
+          .get(Uri.parse('https://travelta.online/agent/supplier'), headers: {
+        'Authorization': 'Bearer $token',
+        'Content-Type': 'application/json',
+        'accept': 'application/json',
+      });
+      if (response.statusCode == 200) {
+        final responseData = json.decode(response.body);
+        Suppliers suppliers = Suppliers.fromJson(responseData);
+        _suppliers = suppliers.suppliers
+            .map(
+              (e) => Supplier.fromJson(e),
+            )
+            .toList();
+        Services services = Services.fromJson(responseData);
+        _services = services.services
+            .map(
+              (e) => Service.fromJson(e),
+            )
+            .toList();
+        _isLoaded = true;
+        notifyListeners();
+      } else {
+        log('Failed to fetch suppliers. Status Code: ${response.statusCode}');
+      }
     } catch (e) {
       log('error fetching suppliers: $e');
     }
   }
 
-  Future<void> addSupplier(BuildContext context,{
+  Future<void> addSupplier(
+    BuildContext context, {
     required String agent,
     required String adminName,
     required String adminEmail,
@@ -59,25 +67,26 @@ class SupplierController with ChangeNotifier{
     final loginProvider = Provider.of<LoginProvider>(context, listen: false);
     final token = loginProvider.token;
 
-    final response = await http.post(Uri.parse('https://travelta.online/agent/supplier/add'),
-    headers: {
-      'Authorization': 'Bearer $token',
-      'Content-Type': 'application/json',
-      'accept': 'application/json',
-    },
-    body: jsonEncode({
-        'agent':agent,
+    final response = await http.post(
+      Uri.parse('https://travelta.online/agent/supplier/add'),
+      headers: {
+        'Authorization': 'Bearer $token',
+        'Content-Type': 'application/json',
+        'accept': 'application/json',
+      },
+      body: jsonEncode({
+        'agent': agent,
         'admin_name': adminName,
         'admin_email': adminEmail,
         'admin_phone': adminPhone,
         'emails': emails,
         'phones': phones,
         'services': selectedIds,
-    }),
+      }),
     );
-    if(response.statusCode == 200){
+    if (response.statusCode == 200) {
       showCustomSnackBar(context, 'Supplier added successfully');
-    }else{
+    } else {
       log('Failed to add supplier. Status Code: ${response.statusCode}');
       log('Failed to add supplier. Status Code: ${response.body}');
       showCustomSnackBar(context, 'something went wrong');

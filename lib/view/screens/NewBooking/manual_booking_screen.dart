@@ -1,7 +1,6 @@
 import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter_travelta/controllers/manual_booking/data_list_provider.dart';
-import 'package:flutter_travelta/model/manual_booking/tour_model.dart';
 import 'package:flutter_travelta/view/screens/NewBooking/manual_booking/details_manual_booking_screen.dart';
 import 'package:flutter_travelta/view/screens/NewBooking/manual_booking/from_manual_booking_screen.dart';
 import 'package:flutter_travelta/view/screens/NewBooking/manual_booking/to_manual_booking_screen.dart';
@@ -249,11 +248,11 @@ class _ManualBookingScreenState extends State<ManualBookingScreen> {
       'mark_up': dataListProvider.manualBookingData.markupValue,
       'mark_up_type': dataListProvider.manualBookingData.selectedMarkup,
     });
-
-    log("Booking data: $bookingData");
+    log(dataListProvider.flightDetails.fromto.toString());
 
     try {
       await dataListProvider.sendBookingData(context, bookingData);
+      dataListProvider.clearBookingData();
     } catch (error) {
       log("Error booking: $error");
     }

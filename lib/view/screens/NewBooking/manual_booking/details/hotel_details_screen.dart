@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_travelta/controllers/manual_booking/data_list_provider.dart';
 import 'package:flutter_travelta/model/manual_booking/hotel_model.dart';
@@ -19,7 +17,7 @@ class HotelWidgetState extends State<HotelWidget> {
   int roomQuantity = 0;
   int adultsNumber = 0;
   int childrenNumber = 0;
-  final List<String> roomTypes = ["Single", "Double", "Suite", "Deluxe"];
+  final List<String> roomTypes = ["Single", "Double", "Suite"];
   List<String?> selectedRoomTypes = [];
   List<Map<String, dynamic>> adultsDetails = [];
   List<Map<String, dynamic>> childrenDetails = [];
@@ -77,7 +75,7 @@ class HotelWidgetState extends State<HotelWidget> {
           CustomDatePickerTextField(
             label: 'Check in',
             icon: Icons.calendar_today,
-            dateFormat: DateFormat('dd/MM/yyyy'),
+            dateFormat: DateFormat('yyyy-MM-dd'),
             onDateSelected: (date) {
               setState(() {
                 hotelModel.checkInDate = date;
@@ -89,7 +87,7 @@ class HotelWidgetState extends State<HotelWidget> {
           CustomDatePickerTextField(
             label: 'Check out',
             icon: Icons.calendar_today,
-            dateFormat: DateFormat('dd/MM/yyyy'),
+            dateFormat: DateFormat('yyyy-MM-dd'),
             onDateSelected: (date) {
               setState(() {
                 hotelModel.checkOutDate = date;
@@ -141,7 +139,8 @@ class HotelWidgetState extends State<HotelWidget> {
             isNumeric: true,
             onChanged: (value) {
               setState(() {
-                adultsNumber = int.tryParse(value) ?? 0;
+                int inputNumber = int.tryParse(value) ?? 0;
+                adultsNumber = inputNumber.clamp(1, 9);
                 hotelModel.adultsNumber = adultsNumber;
 
                 if (adultsNumber > adultsDetails.length) {
@@ -169,7 +168,8 @@ class HotelWidgetState extends State<HotelWidget> {
             isNumeric: true,
             onChanged: (value) {
               setState(() {
-                childrenNumber = int.tryParse(value) ?? 0;
+                int inputNumber = int.tryParse(value) ?? 0;
+                childrenNumber = inputNumber.clamp(1, 9);
                 hotelModel.childrenNumber = childrenNumber;
 
                 if (childrenNumber > childrenDetails.length) {

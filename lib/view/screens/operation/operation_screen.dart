@@ -16,7 +16,7 @@ class _OperationScreenState extends State<OperationScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar:const CustomAppBar(title: 'Operation'),
+      appBar: const CustomAppBar(title: 'Operation'),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
@@ -30,7 +30,6 @@ class _OperationScreenState extends State<OperationScreen> {
               statusTextColor: Colors.orange.shade700,
             ),
             const SizedBox(height: 16.0),
-
             buildOperationCard(
               index: 1,
               operationId: "OP12346",
@@ -40,7 +39,6 @@ class _OperationScreenState extends State<OperationScreen> {
               statusTextColor: Colors.green.shade700,
             ),
             const SizedBox(height: 16.0),
-
             buildOperationCard(
               index: 2,
               operationId: "OP12347",

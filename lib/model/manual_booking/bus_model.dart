@@ -3,8 +3,8 @@ class BusDetails {
   String? to;
   String? checkInDate;
   String? checkOutDate;
-  int adultsNumber; 
-  int childrenNumber; 
+  int adultsNumber;
+  int childrenNumber;
   List<Map<String, dynamic>> adultsDetails;
   List<Map<String, dynamic>> childrenDetails;
   double? adultsPrice;
@@ -18,7 +18,7 @@ class BusDetails {
     this.to,
     this.checkInDate,
     this.checkOutDate,
-    this.adultsNumber = 0, 
+    this.adultsNumber = 0,
     this.childrenNumber = 0,
     this.adultsDetails = const [],
     this.childrenDetails = const [],
@@ -53,10 +53,12 @@ class BusDetails {
       to: json['to'],
       checkInDate: json['checkInDate'],
       checkOutDate: json['checkOutDate'],
-      adultsNumber: json['adultsNumber'] ?? 0, 
+      adultsNumber: json['adultsNumber'] ?? 0,
       childrenNumber: json['childrenNumber'] ?? 0,
-      adultsDetails: List<Map<String, dynamic>>.from(json['adultsDetails'] ?? []),
-      childrenDetails: List<Map<String, dynamic>>.from(json['childrenDetails'] ?? []),
+      adultsDetails:
+          List<Map<String, dynamic>>.from(json['adultsDetails'] ?? []),
+      childrenDetails:
+          List<Map<String, dynamic>>.from(json['childrenDetails'] ?? []),
       adultsPrice: json['adultsPrice'],
       childrenPrice: json['childrenPrice'],
       busName: json['busName'],

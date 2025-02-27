@@ -91,7 +91,9 @@ class LeadScreenState extends State<LeadScreen> {
                           itemBuilder: (context, index) {
                             final lead = leadsProvider.leads[index];
                             if (lead.name.toLowerCase().contains(searchQuery) ||
-                                lead.phone.toLowerCase().contains(searchQuery)) {
+                                lead.phone
+                                    .toLowerCase()
+                                    .contains(searchQuery)) {
                               return buildLeadCard(lead);
                             } else {
                               return const SizedBox.shrink();

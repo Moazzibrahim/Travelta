@@ -2,59 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_travelta/constants/colors.dart';
 
-class CustomTextField extends StatelessWidget {
-  final String label;
-  final IconData? icon;
-  final bool isNumeric;
-  final void Function(String)? onChanged;
-
-  const CustomTextField({
-    super.key,
-    required this.label,
-    this.icon,
-    this.isNumeric = false,
-    this.onChanged,
-    String? initialValue,
-    TextEditingController? controller,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return TextField(
-      keyboardType: isNumeric ? TextInputType.number : TextInputType.text,
-      inputFormatters:
-          isNumeric ? [FilteringTextInputFormatter.digitsOnly] : null,
-      onChanged: onChanged,
-      decoration: InputDecoration(
-        labelText: label,
-        prefixIcon: icon != null ? Icon(icon) : null,
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(8.0),
-          borderSide: BorderSide(color: mainColor),
-        ),
-      ),
-    );
-  }
-}
-
-class SectionTitle extends StatelessWidget {
-  final String title;
-
-  const SectionTitle({super.key, required this.title});
-
-  @override
-  Widget build(BuildContext context) {
-    return Text(
-      title,
-      style: TextStyle(
-        color: mainColor,
-        fontSize: 18,
-        fontWeight: FontWeight.bold,
-      ),
-    );
-  }
-}
-
 class AdultDetailsList extends StatelessWidget {
   final int count;
   final List<Map<String, dynamic>> details;
@@ -236,6 +183,59 @@ class RoomDetailsCard extends StatelessWidget {
             ),
           ],
         ),
+      ),
+    );
+  }
+}
+
+class CustomTextField extends StatelessWidget {
+  final String label;
+  final IconData? icon;
+  final bool isNumeric;
+  final void Function(String)? onChanged;
+
+  const CustomTextField({
+    super.key,
+    required this.label,
+    this.icon,
+    this.isNumeric = false,
+    this.onChanged,
+    String? initialValue,
+    TextEditingController? controller,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return TextField(
+      keyboardType: isNumeric ? TextInputType.number : TextInputType.text,
+      inputFormatters:
+          isNumeric ? [FilteringTextInputFormatter.digitsOnly] : null,
+      onChanged: onChanged,
+      decoration: InputDecoration(
+        labelText: label,
+        prefixIcon: icon != null ? Icon(icon) : null,
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(8.0),
+          borderSide: BorderSide(color: mainColor),
+        ),
+      ),
+    );
+  }
+}
+
+class SectionTitle extends StatelessWidget {
+  final String title;
+
+  const SectionTitle({super.key, required this.title});
+
+  @override
+  Widget build(BuildContext context) {
+    return Text(
+      title,
+      style: TextStyle(
+        color: mainColor,
+        fontSize: 18,
+        fontWeight: FontWeight.bold,
       ),
     );
   }

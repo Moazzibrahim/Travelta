@@ -60,7 +60,6 @@ class _ToManualBookingScreenState extends State<ToManualBookingScreen> {
                 onChanged: (value) {
                   setState(() {
                     selectedCategory = value;
-                    // Reset the supplier or customer field when category changes
                     bookingData.selectedtoSupplier = null;
                     bookingData.selectedtoSupplierId = null;
                     bookingData.selectedtoCustomer = null;
@@ -99,8 +98,7 @@ class _ToManualBookingScreenState extends State<ToManualBookingScreen> {
                         : dataListProvider.travelData?.customers
                                 .map((customer) {
                               return DropdownMenuItem(
-                                value: customer.id
-                                    .toString(), // Ensure this is unique
+                                value: customer.id.toString(),
                                 child: Text(customer.name),
                               );
                             }).toList() ??
@@ -108,7 +106,6 @@ class _ToManualBookingScreenState extends State<ToManualBookingScreen> {
                     onChanged: (value) {
                       setState(() {
                         if (selectedCategory == 'b2b') {
-                          // Update supplier fields
                           bookingData.selectedtoSupplier = value;
                           for (var e in travelData.suppliers) {
                             if (e.id.toString() == value) {
@@ -117,7 +114,6 @@ class _ToManualBookingScreenState extends State<ToManualBookingScreen> {
                             }
                           }
                         } else if (selectedCategory == 'b2c') {
-                          // Update customer fields
                           bookingData.selectedtoCustomer = value;
                           for (var e in travelData.customers) {
                             if (e.id.toString() == value) {

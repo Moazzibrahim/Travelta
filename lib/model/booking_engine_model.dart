@@ -1,4 +1,4 @@
-class HotelBooking{
+class HotelBooking {
   final String name;
   final int id;
 
@@ -12,7 +12,7 @@ class HotelBooking{
   }
 }
 
-class HotelsBookingList{
+class HotelsBookingList {
   final List<dynamic> hotels;
 
   HotelsBookingList({required this.hotels});
@@ -24,7 +24,7 @@ class HotelsBookingList{
   }
 }
 
-class CountriesBooking{
+class CountriesBooking {
   final String name;
   final int id;
 
@@ -38,7 +38,7 @@ class CountriesBooking{
   }
 }
 
-class CountriesBookingList{
+class CountriesBookingList {
   final List<dynamic> countries;
 
   CountriesBookingList({required this.countries});
@@ -50,7 +50,7 @@ class CountriesBookingList{
   }
 }
 
-class CitiesBooking{
+class CitiesBooking {
   final String name;
   final int id;
 
@@ -64,7 +64,7 @@ class CitiesBooking{
   }
 }
 
-class CitiesBookingList{
+class CitiesBookingList {
   final List<dynamic> cities;
 
   CitiesBookingList({required this.cities});

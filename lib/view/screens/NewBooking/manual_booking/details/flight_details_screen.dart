@@ -1,4 +1,3 @@
-import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter_travelta/controllers/manual_booking/data_list_provider.dart';
 import 'package:flutter_travelta/model/manual_booking/flight_model.dart';
@@ -148,7 +147,7 @@ class _FlightWidgetState extends State<FlightWidget> {
             showTimePickerOption: true,
             label: 'departure Date & Time',
             icon: Icons.calendar_today,
-            dateFormat: DateFormat('dd/MM/yyyy'),
+            dateFormat: DateFormat('yyyy/MM/dd HH:mm'),
             onDateSelected: (date) {
               setState(() {
                 flightDetails.checkInDate = date;
@@ -161,7 +160,7 @@ class _FlightWidgetState extends State<FlightWidget> {
               showTimePickerOption: true,
               label: 'Arrival Date & Time',
               icon: Icons.calendar_today,
-              dateFormat: DateFormat('dd/MM/yyyy HH:mm'),
+              dateFormat: DateFormat('yyyy/MM/dd HH:mm'),
               onDateSelected: (dateTimeString) {
                 DateTime parsedDate =
                     DateFormat('dd/MM/yyyy HH:mm').parse(dateTimeString);
@@ -176,7 +175,8 @@ class _FlightWidgetState extends State<FlightWidget> {
             isNumeric: true,
             onChanged: (value) {
               setState(() {
-                adultsNumber = int.tryParse(value) ?? 0;
+                int inputNumber = int.tryParse(value) ?? 0;
+                adultsNumber = inputNumber.clamp(1, 9);
                 flightDetails.adultsNumber = adultsNumber;
                 if (adultsNumber > adultsDetails.length) {
                   adultsDetails.addAll(List<Map<String, dynamic>>.generate(
@@ -219,7 +219,8 @@ class _FlightWidgetState extends State<FlightWidget> {
             isNumeric: true,
             onChanged: (value) {
               setState(() {
-                childrenNumber = int.tryParse(value) ?? 0;
+                int inputNumber = int.tryParse(value) ?? 0;
+                childrenNumber = inputNumber.clamp(1, 9);
                 flightDetails.childrenNumber = childrenNumber;
                 if (childrenNumber > childrenDetails.length) {
                   childrenDetails.addAll(List<Map<String, dynamic>>.generate(

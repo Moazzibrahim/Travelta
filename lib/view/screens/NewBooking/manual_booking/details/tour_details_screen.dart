@@ -1,4 +1,4 @@
-// tour_widget.dart
+import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_travelta/controllers/manual_booking/data_list_provider.dart';
@@ -22,6 +22,8 @@ class _TourWidgetState extends State<TourWidget> {
   int roomQuantity = 0;
   final List<String> roomTypes = ["Single", "Double", "Suite", "Deluxe"];
   final List<String?> selectedRoomTypes = [];
+  List<TourHotel> tourHotels = [];
+  List<TourBus> tourBuses = [];
 
   final List<Map<String, dynamic>> adultsDetails = [];
   final List<Map<String, dynamic>> childrenDetails = [];
@@ -34,9 +36,36 @@ class _TourWidgetState extends State<TourWidget> {
   }
 
   @override
+  void initState() {
+    super.initState();
+
+    tourHotels = List.generate(
+      1,
+      (index) => TourHotel(
+        destination: "Destination ${index + 1}",
+        hotelName: "Hotel ${index + 1}",
+        roomType: roomTypes[index % roomTypes.length],
+        checkIn: DateFormat('yyyy-MM-dd').format(DateTime.now()),
+        checkOut: DateFormat('yyyy-MM-dd')
+            .format(DateTime.now().add(Duration(days: index + 1))),
+        nights: index + 1,
+      ),
+    );
+    tourBuses = List.generate(
+      1,
+      (index) => TourBus(
+        transportation: "Bus ${index + 1}",
+        seats: index + 1,
+      ),
+    );
+
+    selectedRoomTypes.addAll(tourHotels.map((hotel) => hotel.roomType));
+  }
+
+  @override
   Widget build(BuildContext context) {
     final dataListProvider = Provider.of<DataListProvider>(context);
-    final TourModel = dataListProvider.tourModel;
+    tourModel = dataListProvider.tourModel;
 
     return SingleChildScrollView(
       child: Column(
@@ -83,7 +112,8 @@ class _TourWidgetState extends State<TourWidget> {
             isNumeric: true,
             onChanged: (value) {
               setState(() {
-                adultsNumber = int.tryParse(value) ?? 0;
+                int inputNumber = int.tryParse(value) ?? 0;
+                adultsNumber = inputNumber.clamp(1, 9);
                 tourModel.adultsNumber = adultsNumber;
                 if (adultsNumber > adultsDetails.length) {
                   adultsDetails.addAll(List<Map<String, dynamic>>.generate(
@@ -106,8 +136,7 @@ class _TourWidgetState extends State<TourWidget> {
               onDetailChanged: (index, key, value) {
                 setState(() {
                   adultsDetails[index][key] = value;
-                  tourModel.adultsDetails =
-                      List.from(adultsDetails); // Save to model
+                  tourModel.adultsDetails = List.from(adultsDetails);
                   dataListProvider.saveTourData(tourModel);
                 });
               },
@@ -128,8 +157,10 @@ class _TourWidgetState extends State<TourWidget> {
             isNumeric: true,
             onChanged: (value) {
               setState(() {
-                childrenNumber = int.tryParse(value) ?? 0;
-                tourModel.childrenNumber = childrenNumber; // Save to model
+                int inputNumber = int.tryParse(value) ?? 0;
+                childrenNumber = inputNumber.clamp(1, 9);
+
+                tourModel.childrenNumber = childrenNumber;
                 if (childrenNumber > childrenDetails.length) {
                   childrenDetails.addAll(List<Map<String, dynamic>>.generate(
                     childrenNumber - childrenDetails.length,
@@ -166,26 +197,24 @@ class _TourWidgetState extends State<TourWidget> {
               });
             },
           ),
+          const SizedBox(
+            height: 10,
+          ),
           const Row(
             children: [
-              SectionTitle(title: 'hotel Details'),
+              SectionTitle(title: 'Hotel Details'),
             ],
           ),
-          CustomTextField(
-            label: 'Destination',
-            onChanged: (value) {
-              setState(() {
-                if (tourModel.tourHotels.isEmpty) {
-                  tourModel.tourHotels
-                      .add({"destination": value}); // Add as a Map
-                } else {
-                  tourModel.tourHotels[0]["destination"] =
-                      value; // Update existing value
-                }
-                dataListProvider.saveTourData(tourModel);
-              });
-            },
+          const SizedBox(
+            height: 10,
           ),
+          CustomTextField(
+              label: 'Destination',
+              onChanged: (value) {
+                setState(() {
+                  tourHotels[0].destination = value;
+                });
+              }),
           const SizedBox(
             height: 10,
           ),
@@ -193,14 +222,7 @@ class _TourWidgetState extends State<TourWidget> {
             label: 'Hotel Name',
             onChanged: (value) {
               setState(() {
-                if (tourModel.tourHotels.isEmpty) {
-                  tourModel.tourHotels
-                      .add({"hotel_name": value}); // Add as a Map
-                } else {
-                  tourModel.tourHotels[0]["hotel_name"] =
-                      value; // Update existing value
-                }
-                dataListProvider.saveTourData(tourModel);
+                tourHotels[0].hotelName = value;
               });
             },
           ),
@@ -210,35 +232,25 @@ class _TourWidgetState extends State<TourWidget> {
           CustomDatePickerTextField(
             label: 'Check in',
             icon: Icons.calendar_today,
-            dateFormat: DateFormat('dd/MM/yyyy'),
+            dateFormat: DateFormat('yyyy-MM-dd'),
             onDateSelected: (date) {
               setState(() {
-                if (tourModel.tourHotels.isEmpty) {
-                  tourModel.tourHotels
-                      .add({"check_in": date.toString()}); // Add as a Map
-                } else {
-                  tourModel.tourHotels[0]["check_in"] =
-                      date.toString(); // Update existing value
-                }
-                dataListProvider.saveTourData(tourModel);
+                tourHotels[0].checkIn = date.toString();
+                log(tourHotels[0].checkIn.toString());
               });
             },
           ),
-          const SizedBox(height: 10),
+          const SizedBox(
+            height: 10,
+          ),
           CustomDatePickerTextField(
             label: 'Check out',
             icon: Icons.calendar_today,
-            dateFormat: DateFormat('dd/MM/yyyy'),
+            dateFormat: DateFormat('yyyy-MM-dd'),
             onDateSelected: (date) {
               setState(() {
-                if (tourModel.tourHotels.isEmpty) {
-                  tourModel.tourHotels
-                      .add({"check_out": date.toString()}); // Add as a Map
-                } else {
-                  tourModel.tourHotels[0]["check_out"] =
-                      date.toString(); // Update existing value
-                }
-                dataListProvider.saveTourData(tourModel);
+                tourHotels[0].checkOut = date.toString();
+                log(tourHotels[0].checkOut.toString());
               });
             },
           ),
@@ -246,39 +258,14 @@ class _TourWidgetState extends State<TourWidget> {
             height: 10,
           ),
           CustomTextField(
-            label: 'number of night',
+            label: 'Number of Nights',
+            isNumeric: true,
             onChanged: (value) {
               setState(() {
-                if (tourModel.tourHotels.isEmpty) {
-                  tourModel.tourHotels.add({"nights": value});
-                } else {
-                  tourModel.tourHotels[0]["nights"] = value;
-                }
+                tourHotels[0].nights = int.tryParse(value) ?? 0;
+                tourModel.tourHotels = tourHotels;
                 dataListProvider.saveTourData(tourModel);
               });
-            },
-          ),
-          const SizedBox(
-            height: 20,
-          ),
-          CustomDropdownField(
-            label: 'select room type:',
-            items: const [
-              DropdownMenuItem(
-                  value: 'first class', child: Text('first class')),
-              DropdownMenuItem(value: 'double', child: Text('double')),
-            ],
-            onChanged: (value) {
-              if (value != null) {
-                setState(() {
-                  if (tourModel.tourHotels.isEmpty) {
-                    tourModel.tourHotels.add({"room_type": value});
-                  } else {
-                    tourModel.tourHotels[0]["room_type"] = value;
-                  }
-                  dataListProvider.saveTourData(tourModel);
-                });
-              }
             },
           ),
           const SizedBox(
@@ -286,39 +273,34 @@ class _TourWidgetState extends State<TourWidget> {
           ),
           const Row(
             children: [
-              SectionTitle(title: 'transportation Details'),
+              SectionTitle(title: 'Transportation Details'),
             ],
           ),
+          const SizedBox(
+            height: 10,
+          ),
           CustomDropdownField(
-            label: 'Select tour transportation:',
+            label: 'Select Transportation',
             items: const [
-              DropdownMenuItem(value: 'domestic', child: Text('Domestic')),
-              DropdownMenuItem(
-                  value: 'international', child: Text('International')),
+              DropdownMenuItem(value: 'Bus', child: Text('Bus')),
+              DropdownMenuItem(value: 'Flight', child: Text('Flight')),
             ],
             onChanged: (value) {
               setState(() {
-                if (tourModel.tourBuses.isEmpty) {
-                  tourModel.tourBuses
-                      .add({"transportation": value}); // Add as a Map
-                } else {
-                  tourModel.tourBuses[0]["transportation"] =
-                      value; // Update existing value
-                }
-                dataListProvider.saveTourData(tourModel);
+                tourHotels[0].destination = value;
               });
             },
           ),
+          const SizedBox(
+            height: 10,
+          ),
           CustomTextField(
-            label: 'Number of seats',
+            label: 'Number of Seats',
             isNumeric: true,
             onChanged: (value) {
               setState(() {
-                if (tourModel.tourBuses.isEmpty) {
-                  tourModel.tourBuses.add({"seats": int.tryParse(value) ?? 0});
-                } else {
-                  tourModel.tourBuses[0]["seats"] = int.tryParse(value) ?? 0;
-                }
+                tourBuses[0].seats = int.tryParse(value) ?? 0;
+                tourModel.tourBuses = tourBuses;
                 dataListProvider.saveTourData(tourModel);
               });
             },

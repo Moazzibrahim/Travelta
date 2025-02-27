@@ -35,20 +35,23 @@ class BookingListController with ChangeNotifier {
           'accept': 'application/json',
         },
       );
-      if(response.statusCode == 200){
+      if (response.statusCode == 200) {
         final responseData = json.decode(response.body);
-        UpcomingBookingList upcomingBookingList = UpcomingBookingList.fromJson(responseData);
-        CurrentBookingList currentBookingList = CurrentBookingList.fromJson(responseData);
-        PastBookingList pastBookingList = PastBookingList.fromJson(responseData);
+        UpcomingBookingList upcomingBookingList =
+            UpcomingBookingList.fromJson(responseData);
+        CurrentBookingList currentBookingList =
+            CurrentBookingList.fromJson(responseData);
+        PastBookingList pastBookingList =
+            PastBookingList.fromJson(responseData);
         _upcomingBookingList = upcomingBookingList;
         _currentBookingList = currentBookingList;
         _pastBookingList = pastBookingList;
         isLoaded = true;
         notifyListeners();
-      }else{
+      } else {
         log('failed to load booking list. Status Code: ${response.statusCode}');
       }
-    }catch(e){
+    } catch (e) {
       log('Error fetching booking list: $e');
     }
   }

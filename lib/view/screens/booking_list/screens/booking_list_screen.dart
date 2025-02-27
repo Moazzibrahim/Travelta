@@ -19,6 +19,7 @@ class _BookingListScreenState extends State<BookingListScreen> with SingleTicker
     Provider.of<BookingListController>(context,listen: false).fetchBookingList(context);
     super.initState();
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -42,9 +43,11 @@ class _BookingListScreenState extends State<BookingListScreen> with SingleTicker
       ),
       body: Consumer<BookingListController>(
         builder: (context, bookingListProvider, _) {
-          if(!bookingListProvider.isLoaded){
+          if (!bookingListProvider.isLoaded) {
             return Center(
-              child: CircularProgressIndicator(color: mainColor,),
+              child: CircularProgressIndicator(
+                color: mainColor,
+              ),
             );
           }else{
             return TabBarView(

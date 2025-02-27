@@ -23,14 +23,14 @@ class ManualBookingData {
   String? selectedtoSupplierId;
   String? selectedtoCustomer;
   String? selectedtoCustomerId;
-
+  double selectedTaxAmount = 0.0;
   void calculateFinalPrice() {
     if (selectedMarkup == 'value') {
-      finalPrice = cost + markupValue;
+      finalPrice = cost + markupValue + selectedTaxAmount;
     } else if (selectedMarkup == 'precentage') {
-      finalPrice = cost + (cost * (markupValue / 100));
+      finalPrice = cost + (cost * (markupValue / 100)) + selectedTaxAmount;
     } else {
-      finalPrice = cost;
+      finalPrice = cost + selectedTaxAmount;
     }
   }
 

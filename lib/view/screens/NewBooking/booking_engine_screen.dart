@@ -105,9 +105,10 @@ class _BookingEngineScreenState extends State<BookingEngineScreen> {
         builder: (context, bookingEngineProvider, _) {
           if (bookingEngineProvider.isHotelsEmpty) {
             return Center(
-                child: CircularProgressIndicator(
-              color: mainColor,
-            ));
+              child: CircularProgressIndicator(
+                color: mainColor,
+              ),
+            );
           } else {
             final List<Map<String, dynamic>> destinations = [
               ...bookingEngineProvider.cities.map((city) => {
@@ -298,16 +299,23 @@ class _BookingEngineScreenState extends State<BookingEngineScreen> {
                         ),
                       ),
                       onPressed: () {
-                        if(selectedCityId == null && selectedCountryId == null && selectedHotelId == null &&
-                            typedText.isEmpty || _checkInDate == null || _checkOutDate == null){
-                              showCustomSnackBar(context, 'Please fill all fields');
+                        if (selectedCityId == null &&
+                                selectedCountryId == null &&
+                                selectedHotelId == null &&
+                                typedText.isEmpty ||
+                            _checkInDate == null ||
+                            _checkOutDate == null) {
+                          showCustomSnackBar(context, 'Please fill all fields');
                           return;
-                            }
-                        if (selectedCityId == null && selectedCountryId == null && selectedHotelId == null &&
+                        }
+                        if (selectedCityId == null &&
+                            selectedCountryId == null &&
+                            selectedHotelId == null &&
                             typedText.isNotEmpty) {
-                          // Find first match in destinations list
                           final match = destinations.firstWhere(
-                            (item) => item['name'].toLowerCase().startsWith(typedText.toLowerCase()),
+                            (item) => item['name']
+                                .toLowerCase()
+                                .startsWith(typedText.toLowerCase()),
                             orElse: () => {},
                           );
 
@@ -325,8 +333,10 @@ class _BookingEngineScreenState extends State<BookingEngineScreen> {
 
                         bookingEngineProvider.postBooking(
                           context,
-                          checkIn: "${_checkInDate!.year}-${_checkInDate!.month}-${_checkInDate!.day}",
-                          checkOut: "${_checkOutDate!.year}-${_checkOutDate!.month}-${_checkOutDate!.day}",
+                          checkIn:
+                              "${_checkInDate!.year}-${_checkInDate!.month}-${_checkInDate!.day}",
+                          checkOut:
+                              "${_checkOutDate!.year}-${_checkOutDate!.month}-${_checkOutDate!.day}",
                           maxAdults: _adultsCount,
                           maxChildren: _childrenCount,
                           countryId: selectedCountryId,
@@ -334,13 +344,8 @@ class _BookingEngineScreenState extends State<BookingEngineScreen> {
                           hotelId: selectedHotelId,
                         );
 
-                        Navigator.of(context).push(
-                          MaterialPageRoute(builder: (ctx)=> const ResultBookingScreen())
-                        );
-                        log('${_checkInDate!.year}-${_checkInDate!.month}-${_checkInDate!.day}');
-                        log('${_checkOutDate!.year}-${_checkOutDate!.month}-${_checkOutDate!.day}');
-                        log('maxAdults: $_adultsCount, maxChildren: $_childrenCount');
-                        log('countryId: $selectedCountryId, cityId: $selectedCityId, hotelId: $selectedHotelId');
+                        Navigator.of(context).push(MaterialPageRoute(
+                            builder: (ctx) => const ResultBookingScreen()));
                       },
                       child: const Text(
                         "Search",

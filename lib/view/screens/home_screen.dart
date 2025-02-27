@@ -38,8 +38,7 @@ class AdminHomeScreen extends StatelessWidget {
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
-        child: Column(
-          children: [
+        child: Column(children: [
           Expanded(
             child: GridView.count(
               crossAxisCount: 2,
@@ -89,14 +88,14 @@ class AdminHomeScreen extends StatelessWidget {
             height: 130,
             child: GestureDetector(
               onTap: () {
-                Navigator.of(context).push(
-                  MaterialPageRoute(builder: (ctx)=> const SuppliersScreen())
-                );
+                Navigator.of(context).push(MaterialPageRoute(
+                    builder: (ctx) => const SuppliersScreen()));
               },
               child: Card(
                 color: Colors.white,
                 elevation: 3,
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12)),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
@@ -113,8 +112,7 @@ class AdminHomeScreen extends StatelessWidget {
               ),
             ),
           ),
-          ]
-        ),
+        ]),
       ),
     );
   }
