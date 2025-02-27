@@ -7,8 +7,8 @@ class TourModel {
   List<Map<String, dynamic>> childrenDetails;
   String? adultsPrice;
   String? childrenPrice;
-  List<Map<String, dynamic>> tourBuses; // New field
-  List<Map<String, dynamic>> tourHotels; // New field
+  List<TourBus> tourBuses;
+  List<TourHotel> tourHotels;
 
   TourModel({
     this.tourName,
@@ -19,24 +19,9 @@ class TourModel {
     this.childrenDetails = const [],
     this.adultsPrice,
     this.childrenPrice,
-    this.tourBuses = const [], // Default value
-    this.tourHotels = const [], // Default value
+    this.tourBuses = const [],
+    this.tourHotels = const [],
   });
-
-  Map<String, dynamic> toJson() {
-    return {
-      'tourName': tourName,
-      'tourType': tourType,
-      'adultsNumber': adultsNumber,
-      'childrenNumber': childrenNumber,
-      'adultsDetails': adultsDetails,
-      'childrenDetails': childrenDetails,
-      'adultsPrice': adultsPrice,
-      'childrenPrice': childrenPrice,
-      'tourBuses': tourBuses, // Serialize new field
-      'tourHotels': tourHotels, // Serialize new field
-    };
-  }
 
   factory TourModel.fromJson(Map<String, dynamic> json) {
     return TourModel(
@@ -48,10 +33,88 @@ class TourModel {
       childrenDetails: List<Map<String, dynamic>>.from(json['childrenDetails']),
       adultsPrice: json['adultsPrice'],
       childrenPrice: json['childrenPrice'],
-      tourBuses: List<Map<String, dynamic>>.from(
-          json['tourBuses']), // Deserialize new field
-      tourHotels: List<Map<String, dynamic>>.from(
-          json['tourHotels']), // Deserialize new field
+      tourBuses: (json['tourBuses'] as List)
+          .map((bus) => TourBus.fromJson(bus))
+          .toList(),
+      tourHotels: (json['tourHotels'] as List)
+          .map((hotel) => TourHotel.fromJson(hotel))
+          .toList(),
     );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'tourName': tourName,
+      'tourType': tourType,
+      'adultsNumber': adultsNumber,
+      'childrenNumber': childrenNumber,
+      'adultsDetails': adultsDetails,
+      'childrenDetails': childrenDetails,
+      'adultsPrice': adultsPrice,
+      'childrenPrice': childrenPrice,
+      'tourBuses': tourBuses.map((bus) => bus.toJson()).toList(),
+      'tourHotels': tourHotels.map((hotel) => hotel.toJson()).toList(),
+    };
+  }
+}
+
+class TourBus {
+  String? transportation;
+  int? seats;
+
+  TourBus({this.transportation, this.seats});
+
+  factory TourBus.fromJson(Map<String, dynamic> json) {
+    return TourBus(
+      transportation: json['transportation'],
+      seats: json['seats'],
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'transportation': transportation,
+      'seats': seats,
+    };
+  }
+}
+
+class TourHotel {
+  String? destination;
+  String? hotelName;
+  String? roomType;
+  String? checkIn;
+  String? checkOut;
+  int? nights;
+
+  TourHotel({
+    this.destination,
+    this.hotelName,
+    this.roomType,
+    this.checkIn,
+    this.checkOut,
+    this.nights,
+  });
+
+  factory TourHotel.fromJson(Map<String, dynamic> json) {
+    return TourHotel(
+      destination: json['destination'],
+      hotelName: json['hotel_name'],
+      roomType: json['room_type'],
+      checkIn: json['check_in'],
+      checkOut: json['check_out'],
+      nights: json['nights'],
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'destination': destination,
+      'hotel_name': hotelName,
+      'room_type': roomType,
+      'check_in': checkIn,
+      'check_out': checkOut,
+      'nights': nights,
+    };
   }
 }

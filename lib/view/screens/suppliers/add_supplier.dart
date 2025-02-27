@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_travelta/constants/colors.dart';
 import 'package:flutter_travelta/controllers/supplier_controller.dart';
@@ -61,8 +59,6 @@ class _AddSupplierScreenState extends State<AddSupplierScreen> {
     super.dispose();
   }
 
-  
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -116,7 +112,9 @@ class _AddSupplierScreenState extends State<AddSupplierScreen> {
                             setState(() {
                               if (!selectedServices.contains(value)) {
                                 selectedServices.add(value!);
-                                selectedIds.add(services.firstWhere((s) => s.name == value).id);
+                                selectedIds.add(services
+                                    .firstWhere((s) => s.name == value)
+                                    .id);
                               }
                             });
                           },
@@ -142,18 +140,23 @@ class _AddSupplierScreenState extends State<AddSupplierScreen> {
                 buildDynamicFields("Phones", phoneControllers),
                 const SizedBox(height: 24),
                 ElevatedButton(
-                  onPressed: (){
+                  onPressed: () {
                     if (_formKey.currentState!.validate()) {
-                        var agent =  agentController.text;
-                        var adminName = adminNameController.text;
-                        var adminPhone = adminPhoneController.text;
-                        var adminEmail =  adminEmailController.text;
-                        var emails = emailControllers.map((controller) => controller.text).toList();
-                        var phones = phoneControllers.map((controller) => controller.text).toList();
-                        var services =  selectedIds;
+                      var agent = agentController.text;
+                      var adminName = adminNameController.text;
+                      var adminPhone = adminPhoneController.text;
+                      var adminEmail = adminEmailController.text;
+                      var emails = emailControllers
+                          .map((controller) => controller.text)
+                          .toList();
+                      var phones = phoneControllers
+                          .map((controller) => controller.text)
+                          .toList();
+                      var services = selectedIds;
 
-                        // log('emails: $emails');
-                      Provider.of<SupplierController>(context, listen: false).addSupplier(
+                      // log('emails: $emails');
+                      Provider.of<SupplierController>(context, listen: false)
+                          .addSupplier(
                         context,
                         agent: agent,
                         adminName: adminName,

@@ -8,11 +8,13 @@ void showImageDialog(BuildContext context, List<String> images) {
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
         child: Container(
           padding: const EdgeInsets.all(16),
-          constraints: const BoxConstraints(maxHeight: 400), // Limits height for scrolling
+          constraints: const BoxConstraints(
+              maxHeight: 400), // Limits height for scrolling
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              const Text("All Images", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+              const Text("All Images",
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
               const SizedBox(height: 10),
               Expanded(
                 child: SingleChildScrollView(
@@ -22,7 +24,8 @@ void showImageDialog(BuildContext context, List<String> images) {
                         padding: const EdgeInsets.only(bottom: 8),
                         child: ClipRRect(
                           borderRadius: BorderRadius.circular(8),
-                          child: Image.network(image, width: 250, height: 150, fit: BoxFit.cover),
+                          child: Image.network(image,
+                              width: 250, height: 150, fit: BoxFit.cover),
                         ),
                       );
                     }).toList(),

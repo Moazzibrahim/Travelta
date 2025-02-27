@@ -21,16 +21,17 @@ class UpcomingBookingList {
 
   factory UpcomingBookingList.fromJson(Map<String, dynamic> json) =>
       UpcomingBookingList(
-        hotelsBookingList: List<HotelBookingList>.from(
-            json['upcoming']['hotels'].map((x) => HotelBookingList.fromJson(x))),
+        hotelsBookingList: List<HotelBookingList>.from(json['upcoming']
+                ['hotels']
+            .map((x) => HotelBookingList.fromJson(x))),
         busBookingList: List<BusBookingList>.from(
             json['upcoming']['buses'].map((x) => BusBookingList.fromJson(x))),
         flightBookingList: List<Flight>.from(
             json['upcoming']['flights'].map((x) => Flight.fromJson(x))),
         visasBookingList: List<Visa>.from(
-            json['upcoming']['visas'].map((x) => Visa.fromJson(x))),        
+            json['upcoming']['visas'].map((x) => Visa.fromJson(x))),
         toursBookingList: List<Tour>.from(
-            json['upcoming']['tours'].map((x) => Tour.fromJson(x))),        
+            json['upcoming']['tours'].map((x) => Tour.fromJson(x))),
       );
 }
 
@@ -58,9 +59,9 @@ class CurrentBookingList {
         flightBookingList: List<Flight>.from(
             json['current']['flights'].map((x) => Flight.fromJson(x))),
         visasBookingList: List<Visa>.from(
-            json['current']['visas'].map((x) => Visa.fromJson(x))),        
+            json['current']['visas'].map((x) => Visa.fromJson(x))),
         toursBookingList: List<Tour>.from(
-            json['current']['tours'].map((x) => Tour.fromJson(x))),        
+            json['current']['tours'].map((x) => Tour.fromJson(x))),
       );
 }
 
@@ -87,15 +88,9 @@ class PastBookingList {
             json['past']['buses'].map((x) => BusBookingList.fromJson(x))),
         flightBookingList: List<Flight>.from(
             json['past']['flights'].map((x) => Flight.fromJson(x))),
-        visasBookingList: List<Visa>.from(
-            json['past']['visas'].map((x) => Visa.fromJson(x))),        
-        toursBookingList: List<Tour>.from(
-            json['past']['tours'].map((x) => Tour.fromJson(x))),        
+        visasBookingList:
+            List<Visa>.from(json['past']['visas'].map((x) => Visa.fromJson(x))),
+        toursBookingList:
+            List<Tour>.from(json['past']['tours'].map((x) => Tour.fromJson(x))),
       );
 }
-
-
-
-
-
-

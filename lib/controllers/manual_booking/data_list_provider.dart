@@ -8,9 +8,9 @@ import 'package:flutter_travelta/model/manual_booking/flight_model.dart';
 import 'package:flutter_travelta/model/manual_booking/tour_model.dart';
 import 'package:flutter_travelta/model/manual_booking/visa_model.dart';
 import 'package:flutter_travelta/view/screens/NewBooking/cart_screen.dart';
+import 'package:flutter_travelta/view/screens/NewBooking/invoice_voucher_screen.dart';
 import 'package:http/http.dart' as http;
 import 'package:provider/provider.dart';
-
 import '../../model/manual_booking/hotel_model.dart';
 import '../../model/manual_booking/manual_booking_model.dart';
 
@@ -96,6 +96,17 @@ class DataListProvider extends ChangeNotifier {
     }
   }
 
+  void clearBookingData() {
+    manualBookingData = ManualBookingData();
+    hotelData = HotelModel();
+    visaData = VisaBookingData();
+    busDetails = BusDetails();
+    flightDetails = FlightDetails();
+    tourModel = TourModel();
+
+    notifyListeners();
+  }
+
   Future<void> sendBookingData(
       BuildContext context, Map<String, dynamic> data) async {
     const String apiUrl = 'https://travelta.online/agent/manual_booking/cart';
@@ -122,11 +133,9 @@ class DataListProvider extends ChangeNotifier {
         final responseData = jsonDecode(response.body);
         log('Success: $responseData');
 
-        // Extract cart_id and total
         final int cartId = responseData['cart_id'];
         final double total = double.parse(responseData['total'].toString());
 
-        // Navigate to CartScreen
         Navigator.push(
           context,
           MaterialPageRoute(
@@ -136,6 +145,66 @@ class DataListProvider extends ChangeNotifier {
       } else {
         _errorMessage =
             'Failed to send data. Status code: ${response.statusCode}';
+        log('Error: ${response.body}');
+      }
+    } catch (e) {
+      _errorMessage = 'An error occurred: $e';
+      log(_errorMessage.toString());
+    } finally {
+      _isLoading = false;
+      notifyListeners();
+    }
+  }
+
+  Future<void> sendManualBooking(
+      BuildContext context,
+      String paymentType,
+      double totalCart,
+      int cartId,
+      List<Map<String, dynamic>> paymentMethods,
+      List<Map<String, dynamic>> payments) async {
+    const String apiUrl = 'https://travelta.online/agent/manual_booking';
+
+    final loginProvider = Provider.of<LoginProvider>(context, listen: false);
+    final token = loginProvider.token;
+
+    _isLoading = true;
+    _errorMessage = null;
+    notifyListeners();
+
+    final Map<String, dynamic> requestData = {
+      "payment_type": paymentType,
+      "total_cart": totalCart,
+      "cart_id": cartId,
+      "payment_methods": paymentMethods,
+      "payments": payments,
+    };
+    log('Request Data: ${(requestData)}');
+
+    try {
+      final response = await http.post(
+        Uri.parse(apiUrl),
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+          'Authorization': 'Bearer $token',
+        },
+        body: jsonEncode(requestData),
+      );
+      log('Response: ${response.body}');
+
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        final responseData = jsonDecode(response.body);
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) =>
+                InvoiceVoucherScreen(bookingData: responseData),
+          ),
+        );
+      } else {
+        _errorMessage =
+            'Failed to send booking data. Status code: ${response.statusCode}';
         log('Error: ${response.body}');
       }
     } catch (e) {

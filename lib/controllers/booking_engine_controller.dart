@@ -111,8 +111,8 @@ class BookingEngineController with ChangeNotifier {
     }
   }
 
-  Future<void> postBooking(BuildContext context,
-  {
+  Future<void> postBooking(
+    BuildContext context, {
     required String checkIn,
     required String checkOut,
     required int maxAdults,
@@ -120,12 +120,12 @@ class BookingEngineController with ChangeNotifier {
     int? countryId,
     int? cityId,
     int? hotelId,
-  }
-  ) async {
+  }) async {
     try {
       final loginProvider = Provider.of<LoginProvider>(context, listen: false);
       final token = loginProvider.token;
-      final url = Uri.parse('https://travelta.online/agent/agent/avalibleRooms');
+      final url =
+          Uri.parse('https://travelta.online/agent/agent/avalibleRooms');
 
       final response = await http.post(url,
           headers: {
@@ -142,15 +142,15 @@ class BookingEngineController with ChangeNotifier {
             "max_adults": maxAdults,
             "max_children": maxChildren
           }));
-    if(response.statusCode == 200){
-      final responseData = json.decode(response.body);
-      ResultsList results = ResultsList.fromJson(responseData);
-      _results = results.results.map((e) => ResultModel.fromJson(e)).toList();
-      notifyListeners();
-    } else {
-      log('Failed to post booking. Status Code: ${response.statusCode}');
-      log('failed to post booking. Response: ${response.body}');
-    }
+      if (response.statusCode == 200) {
+        final responseData = json.decode(response.body);
+        ResultsList results = ResultsList.fromJson(responseData);
+        _results = results.results.map((e) => ResultModel.fromJson(e)).toList();
+        notifyListeners();
+      } else {
+        log('Failed to post booking. Status Code: ${response.statusCode}');
+        log('failed to post booking. Response: ${response.body}');
+      }
     } catch (e) {
       log('Error in posting booking: $e');
     }

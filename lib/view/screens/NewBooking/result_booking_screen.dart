@@ -16,40 +16,38 @@ class ResultBookingScreen extends StatelessWidget {
       appBar: const CustomAppBar(title: 'Result Booking'),
       body: Consumer<BookingEngineController>(
         builder: (context, bookingProvider, _) {
-          if(bookingProvider.isResultsEmpty){
+          if (bookingProvider.isResultsEmpty) {
             return Center(
               child: CircularProgressIndicator(color: mainColor),
             );
-          }else{
+          } else {
             final List<ResultModel> results = bookingProvider.results;
             return Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: ListView.builder(
-            itemCount: results.length,
-            itemBuilder: (context, index) {
-              final result = results[index];
-              return BookingResultContainer(
-                thumbnail: result.hotelLogo,
-                hotelName: result.hotelName,
-                rating: result.hotelStar,
-                price: result.availableRooms[0].room.price,
-                onPressed: () {
-                  Navigator.of(context).push(
-                    MaterialPageRoute(builder: (ctx)=> HotelDetailsScreen(
-                      hotelImage: result.hotelLogo,
-                      images: result.images,
-                      hotelFacilities: result.hotelFacilities,
-                      hotelFeatures: result.hotelFeatures,
-                      room: result.availableRooms[0],
-                      policies: result.hotelPolicies,
-                      paymentMethods: result.hotelAcceptedCards,
-                    ))
-                  );
-                },
-              );
-            },
-          )
-        );
+                padding: const EdgeInsets.all(16.0),
+                child: ListView.builder(
+                  itemCount: results.length,
+                  itemBuilder: (context, index) {
+                    final result = results[index];
+                    return BookingResultContainer(
+                      thumbnail: result.hotelLogo,
+                      hotelName: result.hotelName,
+                      rating: result.hotelStar,
+                      price: result.availableRooms[0].room.price,
+                      onPressed: () {
+                        Navigator.of(context).push(MaterialPageRoute(
+                            builder: (ctx) => HotelDetailsScreen(
+                                  hotelImage: result.hotelLogo,
+                                  images: result.images,
+                                  hotelFacilities: result.hotelFacilities,
+                                  hotelFeatures: result.hotelFeatures,
+                                  room: result.availableRooms[0],
+                                  policies: result.hotelPolicies,
+                                  paymentMethods: result.hotelAcceptedCards,
+                                )));
+                      },
+                    );
+                  },
+                ));
           }
         },
       ),

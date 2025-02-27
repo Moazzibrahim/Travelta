@@ -79,9 +79,7 @@ class _ClientScreenState extends State<ClientScreen> {
                     final filteredCustomers = customerProvider.customers
                         .where((customer) =>
                             customer.name.toLowerCase().contains(searchQuery) ||
-                            customer.phone
-                                .toLowerCase()
-                                .contains(searchQuery))
+                            customer.phone.toLowerCase().contains(searchQuery))
                         .toList();
 
                     if (filteredCustomers.isEmpty) {

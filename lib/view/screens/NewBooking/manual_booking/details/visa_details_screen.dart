@@ -76,7 +76,8 @@ class _VisaWidgetState extends State<VisaWidget> {
             isNumeric: true,
             onChanged: (value) {
               setState(() {
-                adultsNumber = int.tryParse(value) ?? 0;
+                int inputNumber = int.tryParse(value) ?? 0;
+                adultsNumber = inputNumber.clamp(1, 9);
                 dataListProvider.visaData.adultsNumber =
                     adultsNumber; // Save adults number
 
@@ -111,7 +112,9 @@ class _VisaWidgetState extends State<VisaWidget> {
             isNumeric: true,
             onChanged: (value) {
               setState(() {
-                childrenNumber = int.tryParse(value) ?? 0;
+                int inputNumber = int.tryParse(value) ?? 0;
+                childrenNumber = inputNumber.clamp(1, 9);
+
                 dataListProvider.visaData.childrenNumber = childrenNumber;
 
                 if (childrenNumber > childrenDetails.length) {

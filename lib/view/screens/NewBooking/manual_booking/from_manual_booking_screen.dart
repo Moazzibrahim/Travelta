@@ -74,7 +74,7 @@ class _FromManualBookingScreenState extends State<FromManualBookingScreen> {
               const SizedBox(height: 16),
               CustomDropdownField(
                 label: bookingData.selectedServiceId != null
-                    ? bookingData.selectedService ?? 'Service not selected'
+                    ? bookingData.selectedService ?? 'Select Service:'
                     : 'Select Service:',
                 items: travelData.services.isEmpty
                     ? []
@@ -210,7 +210,7 @@ class _FromManualBookingScreenState extends State<FromManualBookingScreen> {
               const SectionTitle(title: 'Tax Details'),
               CustomDropdownField(
                 label: bookingData.selectedCountryId != null
-                    ? bookingData.selectedCountry ?? 'Country not selected'
+                    ? bookingData.selectedCountry ?? 'Select country'
                     : 'Select country:',
                 items: travelData.countries.isEmpty
                     ? []
@@ -226,13 +226,16 @@ class _FromManualBookingScreenState extends State<FromManualBookingScreen> {
                       bookingData.selectedCountryId = value;
                       for (var e in travelData.countries) {
                         if (e.id.toString() == value) {
-                          bookingData.selectedCategory = e.name;
+                          bookingData.selectedCountry = e.name;
                         }
                       }
                     });
                     _updateTaxes(value, travelData.taxes);
                   }
                 },
+              ),
+              const SizedBox(
+                height: 15,
               ),
               CustomDropdownField(
                 label: bookingData.selectedCityId != null
@@ -256,14 +259,13 @@ class _FromManualBookingScreenState extends State<FromManualBookingScreen> {
                         }
                       }
                     });
-                    _updateTaxes(value, travelData.taxes);
                   }
                 },
               ),
               const SizedBox(height: 16),
               CustomDropdownField(
                 label: bookingData.selectedTaxId != null
-                    ? bookingData.selectedTax ?? 'Tax not selected'
+                    ? bookingData.selectedTax ?? 'Select tax'
                     : 'Select tax:',
                 items: filteredTaxes.isEmpty
                     ? []
@@ -280,8 +282,12 @@ class _FromManualBookingScreenState extends State<FromManualBookingScreen> {
                       for (var e in travelData.taxes) {
                         if (e.id.toString() == value) {
                           bookingData.selectedTax = e.name;
+                          bookingData.selectedTaxAmount =
+                              e.amount; // Store selected tax amount
                         }
                       }
+                      bookingData
+                          .calculateFinalPrice(); // Recalculate final price
                     });
                   }
                 },

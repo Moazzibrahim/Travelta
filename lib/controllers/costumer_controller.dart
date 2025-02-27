@@ -28,10 +28,11 @@ class CustomerController with ChangeNotifier {
           'accept': 'application/json',
         },
       );
-      if(response.statusCode == 200){
+      if (response.statusCode == 200) {
         final responseData = json.decode(response.body);
         Customers customers = Customers.fromJson(responseData);
-        _customers = customers.customers.map((e) => Customer.fromJson(e)).toList();
+        _customers =
+            customers.customers.map((e) => Customer.fromJson(e)).toList();
         _isLoaded = true;
         notifyListeners();
       } else {

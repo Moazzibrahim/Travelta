@@ -11,7 +11,8 @@ class StepperColumn extends StatelessWidget {
     super.key,
     required this.label,
     this.isCompleted = false,
-    required this.onTap, required bool isActive,
+    required this.onTap,
+    required bool isActive,
   });
 
   @override
@@ -51,7 +52,8 @@ class StepperRow extends StatelessWidget {
   final int currentIndex;
   final ValueChanged<int> onStepTapped;
 
-  const StepperRow({super.key, 
+  const StepperRow({
+    super.key,
     required this.steps,
     required this.currentIndex,
     required this.onStepTapped,

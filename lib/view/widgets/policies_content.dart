@@ -3,7 +3,8 @@ import 'package:flutter_travelta/constants/colors.dart';
 import 'package:flutter_travelta/model/result_model.dart';
 
 class PoliciesContent extends StatefulWidget {
-  const PoliciesContent({super.key, required this.policies, required this.paymentMethods});
+  const PoliciesContent(
+      {super.key, required this.policies, required this.paymentMethods});
   final List<HotelPolicies> policies;
   final List<HotelAcceptedCards> paymentMethods;
 
@@ -32,7 +33,8 @@ class _PoliciesContentState extends State<PoliciesContent> {
             padding: const EdgeInsets.symmetric(vertical: 8.0),
             child: Text(
               'Hotel Policies',
-              style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600, color: mainColor),
+              style: TextStyle(
+                  fontSize: 16, fontWeight: FontWeight.w600, color: mainColor),
             ),
           ),
           Wrap(
@@ -42,7 +44,8 @@ class _PoliciesContentState extends State<PoliciesContent> {
               return Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Icon(Icons.local_parking, size: 20, color: mainColor), // Static icon
+                  Icon(Icons.local_parking,
+                      size: 20, color: mainColor), // Static icon
                   const SizedBox(width: 5),
                   Text(
                     policy.description,
@@ -59,17 +62,18 @@ class _PoliciesContentState extends State<PoliciesContent> {
             padding: const EdgeInsets.symmetric(vertical: 8.0),
             child: Text(
               'Payment Methods',
-              style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600, color: mainColor),
+              style: TextStyle(
+                  fontSize: 16, fontWeight: FontWeight.w600, color: mainColor),
             ),
           ),
           Column(
-            children: List.generate(
-              widget.paymentMethods.length,
-              (index) {
-                return _buildPaymentOption(Icons.credit_card, widget.paymentMethods[index].cardName); 
-              },
-            )
-          ),
+              children: List.generate(
+            widget.paymentMethods.length,
+            (index) {
+              return _buildPaymentOption(
+                  Icons.credit_card, widget.paymentMethods[index].cardName);
+            },
+          )),
         ],
       ),
     );

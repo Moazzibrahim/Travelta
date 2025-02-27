@@ -46,6 +46,32 @@ class TravelData {
   }
 }
 
+class Tax {
+  final int id;
+  final String name;
+  final int countryId;
+  final String type;
+  final double amount;
+
+  Tax({
+    required this.id,
+    required this.name,
+    required this.countryId,
+    required this.type,
+    required this.amount,
+  });
+
+  factory Tax.fromJson(Map<String, dynamic> json) {
+    return Tax(
+      id: json['id'] ?? 0,
+      name: json['name'] ?? '',
+      countryId: json['country_id'] ?? 0,
+      type: json['type'] ?? '',
+      amount: (json['amount'] ?? 0).toDouble(),
+    );
+  }
+}
+
 class FinancialAccounting {
   final int id;
   final String name;
@@ -161,38 +187,6 @@ class Country {
     return Country(
       id: json['id'] ?? 0, // Default to 0 if null
       name: json['name'] ?? '', // Default to empty string if null
-    );
-  }
-}
-
-class Tax {
-  final int id;
-  final String name;
-  final int countryId;
-  final int agentId;
-  final int? affiliateId; // Kept as nullable, since it's optional
-  final String type;
-  final double amount;
-
-  Tax({
-    required this.id,
-    required this.name,
-    required this.countryId,
-    required this.agentId,
-    this.affiliateId,
-    required this.type,
-    required this.amount,
-  });
-
-  factory Tax.fromJson(Map<String, dynamic> json) {
-    return Tax(
-      id: json['id'] ?? 0, // Default to 0 if null
-      name: json['name'] ?? '', // Default to empty string if null
-      countryId: json['country_id'] ?? 0, // Default to 0 if null
-      agentId: json['agent_id'] ?? 0, // Default to 0 if null
-      affiliateId: json['affilate_id'], // Nullable, no default needed
-      type: json['type'] ?? '', // Default to empty string if null
-      amount: (json['amount'] ?? 0).toDouble(), // Default to 0.0 if null
     );
   }
 }

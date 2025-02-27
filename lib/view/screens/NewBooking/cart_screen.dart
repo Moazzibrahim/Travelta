@@ -18,7 +18,7 @@ class CartScreen extends StatefulWidget {
 }
 
 class CartScreenState extends State<CartScreen> {
-  String selectedPayment = 'Full Payment';
+  String selectedPayment = 'full';
   DateTime? selectedDate;
   String selectedMethod = '';
   int? selectedMethodId;
@@ -26,6 +26,9 @@ class CartScreenState extends State<CartScreen> {
   List<Widget> additionalCards = [];
   List<TextEditingController> amountControllers = [];
   TextEditingController firstPartialAmountController = TextEditingController();
+  Set<int> selectedMethods = {};
+  Map<int, TextEditingController> paymentAmountControllers =
+      {}; // Store controllers
 
   @override
   void initState() {
@@ -88,26 +91,12 @@ class CartScreenState extends State<CartScreen> {
               ),
               const SizedBox(height: 20),
               _buildPaymentOptions(),
-              if (selectedPayment == 'Partial Payment' ||
-                  selectedPayment == 'Later Payment') ...[
+              if (selectedPayment == 'partial' ||
+                  selectedPayment == 'later') ...[
                 const SizedBox(height: 10),
                 _buildRemainingBalance(),
               ],
-              if (selectedPayment == 'Partial Payment') ...[
-                const SizedBox(height: 20),
-                TextField(
-                  controller: firstPartialAmountController,
-                  decoration: InputDecoration(
-                    labelText: 'Enter First Payment Amount',
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    prefixIcon: const Icon(Icons.money),
-                  ),
-                  keyboardType: TextInputType.number,
-                ),
-              ],
-              if (selectedPayment != 'Full Payment') ...[
+              if (selectedPayment != 'full') ...[
                 const SizedBox(height: 20),
                 Column(
                   children: List.generate(amountControllers.length, (index) {
@@ -130,25 +119,132 @@ class CartScreenState extends State<CartScreen> {
                   }),
                 ),
                 const SizedBox(height: 10),
-                ElevatedButton(
-                  onPressed: () {
-                    setState(() {
-                      TextEditingController newController =
-                          TextEditingController();
-                      newController.addListener(_calculateRemainingBalance);
-                      amountControllers.add(newController);
-                    });
-                  },
-                  child: const Text('Add Another Card'),
+                Row(
+                  children: [
+                    const Spacer(),
+                    IconButton(
+                      onPressed: () {
+                        setState(() {
+                          TextEditingController newController =
+                              TextEditingController();
+                          newController.addListener(_calculateRemainingBalance);
+                          amountControllers.add(newController);
+                        });
+                      },
+                      icon: const Icon(Icons.add, color: Colors.white),
+                      style: ElevatedButton.styleFrom(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 20, vertical: 12),
+                        backgroundColor: mainColor,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        elevation: 5,
+                      ),
+                    ),
+                  ],
                 ),
               ],
               const SizedBox(height: 20),
-              _buildPaymentMethodSection(context), // Section with radio buttons
+              if (selectedPayment != 'later')
+                _buildPaymentMethodSection(context),
+              SizedBox(
+                width: double.infinity,
+                child: ElevatedButton(
+                  onPressed:
+                      remainingBalance == 0 ? _submitManualBooking : null,
+                  style: ElevatedButton.styleFrom(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 40, vertical: 14),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    backgroundColor: mainColor,
+                    disabledBackgroundColor: Colors.grey,
+                  ),
+                  child: const Text(
+                    "Submit Booking",
+                    style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
+                    ),
+                  ),
+                ),
+              ),
             ],
           ),
         ),
       ),
     );
+  }
+
+  Widget _buildCheckbox(String title, int? id) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          children: [
+            Checkbox(
+              value: selectedMethods.contains(id),
+              onChanged: (bool? value) {
+                setState(() {
+                  if (value == true) {
+                    selectedMethods.add(id!);
+                    paymentAmountControllers[id] = TextEditingController();
+                    paymentAmountControllers[id]!
+                        .addListener(_calculateRemainingBalance);
+                  } else {
+                    selectedMethods.remove(id);
+                    paymentAmountControllers[id]
+                        ?.removeListener(_calculateRemainingBalance);
+                    paymentAmountControllers.remove(id);
+                  }
+                  log(selectedMethods.toString());
+                });
+              },
+            ),
+            Text(
+              title,
+              style: const TextStyle(fontSize: 16),
+            ),
+          ],
+        ),
+        if (selectedMethods.contains(id)) ...[
+          Padding(
+            padding:
+                const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+            child: TextField(
+              controller: paymentAmountControllers[id],
+              decoration: InputDecoration(
+                labelText: 'Enter Amount for $title',
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                prefixIcon: const Icon(Icons.money),
+              ),
+              keyboardType: TextInputType.number,
+            ),
+          ),
+        ],
+      ],
+    );
+  }
+
+  void _calculateRemainingBalance() {
+    double amountPaid = 0.0;
+
+    for (var controller in amountControllers) {
+      amountPaid += double.tryParse(controller.text) ?? 0.0;
+    }
+
+    for (var controller in paymentAmountControllers.values) {
+      amountPaid += double.tryParse(controller.text) ?? 0.0;
+    }
+
+    setState(() {
+      remainingBalance = widget.total - amountPaid;
+    });
   }
 
   Widget _buildPaymentMethodSection(BuildContext context) {
@@ -164,30 +260,8 @@ class CartScreenState extends State<CartScreen> {
         Column(
           children: [
             ...financialAccounts
-                .map((account) => _buildRadioButton(account.name, account.id)),
+                .map((account) => _buildCheckbox(account.name, account.id)),
           ],
-        ),
-      ],
-    );
-  }
-
-  Widget _buildRadioButton(String title, int? id) {
-    return Row(
-      children: [
-        Radio<String>(
-          value: title,
-          groupValue: selectedMethod,
-          onChanged: (value) {
-            setState(() {
-              selectedMethod = value!;
-              selectedMethodId = id;
-              log(selectedMethodId.toString());
-            });
-          },
-        ),
-        Text(
-          title,
-          style: const TextStyle(fontSize: 16),
         ),
       ],
     );
@@ -206,6 +280,62 @@ class CartScreenState extends State<CartScreen> {
         prefixIcon: const Icon(Icons.money),
       ),
       keyboardType: TextInputType.number,
+    );
+  }
+
+  Widget _buildRemainingBalance() {
+    _calculateRemainingBalance();
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 8.0),
+      child: Text(
+        'Remaining Balance: \$${remainingBalance.toStringAsFixed(2)}',
+        style: const TextStyle(
+          fontSize: 18,
+          fontWeight: FontWeight.bold,
+          color: Colors.redAccent,
+        ),
+      ),
+    );
+  }
+
+  void _submitManualBooking() {
+    final dataListProvider =
+        Provider.of<DataListProvider>(context, listen: false);
+
+    List<Map<String, dynamic>> paymentMethods = [];
+    List<Map<String, dynamic>> payments = [];
+
+    if (selectedPayment == 'full' || selectedPayment == 'partial') {
+      for (int methodId in selectedMethods) {
+        double amount =
+            double.tryParse(paymentAmountControllers[methodId]?.text ?? '0') ??
+                0.0;
+        if (amount > 0) {
+          paymentMethods.add({
+            "amount": amount,
+            "payment_method_id": methodId,
+            "image": 'selectedMethod',
+          });
+        }
+      }
+    }
+
+    if (selectedPayment == 'partial' || selectedPayment == 'later') {
+      payments = amountControllers.map((controller) {
+        return {
+          "amount": double.tryParse(controller.text) ?? 0.0,
+          "date": selectedDate?.toIso8601String(),
+        };
+      }).toList();
+    }
+
+    dataListProvider.sendManualBooking(
+      context,
+      selectedPayment,
+      widget.total,
+      widget.cartId,
+      paymentMethods,
+      payments,
     );
   }
 
@@ -238,9 +368,9 @@ class CartScreenState extends State<CartScreen> {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        _buildPaymentTile('Full Payment'),
-        _buildPaymentTile('Partial Payment'),
-        _buildPaymentTile('Later Payment'),
+        _buildPaymentTile('full'),
+        _buildPaymentTile('partial'),
+        _buildPaymentTile('later'),
       ],
     );
   }
@@ -265,9 +395,9 @@ class CartScreenState extends State<CartScreen> {
               mainAxisSize: MainAxisSize.min,
               children: [
                 Icon(
-                  title == 'Full Payment'
+                  title == 'full'
                       ? Icons.payment
-                      : title == 'Partial Payment'
+                      : title == 'partial'
                           ? Icons.account_balance_wallet
                           : Icons.schedule,
                   size: 30,
@@ -325,37 +455,6 @@ class CartScreenState extends State<CartScreen> {
               style: const TextStyle(color: Colors.black54),
             ),
           ],
-        ),
-      ),
-    );
-  }
-
-  void _calculateRemainingBalance() {
-    double amountPaid = 0.0;
-
-    if (selectedPayment == 'Partial Payment') {
-      amountPaid += double.tryParse(firstPartialAmountController.text) ?? 0.0;
-    }
-
-    for (var controller in amountControllers) {
-      amountPaid += double.tryParse(controller.text) ?? 0.0;
-    }
-
-    setState(() {
-      remainingBalance = widget.total - amountPaid;
-    });
-  }
-
-  Widget _buildRemainingBalance() {
-    _calculateRemainingBalance();
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 8.0),
-      child: Text(
-        'Remaining Balance: \$${remainingBalance.toStringAsFixed(2)}',
-        style: const TextStyle(
-          fontSize: 18,
-          fontWeight: FontWeight.bold,
-          color: Colors.redAccent,
         ),
       ),
     );

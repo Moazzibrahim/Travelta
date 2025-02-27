@@ -55,7 +55,7 @@ class _BusWidgetState extends State<BusWidget> {
           CustomDatePickerTextField(
             label: 'Check in',
             icon: Icons.calendar_today,
-            dateFormat: DateFormat('dd/MM/yyyy'),
+            dateFormat: DateFormat('yyyy-MM-dd'),
             onDateSelected: (date) {
               setState(() {
                 busDetails.checkInDate = date;
@@ -69,7 +69,7 @@ class _BusWidgetState extends State<BusWidget> {
           CustomDatePickerTextField(
             label: 'Check out',
             icon: Icons.calendar_today,
-            dateFormat: DateFormat('dd/MM/yyyy'),
+            dateFormat: DateFormat('yyyy-MM-dd'),
             onDateSelected: (date) {
               setState(() {
                 busDetails.checkOutDate = date;
@@ -85,7 +85,8 @@ class _BusWidgetState extends State<BusWidget> {
             isNumeric: true,
             onChanged: (value) {
               setState(() {
-                adultsNumber = int.tryParse(value) ?? 0;
+                int inputNumber = int.tryParse(value) ?? 0;
+                adultsNumber = inputNumber.clamp(1, 9);
                 busDetails.adultsNumber = adultsNumber;
                 if (adultsNumber > adultsDetails.length) {
                   adultsDetails.addAll(List<Map<String, dynamic>>.generate(
@@ -130,8 +131,9 @@ class _BusWidgetState extends State<BusWidget> {
             isNumeric: true,
             onChanged: (value) {
               setState(() {
-                childrenNumber = int.tryParse(value) ?? 0;
-                busDetails.childrenNumber = childrenNumber; // Save to model
+                int inputNumber = int.tryParse(value) ?? 0;
+                childrenNumber = inputNumber.clamp(1, 9);
+                busDetails.childrenNumber = childrenNumber;
                 if (childrenNumber > childrenDetails.length) {
                   childrenDetails.addAll(List<Map<String, dynamic>>.generate(
                     childrenNumber - childrenDetails.length,
@@ -153,8 +155,7 @@ class _BusWidgetState extends State<BusWidget> {
               onDetailChanged: (index, field, value) {
                 setState(() {
                   childrenDetails[index][field] = value;
-                  busDetails.childrenDetails =
-                      List.from(childrenDetails); // Save to model
+                  busDetails.childrenDetails = List.from(childrenDetails);
                   dataListProvider.saveBusData(busDetails);
                 });
               },

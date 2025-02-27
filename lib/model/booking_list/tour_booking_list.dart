@@ -61,8 +61,10 @@ class Tour {
       tourType: json['tour_type'],
       childrenNo: json['children_no'],
       adultsNo: json['adults_no'],
-      tourHotels: List<TourHotel>.from(json['tour_hotels'].map((e) => TourHotel.fromJson(e))),
-      tourBuses: List<TourBus>.from(json['tour_buses'].map((e) => TourBus.fromJson(e))),
+      tourHotels: List<TourHotel>.from(
+          json['tour_hotels'].map((e) => TourHotel.fromJson(e))),
+      tourBuses: List<TourBus>.from(
+          json['tour_buses'].map((e) => TourBus.fromJson(e))),
       createdAt: json['created_at'],
       code: json['code'],
       paymentStatus: json['payment_status'] ?? 'No payment status',

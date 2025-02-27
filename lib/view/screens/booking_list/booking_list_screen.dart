@@ -13,26 +13,35 @@ class BookingListScreen extends StatefulWidget {
 class _BookingListScreenState extends State<BookingListScreen> {
   @override
   void initState() {
-    Provider.of<BookingListController>(context,listen: false).fetchBookingList(context);
+    Provider.of<BookingListController>(context, listen: false)
+        .fetchBookingList(context);
     super.initState();
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Booking List'),
         backgroundColor: Colors.white,
-        leading: IconButton(onPressed: (){
-          Navigator.of(context).pop();
-        }, icon: Icon(Icons.arrow_back,color: mainColor,)),
+        leading: IconButton(
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+            icon: Icon(
+              Icons.arrow_back,
+              color: mainColor,
+            )),
       ),
       body: Consumer<BookingListController>(
         builder: (context, bookingListProvider, _) {
-          if(!bookingListProvider.isLoaded){
+          if (!bookingListProvider.isLoaded) {
             return Center(
-              child: CircularProgressIndicator(color: mainColor,),
+              child: CircularProgressIndicator(
+                color: mainColor,
+              ),
             );
-          }else{
+          } else {
             return const Center(
               child: Text('Ahla booking list'),
             );
