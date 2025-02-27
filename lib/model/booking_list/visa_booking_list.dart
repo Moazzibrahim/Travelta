@@ -2,13 +2,13 @@ class Visa {
   final int id;
   final String supplierFromName;
   final String supplierFromEmail;
-  final String supplierFromPhone;
+  final String supplierFromPhone; // Change to String
   final String? country;
   final String totalPrice;
   final String toName;
   final String toRole;
   final String toEmail;
-  final String toPhone;
+  final String toPhone; // Change to String
   final int noAdults;
   final int noChildren;
   final String countryName;
@@ -43,30 +43,28 @@ class Visa {
     this.specialRequest,
   });
 
- factory Visa.fromJson(Map<String, dynamic> json) {
-  return Visa(
-    id: json['id'], 
-    supplierFromName: json['supplier_from_name'],
-    supplierFromEmail: json['supplier_from_email'],
-    supplierFromPhone: json['supplier_from_phone'].toString(),
-    country: json['country']?.toString() ?? 'No country',
-    totalPrice: json['total_price'].toString(), 
-    toName: json['to_name'],
-    toRole: json['to_role'],
-    toEmail: json['to_email'],
-    toPhone: json['to_phone'].toString(), 
-    noAdults: json['no_adults'], 
-    noChildren: json['no_children'], 
-    countryName: json['country_name'],
-    travelDate: json['travel_date'],
-    appointment: json['appointment'],
-    notes: json['notes']?.toString() ?? 'No notes',
-    code: json['code'],
-    paymentStatus: json['payment_status']?.toString() ?? 'no payment status',
-    status: json['status'],
-    specialRequest: json['special_request']?.toString() ?? 'No special request',
-  );
-}
-
-
+  factory Visa.fromJson(Map<String, dynamic> json) {
+    return Visa(
+      id: json['id'],
+      supplierFromName: json['supplier_from_name'],
+      supplierFromEmail: json['supplier_from_email'],
+      supplierFromPhone: json['supplier_from_phone'].toString(), // Convert safely
+      country: json['country']?.toString() ?? 'No country',
+      totalPrice: json['total_price'].toString(),
+      toName: json['to_name'],
+      toRole: json['to_role'],
+      toEmail: json['to_email'],
+      toPhone: json['to_phone'].toString(), // Convert safely
+      noAdults: json['no_adults'],
+      noChildren: json['no_children'],
+      countryName: json['country_name'],
+      travelDate: json['travel_date'],
+      appointment: json['appointment'],
+      notes: json['notes']?.toString() ?? 'No notes',
+      code: json['code'],
+      paymentStatus: json['payment_status']?.toString() ?? 'no payment status',
+      status: json['status'],
+      specialRequest: json['special_request']?.toString() ?? 'No special request',
+    );
+  }
 }

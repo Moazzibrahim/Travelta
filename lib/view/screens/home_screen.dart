@@ -2,7 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_travelta/constants/colors.dart';
-import 'package:flutter_travelta/view/screens/booking_list/booking_list_screen.dart';
+import 'package:flutter_travelta/view/screens/booking_list/screens/booking_list_screen.dart';
 import 'package:flutter_travelta/view/screens/client/client_screen.dart';
 import 'package:flutter_travelta/view/screens/lead/lead_screen.dart';
 import 'package:flutter_travelta/view/screens/operation/operation_screen.dart';
