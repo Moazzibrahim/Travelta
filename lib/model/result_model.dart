@@ -129,19 +129,25 @@ class AvailableRooms {
   final int availableQuantity;
   final String roomType;
   final Room room;
+  final List<Pricing> pricings;
 
   AvailableRooms(
       {required this.id,
       required this.availableQuantity,
       required this.room,
-      required this.roomType});
+      required this.roomType,
+      required this.pricings
+      });
 
   factory AvailableRooms.fromJson(Map<String, dynamic> json) {
     return AvailableRooms(
         id: json['room_id'],
         availableQuantity: json['available_quantity'],
         room: Room.fromJson(json['room_details']),
-        roomType: json['room_type']);
+        roomType: json['room_type'],
+        pricings: List<Pricing>.from(
+            json['pricing'].map((pricing) => Pricing.fromJson(pricing)))
+        );
   }
 }
 
@@ -187,7 +193,7 @@ class Room {
       affiliateId: json['affilate_id'],
       description: json['description'],
       priceType: json['price_type'],
-      price: json['price'].toDouble(),
+      price: json['price'] == null ? 0.0 : json['price'].toDouble(),
       gallery: List<Gallery>.from(
           json['gallery'].map((gallery) => Gallery.fromJson(gallery))),
       roomFeatures: List<RoomFeatures>.from(
@@ -196,6 +202,24 @@ class Room {
   }
 }
 
+
+class Pricing {
+  final int id;
+  final int currencyId;
+  final double price;
+  final String currencyName;
+
+  Pricing({required this.id, required this.currencyId, required this.price, required this.currencyName});
+
+  factory Pricing.fromJson(Map<String, dynamic> json) {
+    return Pricing(
+      id: json['id'],
+      currencyId: json['currency_id'],
+      price: json['price'].toDouble(),
+      currencyName: json['currency']['name'],
+    );
+  }
+}
 class Gallery {
   final String thumbUrl;
   final int id;

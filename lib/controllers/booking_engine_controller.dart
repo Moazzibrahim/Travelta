@@ -24,6 +24,8 @@ class BookingEngineController with ChangeNotifier {
 
   bool get isResultsEmpty => _results.isEmpty;
 
+  bool isLoaded = false;
+
   Future<void> fetchHotels(BuildContext context) async {
     try {
       final loginProvider = Provider.of<LoginProvider>(context, listen: false);
@@ -146,6 +148,7 @@ class BookingEngineController with ChangeNotifier {
         final responseData = json.decode(response.body);
         ResultsList results = ResultsList.fromJson(responseData);
         _results = results.results.map((e) => ResultModel.fromJson(e)).toList();
+        isLoaded = true;
         notifyListeners();
       } else {
         log('Failed to post booking. Status Code: ${response.statusCode}');
