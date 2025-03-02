@@ -224,6 +224,10 @@ class _FromManualBookingScreenState extends State<FromManualBookingScreen> {
                   if (value != null) {
                     setState(() {
                       bookingData.selectedCountryId = value;
+                      bookingData.selectedCityId =
+                          null; // Reset city when country changes
+                      bookingData.selectedCity = null;
+
                       for (var e in travelData.countries) {
                         if (e.id.toString() == value) {
                           bookingData.selectedCountry = e.name;
@@ -234,21 +238,21 @@ class _FromManualBookingScreenState extends State<FromManualBookingScreen> {
                   }
                 },
               ),
-              const SizedBox(
-                height: 15,
-              ),
+              const SizedBox(height: 15),
               CustomDropdownField(
                 label: bookingData.selectedCityId != null
-                    ? bookingData.selectedCity ?? 'select city'
+                    ? bookingData.selectedCity ?? 'Select city'
                     : 'Select city:',
-                items: travelData.cities.isEmpty
-                    ? []
-                    : travelData.cities.map((City city) {
-                        return DropdownMenuItem(
-                          value: city.id.toString(),
-                          child: Text(city.name),
-                        );
-                      }).toList(),
+                items: travelData.cities
+                    .where((city) =>
+                        city.countryId.toString() ==
+                        bookingData.selectedCountryId)
+                    .map((city) {
+                  return DropdownMenuItem(
+                    value: city.id.toString(),
+                    child: Text(city.name),
+                  );
+                }).toList(),
                 onChanged: (value) {
                   if (value != null) {
                     setState(() {

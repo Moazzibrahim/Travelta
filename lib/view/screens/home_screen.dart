@@ -5,7 +5,6 @@ import 'package:flutter_travelta/constants/colors.dart';
 import 'package:flutter_travelta/view/screens/booking_list/screens/booking_list_screen.dart';
 import 'package:flutter_travelta/view/screens/client/client_screen.dart';
 import 'package:flutter_travelta/view/screens/lead/lead_screen.dart';
-import 'package:flutter_travelta/view/screens/operation/operation_screen.dart';
 import 'package:flutter_travelta/view/screens/request/request_screen.dart';
 import 'package:flutter_travelta/view/screens/suppliers/suppliers_screen.dart';
 import 'NewBooking/new_booking_screen.dart';
@@ -44,13 +43,8 @@ class AdminHomeScreen extends StatelessWidget {
               crossAxisCount: 2,
               crossAxisSpacing: 16,
               mainAxisSpacing: 16,
+              childAspectRatio: 0.8,
               children: [
-                _buildDashboardCard(
-                  context: context,
-                  svgPath: "assets/images/Frame 1261154914.svg",
-                  label: "Operation",
-                  targetScreen: const OperationScreen(),
-                ),
                 _buildDashboardCard(
                   context: context,
                   svgPath: "assets/images/Frame 1261154914 (1).svg",
@@ -81,35 +75,13 @@ class AdminHomeScreen extends StatelessWidget {
                   label: "Client",
                   targetScreen: const ClientScreen(),
                 ),
-              ],
-            ),
-          ),
-          SizedBox(
-            height: 130,
-            child: GestureDetector(
-              onTap: () {
-                Navigator.of(context).push(MaterialPageRoute(
-                    builder: (ctx) => const SuppliersScreen()));
-              },
-              child: Card(
-                color: Colors.white,
-                elevation: 3,
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12)),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(
-                      'Suppliers',
-                      style: TextStyle(
-                        color: mainColor,
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ],
+                _buildDashboardCard(
+                  context: context,
+                  svgPath: "assets/images/Frame.svg",
+                  label: "suppliers",
+                  targetScreen: const SuppliersScreen(),
                 ),
-              ),
+              ],
             ),
           ),
         ]),

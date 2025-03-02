@@ -8,6 +8,7 @@ class TravelData {
   final List<Tax> taxes;
   final List<Customer> customers;
   final List<Supplier> suppliers;
+  final List<Employees> emploees;
 
   TravelData({
     required this.cities,
@@ -19,6 +20,7 @@ class TravelData {
     required this.taxes,
     required this.customers,
     required this.suppliers,
+    required this.emploees,
   });
 
   factory TravelData.fromJson(Map<String, dynamic> json) {
@@ -42,6 +44,24 @@ class TravelData {
       suppliers: (json['suppliers'] as List)
           .map((e) => Supplier.fromJson(e))
           .toList(), // Parse suppliers
+      emploees: (json['employees'] as List)
+          .map((e) => Employees.fromJson(e))
+          .toList(), // Parse employees
+    );
+  }
+}
+
+class Employees {
+  final int id;
+  final String name;
+  Employees({
+    required this.id,
+    required this.name,
+  });
+  factory Employees.fromJson(Map<String, dynamic> json) {
+    return Employees(
+      id: json['id'] ?? 0,
+      name: json['name'] ?? '',
     );
   }
 }

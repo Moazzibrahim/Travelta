@@ -52,7 +52,6 @@ class HotelWidgetState extends State<HotelWidget> {
   @override
   Widget build(BuildContext context) {
     final dataListProvider = Provider.of<DataListProvider>(context);
-    final HotelModel = dataListProvider.hotelData;
     return SingleChildScrollView(
       child: Column(
         children: [

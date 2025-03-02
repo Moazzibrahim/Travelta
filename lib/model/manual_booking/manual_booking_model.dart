@@ -24,6 +24,32 @@ class ManualBookingData {
   String? selectedtoCustomer;
   String? selectedtoCustomerId;
   double selectedTaxAmount = 0.0;
+  String? selectedEmployee;
+  String? selectedEmployeeId;
+  String? spicalRequest;
+
+  @override
+  String toString() {
+    return '''
+    Service: $selectedService
+    Service ID: $selectedServiceId
+    Supplier: $selectedSupplier
+    Supplier ID: $fromselectedSupplierId
+    Currency: $selectedCurrency
+    Currency ID: $selectedCurrencyId
+    Cost: $cost
+    Markup: $selectedMarkup
+    Markup Value: $markupValue
+    Final Price: $finalPrice
+    Country: $selectedCountry
+    Country ID: $selectedCountryId
+    Tax: $selectedTax
+    Tax ID: $selectedTaxId
+    Tax Type: $selectedTaxType
+    spicalRequest: $spicalRequest
+  ''';
+  }
+
   void calculateFinalPrice() {
     if (selectedMarkup == 'value') {
       finalPrice = cost + markupValue + selectedTaxAmount;
@@ -48,26 +74,5 @@ class ManualBookingData {
     }
     markupValue = newMarkupValue;
     calculateFinalPrice();
-  }
-
-  @override
-  String toString() {
-    return '''
-    Service: $selectedService
-    Service ID: $selectedServiceId
-    Supplier: $selectedSupplier
-    Supplier ID: $fromselectedSupplierId
-    Currency: $selectedCurrency
-    Currency ID: $selectedCurrencyId
-    Cost: $cost
-    Markup: $selectedMarkup
-    Markup Value: $markupValue
-    Final Price: $finalPrice
-    Country: $selectedCountry
-    Country ID: $selectedCountryId
-    Tax: $selectedTax
-    Tax ID: $selectedTaxId
-    Tax Type: $selectedTaxType
-  ''';
   }
 }

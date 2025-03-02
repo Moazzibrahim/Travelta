@@ -27,7 +27,6 @@ class _FlightWidgetState extends State<FlightWidget> {
   @override
   Widget build(BuildContext context) {
     final dataListProvider = Provider.of<DataListProvider>(context);
-    final FlightDetails = dataListProvider.busDetails;
 
     return SingleChildScrollView(
       child: Column(

@@ -19,11 +19,11 @@ class CustomDatePickerTextField extends StatefulWidget {
   });
 
   @override
-  _CustomDatePickerTextFieldState createState() =>
-      _CustomDatePickerTextFieldState();
+  CustomDatePickerTextFieldState createState() =>
+      CustomDatePickerTextFieldState();
 }
 
-class _CustomDatePickerTextFieldState extends State<CustomDatePickerTextField> {
+class CustomDatePickerTextFieldState extends State<CustomDatePickerTextField> {
   final TextEditingController _controller = TextEditingController();
 
   @override
@@ -60,6 +60,7 @@ class _CustomDatePickerTextFieldState extends State<CustomDatePickerTextField> {
 
       if (widget.showTimePickerOption) {
         TimeOfDay? pickedTime = await showTimePicker(
+          // ignore: use_build_context_synchronously
           context: context,
           initialTime: TimeOfDay.now(),
         );

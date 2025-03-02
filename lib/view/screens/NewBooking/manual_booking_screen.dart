@@ -25,6 +25,7 @@ class _ManualBookingScreenState extends State<ManualBookingScreen> {
     StepData(
       label: "From",
       screen: FromManualBookingScreen(
+        // ignore: non_constant_identifier_names, avoid_types_as_parameter_names
         onServiceSelected: (String) {},
       ),
     ),
@@ -247,6 +248,8 @@ class _ManualBookingScreenState extends State<ManualBookingScreen> {
       'city_id': dataListProvider.manualBookingData.selectedCityId,
       'mark_up': dataListProvider.manualBookingData.markupValue,
       'mark_up_type': dataListProvider.manualBookingData.selectedMarkup,
+      'agent_sales_id': dataListProvider.manualBookingData.selectedEmployeeId,
+      'special_request': dataListProvider.manualBookingData.spicalRequest,
     });
     log(dataListProvider.flightDetails.fromto.toString());
 

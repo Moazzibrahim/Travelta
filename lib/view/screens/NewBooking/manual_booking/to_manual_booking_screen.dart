@@ -45,89 +45,120 @@ class _ToManualBookingScreenState extends State<ToManualBookingScreen> {
 
         return Padding(
           padding: const EdgeInsets.all(16.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              CustomDropdownField(
-                label: bookingData.selectedCategory != null
-                    ? bookingData.selectedCategory ?? 'category not selected'
-                    : 'Select category:',
-                value: selectedCategory,
-                items: const [
-                  DropdownMenuItem(value: 'b2b', child: Text('B2B')),
-                  DropdownMenuItem(value: 'b2c', child: Text('B2C')),
-                ],
-                onChanged: (value) {
-                  setState(() {
-                    selectedCategory = value;
-                    bookingData.selectedtoSupplier = null;
-                    bookingData.selectedtoSupplierId = null;
-                    bookingData.selectedtoCustomer = null;
-                    bookingData.selectedtoCustomerId = null;
-                    dataListProvider.manualBookingData.selectedCategory = value;
-                  });
-                },
-              ),
-              const SizedBox(height: 24),
-              IgnorePointer(
-                ignoring: selectedCategory == null,
-                child: Opacity(
-                  opacity: selectedCategory == null ? 0.5 : 1.0,
-                  child: CustomDropdownField(
-                    label: selectedCategory == 'b2b'
-                        ? (bookingData.selectedtoSupplier != null
-                            ? bookingData.selectedtoSupplier ??
-                                'selectedtoSupplier not selected'
-                            : 'Select supplier:')
-                        : (bookingData.selectedtoCustomer != null
-                            ? bookingData.selectedtoCustomer ??
-                                'selectedtoCustomer not selected'
-                            : 'Select customer:'),
-                    value: selectedCategory == 'b2b'
-                        ? bookingData.selectedtoSupplier
-                        : bookingData.selectedtoCustomer,
-                    items: selectedCategory == 'b2b'
-                        ? dataListProvider.travelData!.suppliers
-                            .map((supplier) {
-                            return DropdownMenuItem(
-                              value: supplier.id
-                                  .toString(), // Ensure this is unique
-                              child: Text(supplier.agent),
-                            );
-                          }).toList()
-                        : dataListProvider.travelData?.customers
-                                .map((customer) {
+          child: SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                CustomDropdownField(
+                  label: bookingData.selectedCategory != null
+                      ? bookingData.selectedCategory ?? 'Category not selected'
+                      : 'Select category:',
+                  value: selectedCategory,
+                  items: const [
+                    DropdownMenuItem(value: 'b2b', child: Text('B2B')),
+                    DropdownMenuItem(value: 'b2c', child: Text('B2C')),
+                  ],
+                  onChanged: (value) {
+                    setState(() {
+                      selectedCategory = value;
+                      bookingData.selectedtoSupplier = null;
+                      bookingData.selectedtoSupplierId = null;
+                      bookingData.selectedtoCustomer = null;
+                      bookingData.selectedtoCustomerId = null;
+                      dataListProvider.manualBookingData.selectedCategory =
+                          value;
+                    });
+                  },
+                ),
+                const SizedBox(height: 24),
+                IgnorePointer(
+                  ignoring: selectedCategory == null,
+                  child: Opacity(
+                    opacity: selectedCategory == null ? 0.5 : 1.0,
+                    child: CustomDropdownField(
+                      label: selectedCategory == 'b2b'
+                          ? (bookingData.selectedtoSupplier ??
+                              'Select supplier:')
+                          : (bookingData.selectedtoCustomer ??
+                              'Select customer:'),
+                      value: selectedCategory == 'b2b'
+                          ? bookingData.selectedtoSupplier
+                          : bookingData.selectedtoCustomer,
+                      items: selectedCategory == 'b2b'
+                          ? dataListProvider.travelData!.suppliers
+                              .map((supplier) {
                               return DropdownMenuItem(
-                                value: customer.id.toString(),
-                                child: Text(customer.name),
+                                value: supplier.id.toString(),
+                                child: Text(supplier.agent),
                               );
-                            }).toList() ??
-                            [],
-                    onChanged: (value) {
-                      setState(() {
-                        if (selectedCategory == 'b2b') {
-                          bookingData.selectedtoSupplier = value;
-                          for (var e in travelData.suppliers) {
-                            if (e.id.toString() == value) {
-                              bookingData.selectedtoSupplierId =
-                                  e.id.toString();
-                            }
+                            }).toList()
+                          : dataListProvider.travelData?.customers
+                                  .map((customer) {
+                                return DropdownMenuItem(
+                                  value: customer.id.toString(),
+                                  child: Text(customer.name),
+                                );
+                              }).toList() ??
+                              [],
+                      onChanged: (value) {
+                        setState(() {
+                          if (selectedCategory == 'b2b') {
+                            bookingData.selectedtoSupplier = value;
+                            bookingData.selectedtoSupplierId = travelData
+                                .suppliers
+                                .firstWhere((e) => e.id.toString() == value)
+                                .id
+                                .toString();
+                          } else if (selectedCategory == 'b2c') {
+                            bookingData.selectedtoCustomer = value;
+                            bookingData.selectedtoCustomerId = travelData
+                                .customers
+                                .firstWhere((e) => e.id.toString() == value)
+                                .id
+                                .toString();
                           }
-                        } else if (selectedCategory == 'b2c') {
-                          bookingData.selectedtoCustomer = value;
-                          for (var e in travelData.customers) {
-                            if (e.id.toString() == value) {
-                              bookingData.selectedtoCustomerId =
-                                  e.id.toString();
-                            }
-                          }
-                        }
-                      });
-                    },
+                        });
+                      },
+                    ),
                   ),
                 ),
-              ),
-            ],
+                const SizedBox(height: 24),
+                CustomDropdownField(
+                  label: bookingData.selectedEmployeeId != null
+                      ? bookingData.selectedEmployee!
+                      : 'Select agent sales:',
+                  items: travelData.emploees.map((Employees) {
+                    return DropdownMenuItem(
+                      value: Employees.id.toString(),
+                      child: Text(Employees.name),
+                    );
+                  }).toList(),
+                  onChanged: (value) {
+                    setState(() {
+                      for (var e in travelData.emploees) {
+                        if (e.id.toString() == value) {
+                          bookingData.selectedEmployee = e.name;
+                        }
+                      }
+                      bookingData.selectedEmployeeId = value;
+                    });
+                  },
+                ),
+                const SizedBox(height: 24),
+                TextField(
+                  decoration: const InputDecoration(
+                    border: OutlineInputBorder(
+                      borderSide: BorderSide(color: Colors.black),
+                    ),
+                    labelText: 'Special request',
+                    hintText: 'Enter special request',
+                  ),
+                  onChanged: (value) {
+                    bookingData.spicalRequest = value;
+                  },
+                )
+              ],
+            ),
           ),
         );
       },
