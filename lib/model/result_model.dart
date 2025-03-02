@@ -129,14 +129,12 @@ class AvailableRooms {
   final int availableQuantity;
   final String roomType;
   final Room room;
-  final List<Pricing> pricings;
 
   AvailableRooms(
       {required this.id,
       required this.availableQuantity,
       required this.room,
       required this.roomType,
-      required this.pricings
       });
 
   factory AvailableRooms.fromJson(Map<String, dynamic> json) {
@@ -145,8 +143,6 @@ class AvailableRooms {
         availableQuantity: json['available_quantity'],
         room: Room.fromJson(json['room_details']),
         roomType: json['room_type'],
-        pricings: List<Pricing>.from(
-            json['pricing'].map((pricing) => Pricing.fromJson(pricing)))
         );
   }
 }
@@ -173,6 +169,7 @@ class Room {
   final double price;
   final List<Gallery> gallery;
   final List<RoomFeatures> roomFeatures;
+  final List<Pricing> pricings;
 
   Room(
       {required this.cityId,
@@ -183,7 +180,9 @@ class Room {
       required this.priceType,
       required this.price,
       required this.gallery,
-      required this.roomFeatures});
+      required this.roomFeatures,
+      required this.pricings
+      });
 
   factory Room.fromJson(Map<String, dynamic> json) {
     return Room(
@@ -198,6 +197,8 @@ class Room {
           json['gallery'].map((gallery) => Gallery.fromJson(gallery))),
       roomFeatures: List<RoomFeatures>.from(
           json['amenity'].map((room) => RoomFeatures.fromJson(room))),
+      pricings: List<Pricing>.from(
+            json['pricing'].map((pricing) => Pricing.fromJson(pricing)))
     );
   }
 }

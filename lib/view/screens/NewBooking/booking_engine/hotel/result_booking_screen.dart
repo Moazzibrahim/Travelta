@@ -37,7 +37,7 @@ class ResultBookingScreen extends StatelessWidget {
                       thumbnail: result.hotelLogo,
                       hotelName: result.hotelName,
                       rating: result.hotelStar,
-                      price: result.availableRooms[0].pricings[0].price,
+                      price: result.availableRooms[0].room.pricings[0].price,
                       onPressed: () {
                         Navigator.of(context).push(MaterialPageRoute(
                             builder: (ctx) => HotelDetailsScreen(
