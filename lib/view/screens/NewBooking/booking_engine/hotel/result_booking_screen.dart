@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_travelta/constants/colors.dart';
 import 'package:flutter_travelta/controllers/booking_engine_controller.dart';
 import 'package:flutter_travelta/model/result_model.dart';
-import 'package:flutter_travelta/view/screens/NewBooking/hotel_details_screen.dart';
+import 'package:flutter_travelta/view/screens/NewBooking/booking_engine/hotel/hotel_details_screen.dart';
 import 'package:flutter_travelta/view/widgets/appbar_widget.dart';
 import 'package:flutter_travelta/view/widgets/booking_result_container.dart';
 import 'package:provider/provider.dart';

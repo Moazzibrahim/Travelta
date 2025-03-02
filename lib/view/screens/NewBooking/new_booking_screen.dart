@@ -5,7 +5,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_travelta/view/screens/NewBooking/manual_booking_screen.dart';
 import 'package:flutter_travelta/view/widgets/appbar_widget.dart';
 import '../../../constants/colors.dart';
-import 'booking_engine_screen.dart';
+import 'booking_engine/hotel/booking_engine_screen.dart';
 
 class NewBookingScreen extends StatefulWidget {
   const NewBookingScreen({super.key});

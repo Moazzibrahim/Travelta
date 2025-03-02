@@ -3,7 +3,7 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter_travelta/constants/colors.dart';
 import 'package:flutter_travelta/controllers/booking_engine_controller.dart';
-import 'package:flutter_travelta/view/screens/NewBooking/result_booking_screen.dart';
+import 'package:flutter_travelta/view/screens/NewBooking/booking_engine/hotel/result_booking_screen.dart';
 import 'package:flutter_travelta/view/widgets/appbar_widget.dart';
 import 'package:flutter_travelta/view/widgets/auto_complete_widget.dart';
 import 'package:flutter_travelta/view/widgets/custom_snackbar.dart';
