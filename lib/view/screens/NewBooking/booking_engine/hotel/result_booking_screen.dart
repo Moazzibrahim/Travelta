@@ -42,13 +42,6 @@ class ResultBookingScreen extends StatelessWidget {
                         Navigator.of(context).push(MaterialPageRoute(
                             builder: (ctx) => HotelDetailsScreen(
                                   availableRooms: result.availableRooms,
-                                  // hotelImage: result.hotelLogo,
-                                  // images: result.images,
-                                  // hotelFacilities: result.hotelFacilities,
-                                  // hotelFeatures: result.hotelFeatures,
-                                  // room: result.availableRooms[0],
-                                  // policies: result.hotelPolicies,
-                                  // paymentMethods: result.hotelAcceptedCards,
                                 )));
                       },
                     );
