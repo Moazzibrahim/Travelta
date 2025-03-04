@@ -3,7 +3,9 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_travelta/controllers/Auth/login_provider.dart';
+import 'package:flutter_travelta/model/agent_booking.dart';
 import 'package:flutter_travelta/model/booking_engine_model.dart';
+import 'package:flutter_travelta/model/customer_booking.dart';
 import 'package:flutter_travelta/model/result_model.dart';
 import 'package:provider/provider.dart';
 import 'package:http/http.dart' as http;
@@ -21,6 +23,12 @@ class BookingEngineController with ChangeNotifier {
 
   List<ResultModel> _results = [];
   List<ResultModel> get results => _results;
+
+  List<CustomerBooking> _customers = [];
+  List<CustomerBooking> get customers => _customers;
+
+  List<AgentBooking> _agents = []; 
+  List<AgentBooking> get agents => _agents;
 
   bool get isResultsEmpty => _results.isEmpty;
 
@@ -158,4 +166,69 @@ class BookingEngineController with ChangeNotifier {
       log('Error in posting booking: $e');
     }
   }
-}
+
+  Future<void> fetchCustomers(BuildContext context) async {
+    final loginProvider = Provider.of<LoginProvider>(context, listen: false);
+    final token = loginProvider.token;
+    try {
+      final url = Uri.parse('https://travelta.online/agent/getCustomers');
+
+      final response = await http.get(
+        url,
+        headers: {
+          'Content-Type': 'application/json',
+          'accept': 'application/json',
+          'Authorization': 'Bearer $token',
+        },
+      );
+      if (response.statusCode == 200) {
+        final responseData = json.decode(response.body);
+        CustomerBookingList customers = CustomerBookingList.fromJson(responseData);
+        _customers = customers.customerBookings.map((e) => CustomerBooking.fromJson(e)).toList();
+        notifyListeners();
+      }
+    } catch (e) {
+      log('Error in fetching customers: $e');
+    }
+  }
+
+  Future<void> fetchAgents(BuildContext context) async {
+    final loginProvider = Provider.of<LoginProvider>(context, listen: false);
+    final token = loginProvider.token;
+    try {
+      final url = Uri.parse('https://travelta.online/agent/getAgents');
+
+      final response = await http.get(
+        url,
+        headers: {
+          'Content-Type': 'application/json',
+          'accept': 'application/json',
+          'Authorization': 'Bearer $token',
+        },
+      );
+      if (response.statusCode == 200) {
+        final responseData = json.decode(response.body);        
+        AgentBookingList agents = AgentBookingList.fromJson(responseData);
+        _agents = agents.agentBookings.map((e) => AgentBooking.fromJson(e)).toList();
+        notifyListeners();
+      }
+    } catch (e) {
+      log('Error in fetching agents: $e');
+    }
+        }
+  }
+
+  Future<void> bookRoom(BuildContext context,
+  {
+    required int roomId,
+    required int adults,
+    required int children,
+    required String checkOut,
+    required String checkIn,
+    required int quantity,
+
+  }
+  ) async {
+    
+  }
+
