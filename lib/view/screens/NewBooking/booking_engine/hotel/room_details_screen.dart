@@ -211,7 +211,9 @@ class RoomDetailsScreen extends StatelessWidget {
                 padding:
                     const EdgeInsets.symmetric(vertical: 15, horizontal: 10),
                 child: ElevatedButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    
+                  },
                   style: ElevatedButton.styleFrom(
                       backgroundColor: mainColor,
                       foregroundColor: Colors.white,

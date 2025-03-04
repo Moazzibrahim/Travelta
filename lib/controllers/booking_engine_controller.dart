@@ -197,7 +197,7 @@ class BookingEngineController with ChangeNotifier {
     final loginProvider = Provider.of<LoginProvider>(context, listen: false);
     final token = loginProvider.token;
     try {
-      final url = Uri.parse('https://travelta.online/agent/getAgents');
+      final url = Uri.parse('https://travelta.online/agent/getagents');
 
       final response = await http.get(
         url,
@@ -216,9 +216,9 @@ class BookingEngineController with ChangeNotifier {
     } catch (e) {
       log('Error in fetching agents: $e');
     }
-        }
+  }
 
-     Future<void> bookRoom(BuildContext context,
+    Future<void> bookRoom(BuildContext context,
   {
     required int roomId,
     required int adults,

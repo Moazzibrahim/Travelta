@@ -39,6 +39,7 @@ class _BookingEngineScreenState extends State<BookingEngineScreen> {
               Tab(text: "Tour"),
             ],
           ),
+          backgroundColor: Colors.white,
         ),
         body: const TabBarView(
           children: [HotelBookingTab(), TourBookingTab()],
