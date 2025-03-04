@@ -25,6 +25,8 @@ class BookingEngineController with ChangeNotifier {
   bool get isResultsEmpty => _results.isEmpty;
 
   bool isLoaded = false;
+  List<TourType> _tourTypes = [];
+  List<TourType> get tourTypes => _tourTypes;
 
   Future<void> fetchHotels(BuildContext context) async {
     try {
@@ -156,6 +158,86 @@ class BookingEngineController with ChangeNotifier {
       }
     } catch (e) {
       log('Error in posting booking: $e');
+    }
+  }
+
+  Future<void> fetchTourTypes(BuildContext context) async {
+    try {
+      final loginProvider = Provider.of<LoginProvider>(context, listen: false);
+      final token = loginProvider.token;
+
+      final url = Uri.parse('https://travelta.online/agent/gettourtypes');
+
+      final response = await http.get(
+        url,
+        headers: {
+          'Content-Type': 'application/json',
+          'accept': 'application/json',
+          'Authorization': 'Bearer $token',
+        },
+      );
+      if (response.statusCode == 200) {
+        final responseData = json.decode(response.body);
+        TourTypeList tourTypeList = TourTypeList.fromJson(responseData);
+        _tourTypes = tourTypeList.tourTypes;
+        notifyListeners();
+      } else {
+        log('Failed to load tour types. Status Code: ${response.statusCode}');
+      }
+    } catch (e) {
+      log('Error in fetching tour types: $e');
+    }
+  }
+
+  Future<void> postTourBooking(
+    BuildContext context, {
+    required int year,
+    required int month,
+    required int people,
+    int? destinationCountry,
+    int? destinationCity,
+    required int tourTypeId,
+  }) async {
+    try {
+      final loginProvider = Provider.of<LoginProvider>(context, listen: false);
+      final token = loginProvider.token;
+      final url = Uri.parse('https://travelta.online/agent/agent/tours');
+
+      // Constructing the request body dynamically
+      final Map<String, dynamic> requestBody = {
+        "year": year,
+        "month": month,
+        "people": people,
+        "tour_type_id": tourTypeId,
+      };
+
+      if (destinationCountry != null) {
+        requestBody["destination_country"] = destinationCountry;
+      }
+      if (destinationCity != null) {
+        requestBody["destination_city"] = destinationCity;
+      }
+
+      final response = await http.post(
+        url,
+        headers: {
+          'Content-Type': 'application/json',
+          'accept': 'application/json',
+          'Authorization': 'Bearer $token',
+        },
+        body: jsonEncode(requestBody),
+      );
+
+      if (response.statusCode == 200) {
+        final responseData = json.decode(response.body);
+        log('Tour booking successful: $responseData');
+        notifyListeners();
+      } else {
+        log('Failed to post tour booking. Status Code: ${response.statusCode}');
+        log('Response: ${response.body}');
+      }
+    } catch (e) {
+      log('Error in posting tour booking: $e');
     }
   }
 }
