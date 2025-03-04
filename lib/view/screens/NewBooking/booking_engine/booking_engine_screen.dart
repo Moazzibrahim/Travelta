@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_travelta/constants/colors.dart';
 import 'package:flutter_travelta/controllers/booking_engine_controller.dart';
 import 'package:flutter_travelta/view/screens/NewBooking/booking_engine/hotel/hotel_booking_engine.dart';
+import 'package:flutter_travelta/view/screens/NewBooking/booking_engine/tour/tour_booking_engine.dart';
 import 'package:provider/provider.dart';
 
 class BookingEngineScreen extends StatefulWidget {
@@ -39,13 +40,8 @@ class _BookingEngineScreenState extends State<BookingEngineScreen> {
             ],
           ),
         ),
-        body: TabBarView(
-          children: [
-            HotelBookingTab(),
-            const Center(
-                child: Text("Tour booking will be added here",
-                    style: TextStyle(fontSize: 18))),
-          ],
+        body: const TabBarView(
+          children: [HotelBookingTab(), TourBookingTab()],
         ),
       ),
     );

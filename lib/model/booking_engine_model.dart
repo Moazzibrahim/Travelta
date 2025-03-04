@@ -75,3 +75,31 @@ class CitiesBookingList {
     );
   }
 }
+
+class TourType {
+  final int id;
+  final String name;
+
+  TourType({required this.id, required this.name});
+
+  factory TourType.fromJson(Map<String, dynamic> json) {
+    return TourType(
+      id: json['id'],
+      name: json['name'],
+    );
+  }
+}
+
+class TourTypeList {
+  final List<TourType> tourTypes;
+
+  TourTypeList({required this.tourTypes});
+
+  factory TourTypeList.fromJson(Map<String, dynamic> json) {
+    return TourTypeList(
+      tourTypes: (json['tourtype'] as List)
+          .map((item) => TourType.fromJson(item))
+          .toList(),
+    );
+  }
+}

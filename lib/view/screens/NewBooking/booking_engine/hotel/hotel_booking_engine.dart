@@ -9,6 +9,8 @@ import 'package:flutter_travelta/view/widgets/custom_snackbar.dart';
 import 'package:provider/provider.dart';
 
 class HotelBookingTab extends StatefulWidget {
+  const HotelBookingTab({super.key});
+
   @override
   State<HotelBookingTab> createState() => _HotelBookingTabState();
 }
