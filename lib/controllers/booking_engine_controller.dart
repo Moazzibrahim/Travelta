@@ -4,6 +4,7 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter_travelta/controllers/Auth/login_provider.dart';
 import 'package:flutter_travelta/model/agent_booking.dart';
+import 'package:flutter_travelta/model/book_room.dart';
 import 'package:flutter_travelta/model/booking_engine_model.dart';
 import 'package:flutter_travelta/model/customer_booking.dart';
 import 'package:flutter_travelta/model/result_model.dart';
@@ -29,10 +30,16 @@ class BookingEngineController with ChangeNotifier {
 
   List<AgentBooking> _agents = [];
   List<AgentBooking> get agents => _agents;
+  bool isCustomersLoaded = false;
+
+  BookRoom _bookRoom = BookRoom();
+  BookRoom get bookRoom => _bookRoom;
 
   bool get isResultsEmpty => _results.isEmpty;
 
   bool isLoaded = false;
+  bool isAgentsLoaded = false;
+  bool isCustomersLoaded = false;
   List<TourType> _tourTypes = [];
   List<TourType> get tourTypes => _tourTypes;
 
@@ -190,6 +197,8 @@ class BookingEngineController with ChangeNotifier {
         _customers = customers.customerBookings
             .map((e) => CustomerBooking.fromJson(e))
             .toList();
+        isCustomersLoaded = true;
+
         notifyListeners();
       }
     } catch (e) {
@@ -216,48 +225,37 @@ class BookingEngineController with ChangeNotifier {
         AgentBookingList agents = AgentBookingList.fromJson(responseData);
         _agents =
             agents.agentBookings.map((e) => AgentBooking.fromJson(e)).toList();
+                    isAgentsLoaded = true;
+
         notifyListeners();
       }
     } catch (e) {
       log('Error in fetching agents: $e');
     }
   }
-
-  Future<void> bookRoom(
-    BuildContext context, {
-    required int roomId,
-    required int adults,
-    required int children,
-    required String checkOut,
-    required String checkIn,
-    required int quantity,
-  }) async {}
-
-  Future<void> fetchTourTypes(BuildContext context) async {
+   Future<void> postBookRoom(BuildContext context) async {
     try {
       final loginProvider = Provider.of<LoginProvider>(context, listen: false);
       final token = loginProvider.token;
 
-      final url = Uri.parse('https://travelta.online/agent/gettourtypes');
+      final url = Uri.parse('https://travelta.online/agent/agent/bookingEngine');
 
-      final response = await http.get(
+      final response = await http.post(
         url,
         headers: {
           'Content-Type': 'application/json',
           'accept': 'application/json',
           'Authorization': 'Bearer $token',
         },
+        body: jsonEncode({
+          
+        })
       );
       if (response.statusCode == 200) {
-        final responseData = json.decode(response.body);
-        TourTypeList tourTypeList = TourTypeList.fromJson(responseData);
-        _tourTypes = tourTypeList.tourTypes;
-        notifyListeners();
-      } else {
-        log('Failed to load tour types. Status Code: ${response.statusCode}');
+        
       }
     } catch (e) {
-      log('Error in fetching tour types: $e');
+      log('Error in posting booking: $e');
     }
   }
 

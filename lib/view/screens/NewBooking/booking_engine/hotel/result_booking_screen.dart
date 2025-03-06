@@ -42,6 +42,7 @@ class ResultBookingScreen extends StatelessWidget {
                         Navigator.of(context).push(MaterialPageRoute(
                             builder: (ctx) => HotelDetailsScreen(
                                   availableRooms: result.availableRooms,
+                                  result: result,
                                 )));
                       },
                     );
