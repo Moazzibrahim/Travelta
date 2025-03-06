@@ -27,7 +27,7 @@ class BookingEngineController with ChangeNotifier {
   List<CustomerBooking> _customers = [];
   List<CustomerBooking> get customers => _customers;
 
-  List<AgentBooking> _agents = []; 
+  List<AgentBooking> _agents = [];
   List<AgentBooking> get agents => _agents;
 
   bool get isResultsEmpty => _results.isEmpty;
@@ -168,6 +168,7 @@ class BookingEngineController with ChangeNotifier {
       log('Error in posting booking: $e');
     }
   }
+
   Future<void> fetchCustomers(BuildContext context) async {
     final loginProvider = Provider.of<LoginProvider>(context, listen: false);
     final token = loginProvider.token;
@@ -184,8 +185,11 @@ class BookingEngineController with ChangeNotifier {
       );
       if (response.statusCode == 200) {
         final responseData = json.decode(response.body);
-        CustomerBookingList customers = CustomerBookingList.fromJson(responseData);
-        _customers = customers.customerBookings.map((e) => CustomerBooking.fromJson(e)).toList();
+        CustomerBookingList customers =
+            CustomerBookingList.fromJson(responseData);
+        _customers = customers.customerBookings
+            .map((e) => CustomerBooking.fromJson(e))
+            .toList();
         notifyListeners();
       }
     } catch (e) {
@@ -208,9 +212,10 @@ class BookingEngineController with ChangeNotifier {
         },
       );
       if (response.statusCode == 200) {
-        final responseData = json.decode(response.body);        
+        final responseData = json.decode(response.body);
         AgentBookingList agents = AgentBookingList.fromJson(responseData);
-        _agents = agents.agentBookings.map((e) => AgentBooking.fromJson(e)).toList();
+        _agents =
+            agents.agentBookings.map((e) => AgentBooking.fromJson(e)).toList();
         notifyListeners();
       }
     } catch (e) {
@@ -218,19 +223,15 @@ class BookingEngineController with ChangeNotifier {
     }
   }
 
-    Future<void> bookRoom(BuildContext context,
-  {
+  Future<void> bookRoom(
+    BuildContext context, {
     required int roomId,
     required int adults,
     required int children,
     required String checkOut,
     required String checkIn,
     required int quantity,
-
-  }
-  ) async {
-    
-  }
+  }) async {}
 
   Future<void> fetchTourTypes(BuildContext context) async {
     try {
@@ -260,7 +261,7 @@ class BookingEngineController with ChangeNotifier {
     }
   }
 
-  Future<void> postTourBooking(
+  Future<Map<String, dynamic>?> postTourBooking(
     BuildContext context, {
     required int year,
     required int month,
@@ -274,7 +275,6 @@ class BookingEngineController with ChangeNotifier {
       final token = loginProvider.token;
       final url = Uri.parse('https://travelta.online/agent/agent/tours');
 
-      // Constructing the request body dynamically
       final Map<String, dynamic> requestBody = {
         "year": year,
         "month": month,
@@ -302,14 +302,15 @@ class BookingEngineController with ChangeNotifier {
       if (response.statusCode == 200) {
         final responseData = json.decode(response.body);
         log('Tour booking successful: $responseData');
-        notifyListeners();
+        return responseData;
       } else {
         log('Failed to post tour booking. Status Code: ${response.statusCode}');
         log('Response: ${response.body}');
+        return null;
       }
     } catch (e) {
       log('Error in posting tour booking: $e');
+      return null;
     }
   }
-  }
-
+}

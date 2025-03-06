@@ -5,6 +5,7 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter_travelta/constants/colors.dart';
 import 'package:flutter_travelta/controllers/booking_engine_controller.dart';
+import 'package:flutter_travelta/view/screens/NewBooking/booking_engine/tour/tour_list_screen.dart';
 import 'package:flutter_travelta/view/widgets/auto_complete_widget.dart';
 import 'package:provider/provider.dart';
 
@@ -94,13 +95,16 @@ class _TourBookingTabState extends State<TourBookingTab> {
                       style: ElevatedButton.styleFrom(
                           backgroundColor: mainColor,
                           padding: const EdgeInsets.symmetric(vertical: 16)),
-                      onPressed: () {
+                      onPressed: () async {
                         if (selectedYear != null &&
                             selectedMonth != null &&
                             selectedTourTypeId != null) {
-                          Provider.of<BookingEngineController>(context,
-                                  listen: false)
-                              .postTourBooking(
+                          final bookingController =
+                              Provider.of<BookingEngineController>(context,
+                                  listen: false);
+
+                          final responseData =
+                              await bookingController.postTourBooking(
                             context,
                             year: selectedYear!,
                             month: selectedMonth!,
@@ -109,6 +113,20 @@ class _TourBookingTabState extends State<TourBookingTab> {
                             destinationCity: selectedCityId,
                             tourTypeId: selectedTourTypeId!,
                           );
+
+                          if (responseData != null) {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => TourListScreen(
+                                  tourData: responseData,
+                                  adultsCount: _adultsCount,
+                                ),
+                              ),
+                            );
+                          } else {
+                            log("Failed to fetch tour booking data.");
+                          }
                         } else {
                           log("Please select all required fields before searching.");
                         }
