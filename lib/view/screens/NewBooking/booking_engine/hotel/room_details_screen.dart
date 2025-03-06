@@ -1,28 +1,33 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_travelta/constants/colors.dart';
+import 'package:flutter_travelta/controllers/booking_engine_controller.dart';
 import 'package:flutter_travelta/model/result_model.dart';
+import 'package:flutter_travelta/view/screens/NewBooking/booking_engine/hotel/choose_agent_customer_screen.dart';
 import 'package:flutter_travelta/view/widgets/images_dilaog.dart';
 import 'package:flutter_travelta/view/widgets/policies_content.dart';
 import 'package:flutter_travelta/view/widgets/rooms_and_facilities_content.dart';
+import 'package:provider/provider.dart';
 
 class RoomDetailsScreen extends StatelessWidget {
   const RoomDetailsScreen(
       {super.key,
-      required this.hotelImage,
+      required this.roomImage,
       required this.images,
       required this.hotelFeatures,
       required this.hotelFacilities,
       required this.room,
       required this.policies,
-      required this.paymentMethods});
-  final String hotelImage;
+      required this.paymentMethods, required this.hotelDescription, required this.hotelName});
+  final String roomImage;
   final List<String> images;
   final List<HotelFeatures> hotelFeatures;
   final List<HotelFacilities> hotelFacilities;
   final AvailableRooms room;
   final List<HotelPolicies> policies;
   final List<HotelAcceptedCards> paymentMethods;
+  final String hotelDescription;
+  final String hotelName;
 
   @override
   Widget build(BuildContext context) {
@@ -35,7 +40,7 @@ class RoomDetailsScreen extends StatelessWidget {
               Stack(
                 children: [
                   Image.network(
-                    hotelImage,
+                    roomImage,
                     fit: BoxFit.cover,
                     width: double.infinity,
                     height: 280,
@@ -167,10 +172,10 @@ class RoomDetailsScreen extends StatelessWidget {
                           const SizedBox(height: 10),
                           Row(
                             children: [
-                              const Expanded(
+                              Expanded(
                                 child: Text(
-                                  'A luxurious hotel with direct Nile views, offering upscale accommodation, distinguished services, and modern facilities.',
-                                  style: TextStyle(fontSize: 11),
+                                  hotelDescription,
+                                  style: const TextStyle(fontSize: 11),
                                   softWrap: true,
                                 ),
                               ),
@@ -212,7 +217,9 @@ class RoomDetailsScreen extends StatelessWidget {
                     const EdgeInsets.symmetric(vertical: 15, horizontal: 10),
                 child: ElevatedButton(
                   onPressed: () {
-                    
+                    final bookingEngineProvider = Provider.of<BookingEngineController>(context, listen: false);
+                    bookingEngineProvider.bookRoom.fromSupplierId = room.room.agentId;
+                    Navigator.of(context).push(MaterialPageRoute(builder: (_) => const ChooseAgentCustomerScreen()));
                   },
                   style: ElevatedButton.styleFrom(
                       backgroundColor: mainColor,
@@ -220,7 +227,7 @@ class RoomDetailsScreen extends StatelessWidget {
                       shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(8)),
                       minimumSize: const Size(double.infinity, 50)),
-                  child: const Text('Reserve'),
+                  child: const Text('Procced to Book'),
                 ),
               ),
             ],

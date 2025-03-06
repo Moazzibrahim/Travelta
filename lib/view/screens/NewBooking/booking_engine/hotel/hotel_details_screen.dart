@@ -1,24 +1,115 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_travelta/controllers/booking_engine_controller.dart';
 import 'package:flutter_travelta/model/result_model.dart';
+import 'package:flutter_travelta/view/widgets/images_dilaog.dart';
 import 'package:provider/provider.dart';
 import 'room_details_screen.dart';
 
 class HotelDetailsScreen extends StatelessWidget {
-  const HotelDetailsScreen({super.key, required this.availableRooms});
+  const HotelDetailsScreen({super.key, required this.availableRooms, required this.result});
   final List<AvailableRooms> availableRooms;
+  final ResultModel result;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Available Rooms')),
-      body: ListView.builder(
-        itemCount: availableRooms.length,
-        padding: const EdgeInsets.all(10),
-        itemBuilder: (context, index) {
-          final room = availableRooms[index];
-          return RoomCard(room: room,index: index,);
-        },
+      appBar: AppBar(title: Text('Available Rooms in ${result.hotelName}'), backgroundColor: Colors.white,),
+      body: Column(
+        children: [
+          Stack(
+                children: [
+                  Image.network(
+                    result.hotelLogo,
+                    fit: BoxFit.cover,
+                    width: double.infinity,
+                    height: 200,
+                  ),
+                  Positioned(
+                    bottom: 16,
+                    left: 16,
+                    right: 16,
+                    child: Center(
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 8, vertical: 8),
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(16),
+                          boxShadow: const [
+                            BoxShadow(
+                              color: Colors.black26,
+                              blurRadius: 8,
+                              spreadRadius: 2,
+                            ),
+                          ],
+                        ),
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: List.generate(
+                            result.images.length > 3 ? 4 : result.images.length,
+                            (index) {
+                              return Padding(
+                                padding:
+                                    const EdgeInsets.symmetric(horizontal: 4),
+                                child: ClipRRect(
+                                  borderRadius: BorderRadius.circular(8),
+                                  child: Stack(
+                                    children: [
+                                      Image.network(
+                                        result.images[index],
+                                        width: 50,
+                                        height: 50,
+                                        fit: BoxFit.cover,
+                                      ),
+                                      if (index == 3 && result.images.length > 4)
+                                        GestureDetector(
+                                          onTap: () {
+                                            showImageDialog(context, result.images);
+                                          },
+                                          child: Container(
+                                            width: 50,
+                                            height: 50,
+                                            decoration: BoxDecoration(
+                                              color:
+                                                  Colors.black.withOpacity(0.5),
+                                              borderRadius:
+                                                  BorderRadius.circular(8),
+                                            ),
+                                            child: Center(
+                                              child: Text(
+                                                "+${result.images.length - 3}",
+                                                style: const TextStyle(
+                                                  color: Colors.white,
+                                                  fontWeight: FontWeight.bold,
+                                                  fontSize: 16,
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                    ],
+                                  ),
+                                ),
+                              );
+                            },
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+          Expanded(
+            child: ListView.builder(
+              itemCount: availableRooms.length,
+              padding: const EdgeInsets.all(10),
+              itemBuilder: (context, index) {
+                final room = availableRooms[index];
+                return RoomCard(room: room,index: index,);
+              },
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -41,17 +132,20 @@ class RoomCard extends StatelessWidget {
               Provider.of<BookingEngineController>(context, listen: false);
           final result = hotelBookingEngineProvider.results
               .firstWhere((element) => element.availableRooms.contains(room));
+          
           Navigator.push(
             context,
             MaterialPageRoute(
               builder: (context) => RoomDetailsScreen(
-                hotelImage: result.hotelLogo,
-                images: result.images,
+                hotelName: result.hotelName,
+                roomImage: room.room.gallery[0].thumbUrl,
+                images: room.room.gallery.map((e) => e.thumbUrl,).toList(),
                 hotelFacilities: result.hotelFacilities,
                 hotelFeatures: result.hotelFeatures,
                 room: result.availableRooms[index],
                 policies: result.hotelPolicies,
                 paymentMethods: result.hotelAcceptedCards,
+                hotelDescription: result.hotelDescription,
               ),
             ),
           );

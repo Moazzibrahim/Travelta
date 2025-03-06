@@ -4,6 +4,7 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter_travelta/controllers/Auth/login_provider.dart';
 import 'package:flutter_travelta/model/agent_booking.dart';
+import 'package:flutter_travelta/model/book_room.dart';
 import 'package:flutter_travelta/model/booking_engine_model.dart';
 import 'package:flutter_travelta/model/customer_booking.dart';
 import 'package:flutter_travelta/model/result_model.dart';
@@ -30,9 +31,14 @@ class BookingEngineController with ChangeNotifier {
   List<AgentBooking> _agents = []; 
   List<AgentBooking> get agents => _agents;
 
+  BookRoom _bookRoom = BookRoom();
+  BookRoom get bookRoom => _bookRoom;
+
   bool get isResultsEmpty => _results.isEmpty;
 
   bool isLoaded = false;
+  bool isAgentsLoaded = false;
+  bool isCustomersLoaded = false;
   List<TourType> _tourTypes = [];
   List<TourType> get tourTypes => _tourTypes;
 
@@ -186,6 +192,7 @@ class BookingEngineController with ChangeNotifier {
         final responseData = json.decode(response.body);
         CustomerBookingList customers = CustomerBookingList.fromJson(responseData);
         _customers = customers.customerBookings.map((e) => CustomerBooking.fromJson(e)).toList();
+        isCustomersLoaded = true;
         notifyListeners();
       }
     } catch (e) {
@@ -211,6 +218,7 @@ class BookingEngineController with ChangeNotifier {
         final responseData = json.decode(response.body);        
         AgentBookingList agents = AgentBookingList.fromJson(responseData);
         _agents = agents.agentBookings.map((e) => AgentBooking.fromJson(e)).toList();
+        isAgentsLoaded = true;
         notifyListeners();
       }
     } catch (e) {
@@ -218,18 +226,30 @@ class BookingEngineController with ChangeNotifier {
     }
   }
 
-    Future<void> bookRoom(BuildContext context,
-  {
-    required int roomId,
-    required int adults,
-    required int children,
-    required String checkOut,
-    required String checkIn,
-    required int quantity,
+    Future<void> postBookRoom(BuildContext context) async {
+    try {
+      final loginProvider = Provider.of<LoginProvider>(context, listen: false);
+      final token = loginProvider.token;
 
-  }
-  ) async {
-    
+      final url = Uri.parse('https://travelta.online/agent/agent/bookingEngine');
+
+      final response = await http.post(
+        url,
+        headers: {
+          'Content-Type': 'application/json',
+          'accept': 'application/json',
+          'Authorization': 'Bearer $token',
+        },
+        body: jsonEncode({
+          
+        })
+      );
+      if (response.statusCode == 200) {
+        
+      }
+    } catch (e) {
+      log('Error in posting booking: $e');
+    }
   }
 
   Future<void> fetchTourTypes(BuildContext context) async {

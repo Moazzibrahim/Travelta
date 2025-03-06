@@ -2,7 +2,7 @@ class CustomerBooking {
   final int id;
   final String name;
   final String phone;
-  final String emergencyPhone;
+  final String? emergencyPhone;
   final String email;
 
   CustomerBooking(
@@ -19,7 +19,7 @@ class CustomerBooking {
       name: json['name'],
       phone: json['phone'],
       email: json['email'],
-      emergencyPhone: json['emergency_phone'],
+      emergencyPhone: json['emergency_phone'] ?? 'No emergency phone',
     );
   }
 }

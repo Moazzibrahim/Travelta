@@ -1,5 +1,6 @@
 class ResultModel {
   final String hotelName;
+  final String hotelDescription;
   final int hotelStar;
   final int hotelId;
   final String countryName;
@@ -24,7 +25,9 @@ class ResultModel {
       required this.hotelFacilities,
       required this.hotelFeatures,
       required this.hotelPolicies,
-      required this.hotelAcceptedCards});
+      required this.hotelAcceptedCards,
+      required this.hotelDescription
+      });
 
   factory ResultModel.fromJson(Map<String, dynamic> json) {
     return ResultModel(
@@ -35,6 +38,7 @@ class ResultModel {
       hotelId: json['hotel_id'],
       countryName: json['country'],
       cityName: json['city'],
+      hotelDescription: json['hotel_description'] ?? 'no description',
       hotelFacilities: List<HotelFacilities>.from(json['hotel_facilities']
           .map((facility) => HotelFacilities.fromJson(facility))),
       availableRooms: List<AvailableRooms>.from(

@@ -21,6 +21,8 @@ class _HotelBookingTabState extends State<HotelBookingTab> {
   DateTime? _checkOutDate;
   int _adultsCount = 1;
   int _childrenCount = 0;
+  int _noOfNights = 1;
+  int _noOfRooms  =1;
   String? selectedType;
   int? selectedCountryId;
   int? selectedCityId;
@@ -68,6 +70,26 @@ class _HotelBookingTabState extends State<HotelBookingTab> {
         } else if (_childrenCount > 0) {
           _childrenCount--;
         }
+      }
+    });
+  }
+
+  void _updateNoOfRooms(bool isIncrement) {
+    setState(() {
+      if (isIncrement) {
+        _noOfRooms++;
+      } else if (_noOfRooms > 1) {
+        _noOfRooms--;
+      }
+    });
+  }
+
+  void _updateNoOfNights(bool isIncrement) {
+    setState(() {
+      if (isIncrement) {
+        _noOfNights++;
+      } else if (_noOfNights > 1) {
+        _noOfNights--;
       }
     });
   }
@@ -143,6 +165,18 @@ class _HotelBookingTabState extends State<HotelBookingTab> {
                       () => _updateCount(false, false),
                       () => _updateCount(false, true)),
                   const SizedBox(height: 16),
+                  _buildCountRow(
+                      "No. of Nights",
+                      _noOfNights,
+                      () => _updateNoOfNights(false,),
+                      () => _updateNoOfNights(true,)),
+                  const SizedBox(height: 16),
+                  _buildCountRow(
+                      "Quantity of rooms",
+                      _noOfRooms,
+                      () => _updateNoOfRooms(false),
+                      () => _updateNoOfRooms(true)),
+                  const SizedBox(height: 16),
                   SizedBox(
                     width: double.infinity,
                     child: ElevatedButton(
@@ -159,6 +193,18 @@ class _HotelBookingTabState extends State<HotelBookingTab> {
                           showCustomSnackBar(context, 'Please fill all fields');
                           return;
                         }
+
+                        bookingEngineProvider.bookRoom.adults = _adultsCount;
+                        bookingEngineProvider.bookRoom.children = _childrenCount;
+                        bookingEngineProvider.bookRoom.checkIn =
+                            "${_checkInDate!.year}-${_checkInDate!.month}-${_checkInDate!.day}";
+                        bookingEngineProvider.bookRoom.checkOut =
+                            "${_checkOutDate!.year}-${_checkOutDate!.month}-${_checkOutDate!.day}";
+                        bookingEngineProvider.bookRoom.hotelId = selectedHotelId;
+                        bookingEngineProvider.bookRoom.cityId = selectedCityId;
+                        bookingEngineProvider.bookRoom.countryId = selectedCountryId;
+                        bookingEngineProvider.bookRoom.noOfNights = _noOfNights;
+                        bookingEngineProvider.bookRoom.quantity = _noOfRooms;
 
                         bookingEngineProvider.postBooking(
                           context,
