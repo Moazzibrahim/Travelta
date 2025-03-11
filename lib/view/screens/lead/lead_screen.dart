@@ -19,9 +19,9 @@ class LeadScreenState extends State<LeadScreen> {
   @override
   void initState() {
     super.initState();
-    // Fetch leads when the widget is initialized
-    final leadsProvider = Provider.of<LeadsProvider>(context, listen: false);
-    leadsProvider.fetchLeads(context);
+    Future.microtask(() {
+      Provider.of<LeadsProvider>(context, listen: false).fetchLeads(context);
+    });
   }
 
   String formatDate(String dateTime) {

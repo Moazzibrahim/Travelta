@@ -19,12 +19,12 @@ class Customer {
 
   factory Customer.fromJson(Map<String, dynamic> json) {
     return Customer(
-      id: json['id'],
-      name: json['name'],
-      phone: json['phone'],
-      email: json['email'],
-      gender: json['gender'],
-      createdAt: json['created_at'],
+      id: json['id'] ?? 0,
+      name: json['name'] ?? 'Unknown',
+      phone: json['phone'] ?? 'N/A',
+      email: json['email'] ?? 'N/A',
+      gender: json['gender'] ?? 'Unknown',
+      createdAt: json['created_at'] ?? '',
       emergencyPhone: json['emergency_phone'],
     );
   }
