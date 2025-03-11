@@ -132,6 +132,12 @@ class RoomCard extends StatelessWidget {
               Provider.of<BookingEngineController>(context, listen: false);
           final result = hotelBookingEngineProvider.results
               .firstWhere((element) => element.availableRooms.contains(room));
+
+          hotelBookingEngineProvider.bookRoom.roomType = room.roomType;
+          hotelBookingEngineProvider.bookRoom.roomId = room.id;
+          hotelBookingEngineProvider.bookRoom.countryId = room.room.countryId;
+          hotelBookingEngineProvider.bookRoom.cityId = room.room.cityId;
+          hotelBookingEngineProvider.bookRoom.hotelId = room.room.hotelId;
           
           Navigator.push(
             context,

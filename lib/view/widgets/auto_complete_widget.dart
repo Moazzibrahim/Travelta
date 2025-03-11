@@ -73,11 +73,11 @@ class AutoCompleteWidget extends StatelessWidget {
                   return Column(
                     children: [
                       ListTile(
-                        leading: Icon(option['icon'], color: mainColor),
+                        leading: Icon(option['icon'] ?? Icons.flag, color: mainColor),
                         title: Text(option['name'],
                             style: const TextStyle(
                                 fontSize: 16, fontWeight: FontWeight.w500)),
-                        subtitle: Text(option['type'],
+                        subtitle: option['type'] == null ? null : Text(option['type'],
                             style: TextStyle(color: Colors.grey.shade600)),
                         onTap: () {
                           onSelected(option);

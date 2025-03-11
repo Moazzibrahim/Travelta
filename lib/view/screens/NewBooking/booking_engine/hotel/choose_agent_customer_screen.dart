@@ -7,7 +7,8 @@ class ChooseAgentCustomerScreen extends StatefulWidget {
   const ChooseAgentCustomerScreen({super.key});
 
   @override
-  State<ChooseAgentCustomerScreen> createState() => _ChooseAgentCustomerScreenState();
+  State<ChooseAgentCustomerScreen> createState() =>
+      _ChooseAgentCustomerScreenState();
 }
 
 class _ChooseAgentCustomerScreenState extends State<ChooseAgentCustomerScreen> {
@@ -17,22 +18,31 @@ class _ChooseAgentCustomerScreenState extends State<ChooseAgentCustomerScreen> {
   @override
   void initState() {
     super.initState();
-    final bookingProvider = Provider.of<BookingEngineController>(context, listen: false);
+    final bookingProvider =
+        Provider.of<BookingEngineController>(context, listen: false);
     bookingProvider.fetchAgents(context);
     bookingProvider.fetchCustomers(context);
   }
 
   void _onAgentSelected(int index) {
     setState(() {
-      selectedAgentIndex = (selectedAgentIndex == index) ? null : index;
-      selectedCustomerIndex = null; // Deselect customer when agent is selected
+      if (selectedAgentIndex == index) {
+        selectedAgentIndex = null; // Deselect agent
+      } else {
+        selectedAgentIndex = index;
+        selectedCustomerIndex = null; // Deselect customer when an agent is selected
+      }
     });
   }
 
   void _onCustomerSelected(int index) {
     setState(() {
-      selectedCustomerIndex = (selectedCustomerIndex == index) ? null : index;
-      selectedAgentIndex = null; // Deselect agent when customer is selected
+      if (selectedCustomerIndex == index) {
+        selectedCustomerIndex = null; // Deselect customer
+      } else {
+        selectedCustomerIndex = index;
+        selectedAgentIndex = null; // Deselect agent when a customer is selected
+      }
     });
   }
 
@@ -43,7 +53,13 @@ class _ChooseAgentCustomerScreenState extends State<ChooseAgentCustomerScreen> {
       child: SafeArea(
         child: Scaffold(
           appBar: AppBar(
-            automaticallyImplyLeading: false,
+            leading: IconButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              icon: const Icon(Icons.arrow_back),
+              color: mainColor,
+            ),
             backgroundColor: Colors.white,
             bottom: const TabBar(
               tabs: [
@@ -71,10 +87,11 @@ class _ChooseAgentCustomerScreenState extends State<ChooseAgentCustomerScreen> {
                             return ListTile(
                               title: Text(agent.name),
                               subtitle: Text(agent.email),
-                              trailing: Radio<int>(
-                                value: index,
-                                groupValue: selectedAgentIndex,
-                                onChanged: (value) => _onAgentSelected(index),
+                              trailing: Checkbox(
+                                value: selectedAgentIndex == index,
+                                onChanged: (selectedCustomerIndex == null)
+                                    ? (value) => _onAgentSelected(index)
+                                    : null, // Disable if customer is selected
                                 activeColor: mainColor,
                               ),
                             );
@@ -96,10 +113,11 @@ class _ChooseAgentCustomerScreenState extends State<ChooseAgentCustomerScreen> {
                             return ListTile(
                               title: Text(customer.name),
                               subtitle: Text(customer.email),
-                              trailing: Radio<int>(
-                                value: index,
-                                groupValue: selectedCustomerIndex,
-                                onChanged: (value) => _onCustomerSelected(index),
+                              trailing: Checkbox(
+                                value: selectedCustomerIndex == index,
+                                onChanged: (selectedAgentIndex == null)
+                                    ? (value) => _onCustomerSelected(index)
+                                    : null, // Disable if agent is selected
                                 activeColor: mainColor,
                               ),
                             );
@@ -113,19 +131,25 @@ class _ChooseAgentCustomerScreenState extends State<ChooseAgentCustomerScreen> {
               Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: ElevatedButton(
-                  onPressed: (selectedAgentIndex != null || selectedCustomerIndex != null)
+                  onPressed: (selectedAgentIndex != null ||
+                          selectedCustomerIndex != null)
                       ? () {
-                          final bookingProvider = Provider.of<BookingEngineController>(context, listen: false);
+                          final bookingProvider =
+                              Provider.of<BookingEngineController>(context,listen: false);
                           if (selectedAgentIndex != null) {
-                            bookingProvider.bookRoom.toAgentId = bookingProvider.agents[selectedAgentIndex!].id;
+                            bookingProvider.bookRoom.toAgentId =
+                                bookingProvider.agents[selectedAgentIndex!].id;
                           } else if (selectedCustomerIndex != null) {
-                            bookingProvider.bookRoom.toCustomerId = bookingProvider.customers[selectedCustomerIndex!].id;
+                            bookingProvider.bookRoom.toCustomerId =
+                                bookingProvider
+                                    .customers[selectedCustomerIndex!].id;
                           }
                           bookingProvider.postBookRoom(context);
                         }
                       : null,
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: (selectedAgentIndex != null || selectedCustomerIndex != null)
+                    backgroundColor: (selectedAgentIndex != null ||
+                            selectedCustomerIndex != null)
                         ? mainColor
                         : Colors.grey,
                     shape: RoundedRectangleBorder(
@@ -133,7 +157,8 @@ class _ChooseAgentCustomerScreenState extends State<ChooseAgentCustomerScreen> {
                     ),
                     minimumSize: const Size(double.infinity, 50),
                   ),
-                  child: const Text('Reserve', style: TextStyle(color: Colors.white)),
+                  child: const Text('Reserve',
+                      style: TextStyle(color: Colors.white)),
                 ),
               ),
             ],

@@ -22,6 +22,8 @@ class _BookingEngineScreenState extends State<BookingEngineScreen> {
         .fetchCities(context);
     Provider.of<BookingEngineController>(context, listen: false)
         .fetchHotels(context);
+    Provider.of<BookingEngineController>(context, listen: false)
+        .fetchNationalities(context);
   }
 
   @override

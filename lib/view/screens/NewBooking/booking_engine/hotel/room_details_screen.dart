@@ -219,6 +219,7 @@ class RoomDetailsScreen extends StatelessWidget {
                   onPressed: () {
                     final bookingEngineProvider = Provider.of<BookingEngineController>(context, listen: false);
                     bookingEngineProvider.bookRoom.fromSupplierId = room.room.agentId;
+                    bookingEngineProvider.bookRoom.amount = room.room.price;
                     Navigator.of(context).push(MaterialPageRoute(builder: (_) => const ChooseAgentCustomerScreen()));
                   },
                   style: ElevatedButton.styleFrom(

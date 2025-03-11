@@ -166,6 +166,7 @@ class AvailableRoomsList {
 class Room {
   final int? cityId;
   final int? countryId;
+  final int? hotelId;
   final int? agentId;
   final int? affiliateId;
   final String description;
@@ -185,7 +186,8 @@ class Room {
       required this.price,
       required this.gallery,
       required this.roomFeatures,
-      required this.pricings
+      required this.pricings,
+      required this.hotelId
       });
 
   factory Room.fromJson(Map<String, dynamic> json) {
@@ -196,6 +198,7 @@ class Room {
       affiliateId: json['affilate_id'],
       description: json['description'],
       priceType: json['price_type'],
+      hotelId: json['hotel_id'],
       price: json['price'] == null ? 0.0 : json['price'].toDouble(),
       gallery: List<Gallery>.from(
           json['gallery'].map((gallery) => Gallery.fromJson(gallery))),

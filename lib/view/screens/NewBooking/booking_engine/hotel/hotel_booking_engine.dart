@@ -21,13 +21,14 @@ class _HotelBookingTabState extends State<HotelBookingTab> {
   DateTime? _checkOutDate;
   int _adultsCount = 1;
   int _childrenCount = 0;
-  int _noOfNights = 1;
   int _noOfRooms  =1;
   String? selectedType;
   int? selectedCountryId;
   int? selectedCityId;
   int? selectedHotelId;
   String typedText = '';
+  String typedNationalityText = '';
+  String? selectedNationality;
 
   Future<void> _selectDate(BuildContext context, bool isCheckIn) async {
     final DateTime? pickedDate = await showDatePicker(
@@ -84,16 +85,6 @@ class _HotelBookingTabState extends State<HotelBookingTab> {
     });
   }
 
-  void _updateNoOfNights(bool isIncrement) {
-    setState(() {
-      if (isIncrement) {
-        _noOfNights++;
-      } else if (_noOfNights > 1) {
-        _noOfNights--;
-      }
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
     return Consumer<BookingEngineController>(
@@ -122,6 +113,13 @@ class _HotelBookingTabState extends State<HotelBookingTab> {
                 }),
           ];
 
+          final List<Map<String,dynamic>> nationalities = [
+            ...bookingEngineProvider.nationalities.map((e) => {
+              'name': e.name,
+              'id': e.id
+            },)
+          ];
+
           return Padding(
             padding: const EdgeInsets.all(16.0),
             child: SingleChildScrollView(
@@ -146,6 +144,17 @@ class _HotelBookingTabState extends State<HotelBookingTab> {
                     },
                     onChange: (value) => setState(() => typedText = value),
                   ),
+                  const SizedBox(height: 16,),
+                  AutoCompleteWidget(
+                    hintText: 'Search for Nationality',
+                    options: nationalities,
+                    onSelected: (value) {
+                      setState(() {
+                        selectedNationality = value['name'];
+                      });
+                    },
+                    onChange: (value) => setState(() => typedNationalityText = value),
+                  ),
                   const SizedBox(height: 16),
                   _buildDateField(context, "Check-In Date", _checkInDate,
                       () => _selectDate(context, true)),
@@ -164,12 +173,6 @@ class _HotelBookingTabState extends State<HotelBookingTab> {
                       _childrenCount,
                       () => _updateCount(false, false),
                       () => _updateCount(false, true)),
-                  const SizedBox(height: 16),
-                  _buildCountRow(
-                      "No. of Nights",
-                      _noOfNights,
-                      () => _updateNoOfNights(false,),
-                      () => _updateNoOfNights(true,)),
                   const SizedBox(height: 16),
                   _buildCountRow(
                       "Quantity of rooms",
@@ -194,6 +197,11 @@ class _HotelBookingTabState extends State<HotelBookingTab> {
                           return;
                         }
 
+                        if(selectedNationality == null){
+                          showCustomSnackBar(context, 'Please fill all fields');
+                          return;
+                        }
+
                         bookingEngineProvider.bookRoom.adults = _adultsCount;
                         bookingEngineProvider.bookRoom.children = _childrenCount;
                         bookingEngineProvider.bookRoom.checkIn =
@@ -203,15 +211,13 @@ class _HotelBookingTabState extends State<HotelBookingTab> {
                         bookingEngineProvider.bookRoom.hotelId = selectedHotelId;
                         bookingEngineProvider.bookRoom.cityId = selectedCityId;
                         bookingEngineProvider.bookRoom.countryId = selectedCountryId;
-                        bookingEngineProvider.bookRoom.noOfNights = _noOfNights;
+                        bookingEngineProvider.bookRoom.noOfNights = _checkOutDate!.difference(_checkInDate!).inDays;
                         bookingEngineProvider.bookRoom.quantity = _noOfRooms;
 
                         bookingEngineProvider.postBooking(
                           context,
-                          checkIn:
-                              "${_checkInDate!.year}-${_checkInDate!.month}-${_checkInDate!.day}",
-                          checkOut:
-                              "${_checkOutDate!.year}-${_checkOutDate!.month}-${_checkOutDate!.day}",
+                          checkIn: "${_checkInDate!.year}-${_checkInDate!.month}-${_checkInDate!.day}",
+                          checkOut: "${_checkOutDate!.year}-${_checkOutDate!.month}-${_checkOutDate!.day}",
                           maxAdults: _adultsCount,
                           maxChildren: _childrenCount,
                           cityId: selectedCityId,

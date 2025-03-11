@@ -103,3 +103,29 @@ class TourTypeList {
     );
   }
 }
+
+class Nationaility {
+  final String name;
+  final int id;
+
+  Nationaility({required this.name, required this.id});
+
+  factory Nationaility.fromJson(Map<String, dynamic> json) {
+    return Nationaility(
+      name: json['name'],
+      id: json['id'],
+    );
+  }
+}
+
+class NationailityList {
+  final List<dynamic> nationailities;
+
+  NationailityList({required this.nationailities});  
+
+  factory NationailityList.fromJson(Map<String, dynamic> json) {
+    return NationailityList(
+      nationailities: json['nationality']
+    );
+  }
+}

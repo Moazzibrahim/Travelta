@@ -1,6 +1,5 @@
 import 'dart:convert';
 import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_travelta/controllers/Auth/login_provider.dart';
 import 'package:flutter_travelta/model/agent_booking.dart';
@@ -8,6 +7,8 @@ import 'package:flutter_travelta/model/book_room.dart';
 import 'package:flutter_travelta/model/booking_engine_model.dart';
 import 'package:flutter_travelta/model/customer_booking.dart';
 import 'package:flutter_travelta/model/result_model.dart';
+import 'package:flutter_travelta/view/screens/NewBooking/booking_engine/hotel/voucher_hotel_booking_engine.dart';
+import 'package:flutter_travelta/view/widgets/custom_snackbar.dart';
 import 'package:provider/provider.dart';
 import 'package:http/http.dart' as http;
 
@@ -41,6 +42,9 @@ class BookingEngineController with ChangeNotifier {
   bool isAgentsLoaded = false;
   List<TourType> _tourTypes = [];
   List<TourType> get tourTypes => _tourTypes;
+
+  List<Nationaility> _nationalities = [];
+  List<Nationaility> get nationalities => _nationalities;
 
   Future<void> fetchTourTypes(BuildContext context) async {
     try {
@@ -269,6 +273,22 @@ class BookingEngineController with ChangeNotifier {
 
       final url =
           Uri.parse('https://travelta.online/agent/agent/bookingEngine');
+          // log('${bookRoom.roomId}');
+          // log('${bookRoom.checkIn}');
+          // log('${bookRoom.checkOut}');
+          // log('${bookRoom.quantity}');
+          // log('${bookRoom.fromSupplierId}');
+          // log('${bookRoom.countryId}');
+          // log('${bookRoom.cityId}');
+          // log('${bookRoom.hotelId}');
+          // log('${bookRoom.toAgentId}');
+          // log('${bookRoom.toCustomerId}');
+          // log('${bookRoom.roomType}');
+          // log('${bookRoom.adults}');
+          // log('${bookRoom.children}');
+          // log('${bookRoom.noOfNights}');
+          // log('1');
+          // log(bookRoom.amount.toString());
 
       final response = await http.post(url,
           headers: {
@@ -276,8 +296,36 @@ class BookingEngineController with ChangeNotifier {
             'accept': 'application/json',
             'Authorization': 'Bearer $token',
           },
-          body: jsonEncode({}));
-      if (response.statusCode == 200) {}
+          body: jsonEncode({
+            "room_id": bookRoom.roomId,
+            "check_in": bookRoom.checkIn,
+            "check_out": bookRoom.checkOut,
+            "quantity": bookRoom.quantity,
+            "from_supplier_id": bookRoom.fromSupplierId,
+            "country_id": bookRoom.countryId,
+            "city_id": bookRoom.cityId,
+            "hotel_id": bookRoom.hotelId,
+            "to_agent_id": bookRoom.toAgentId,
+            "to_customer_id": bookRoom.toCustomerId,
+            "room_type": bookRoom.roomType,
+            "no_of_adults": bookRoom.adults,
+            "no_of_children": bookRoom.children,
+            "no_of_nights": bookRoom.noOfNights,
+            "currency_id": bookRoom.currencyId ?? 3,
+            "amount": bookRoom.amount
+          }));
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        showCustomSnackBar(context, 'The room booked Successfully');
+        final responsedata = json.decode(response.body);
+        _bookRoom = BookRoom.fromJson(responsedata['booking_list']);
+        Navigator.of(context).push(
+          MaterialPageRoute(builder: (ctx)=> const VoucherHotelBookingEngine()),
+        );
+        notifyListeners();
+      }else{
+        log('Failed to post room booking. Status Code: ${response.statusCode}');
+        log('Response: ${response.body}');
+      }
     } catch (e) {
       log('Error in posting booking: $e');
     }
@@ -333,6 +381,28 @@ class BookingEngineController with ChangeNotifier {
     } catch (e) {
       log('Error in posting tour booking: $e');
       return null;
+    }
+  }
+
+  Future<void> fetchNationalities(BuildContext context) async{
+    final loginProvider = Provider.of<LoginProvider>(context, listen: false);
+    final token = loginProvider.token;
+    final url = Uri.parse('https://travelta.online/agent/getNationalties');
+
+    final response = await http.get(url,
+    headers: {
+        'Content-Type': 'application/json',
+        'accept': 'application/json',
+        'Authorization': 'Bearer $token',
+    },
+    );
+    if(response.statusCode == 200){
+      final responseData = jsonDecode(response.body);
+      NationailityList nationalities = NationailityList.fromJson(responseData);
+      _nationalities = nationalities.nationailities.map((e) => Nationaility.fromJson(e),).toList();
+    }else{
+      log('Failed to get nationalities: ${response.statusCode}');
+      log('Response: ${response.body}');
     }
   }
 }
