@@ -3,8 +3,11 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_travelta/constants/colors.dart';
+import 'package:flutter_travelta/controllers/booking_engine_controller.dart';
 import 'package:flutter_travelta/view/screens/NewBooking/booking_engine/tour/details_tour_widget.dart';
+import 'package:flutter_travelta/view/screens/NewBooking/booking_engine/tour/last_book_tour_screen.dart';
 import 'package:flutter_travelta/view/screens/NewBooking/booking_engine/tour/pricing_tour_widget.dart';
+import 'package:provider/provider.dart';
 
 class TourDetailsScreen extends StatefulWidget {
   final Map<String, dynamic> tour;
@@ -191,15 +194,30 @@ class TourDetailsScreenState extends State<TourDetailsScreen> {
               Padding(
                 padding:
                     const EdgeInsets.symmetric(vertical: 15, horizontal: 10),
-                child: ElevatedButton(
-                  onPressed: () {},
-                  style: ElevatedButton.styleFrom(
-                      backgroundColor: mainColor,
-                      foregroundColor: Colors.white,
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(8)),
-                      minimumSize: const Size(double.infinity, 50)),
-                  child: const Text('Book Now'),
+                child: Consumer<BookingEngineController>(
+                  builder: (context, bookingController, child) {
+                    return ElevatedButton(
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => LastBookTourScreen(
+                                tour: widget.tour,
+                                adultsCount: widget.adultsCount),
+                          ),
+                        );
+                      },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: mainColor,
+                        foregroundColor: Colors.white,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        minimumSize: const Size(double.infinity, 50),
+                      ),
+                      child: const Text('Book Now'),
+                    );
+                  },
                 ),
               ),
             ],

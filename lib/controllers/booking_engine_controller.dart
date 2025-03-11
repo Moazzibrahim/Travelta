@@ -1,10 +1,10 @@
 import 'dart:convert';
 import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_travelta/controllers/Auth/login_provider.dart';
 import 'package:flutter_travelta/model/agent_booking.dart';
 import 'package:flutter_travelta/model/book_room.dart';
+import 'package:flutter_travelta/model/book_tour.dart';
 import 'package:flutter_travelta/model/booking_engine_model.dart';
 import 'package:flutter_travelta/model/customer_booking.dart';
 import 'package:flutter_travelta/model/result_model.dart';
@@ -32,7 +32,7 @@ class BookingEngineController with ChangeNotifier {
   List<AgentBooking> get agents => _agents;
   bool isCustomersLoaded = false;
 
-  BookRoom _bookRoom = BookRoom();
+  final BookRoom _bookRoom = BookRoom();
   BookRoom get bookRoom => _bookRoom;
 
   bool get isResultsEmpty => _results.isEmpty;
@@ -41,6 +41,76 @@ class BookingEngineController with ChangeNotifier {
   bool isAgentsLoaded = false;
   List<TourType> _tourTypes = [];
   List<TourType> get tourTypes => _tourTypes;
+
+  final TourBooking _tourBooking = TourBooking();
+  TourBooking get tourBooking => _tourBooking;
+  void updateTotalPrice(double price) {
+    _tourBooking.totalPrice = price;
+    notifyListeners();
+  }
+
+  void updateRoomCount(String roomType, int count) {
+    _tourBooking.updateRoomCount(roomType, count);
+    notifyListeners();
+  }
+
+  Future<void> booktour(
+    BuildContext context, {
+    int? tourId,
+    int? noOfPeople,
+    int? currencyId,
+    double? totalPrice,
+    String? customerId,
+    String? specialRequest,
+    String? agentsId,
+    String status = "confirmed",
+    int? toHotelId,
+    int? singleRoomCount,
+    int? doubleRoomCount,
+    int? tripleRoomCount,
+    int? quadRoomCount,
+    List<Map<String, dynamic>>? extras,
+  }) async {
+    try {
+      final loginProvider = Provider.of<LoginProvider>(context, listen: false);
+      final token = loginProvider.token;
+      final url = Uri.parse('https://travelta.online/agent/agent/bookTour');
+
+      final response = await http.post(
+        url,
+        headers: {
+          'Content-Type': 'application/json',
+          'accept': 'application/json',
+          'Authorization': 'Bearer $token',
+        },
+        body: jsonEncode({
+          "tour_id": tourId,
+          "no_of_people": noOfPeople,
+          "special_request": specialRequest,
+          "currency_id": currencyId,
+          "total_price": totalPrice,
+          "customer_id": customerId,
+          "agents_id": agentsId,
+          "status": status,
+          "to_hotel_id": toHotelId,
+          "single_room_count": singleRoomCount,
+          "double_room_count": doubleRoomCount,
+          "triple_room_count": tripleRoomCount,
+          "quad_room_count": quadRoomCount,
+          "extras": extras ?? [],
+        }),
+      );
+
+      if (response.statusCode == 200) {
+        log('Tour booking successful: ${response.body}');
+      } else {
+        log('Failed to post tour booking. Status Code: ${response.statusCode}');
+        log('Response: ${response.body}');
+      }
+    } catch (e) {
+      log('Error in posting tour booking: $e');
+    }
+  }
 
   Future<void> fetchTourTypes(BuildContext context) async {
     try {
