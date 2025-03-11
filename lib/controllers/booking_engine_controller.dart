@@ -34,7 +34,7 @@ class BookingEngineController with ChangeNotifier {
   List<AgentBooking> get agents => _agents;
   bool isCustomersLoaded = false;
 
-  final BookRoom _bookRoom = BookRoom();
+  BookRoom _bookRoom = BookRoom();
   BookRoom get bookRoom => _bookRoom;
 
   bool get isResultsEmpty => _results.isEmpty;
