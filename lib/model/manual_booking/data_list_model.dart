@@ -9,46 +9,73 @@ class TravelData {
   final List<Customer> customers;
   final List<Supplier> suppliers;
   final List<Employees> emploees;
+  final List<Source> sources;
+  final List<Nationality> nationalities;
 
-  TravelData({
-    required this.cities,
-    required this.countries,
-    required this.services,
-    required this.currencies,
-    required this.adultTitles,
-    required this.financialAccounting,
-    required this.taxes,
-    required this.customers,
-    required this.suppliers,
-    required this.emploees,
-  });
+  TravelData(
+      {required this.cities,
+      required this.countries,
+      required this.services,
+      required this.currencies,
+      required this.adultTitles,
+      required this.financialAccounting,
+      required this.taxes,
+      required this.customers,
+      required this.suppliers,
+      required this.emploees,
+      required this.sources,
+      required this.nationalities});
 
   factory TravelData.fromJson(Map<String, dynamic> json) {
     return TravelData(
-      cities: (json['cities'] as List).map((e) => City.fromJson(e)).toList(),
-      countries:
-          (json['contries'] as List).map((e) => Country.fromJson(e)).toList(),
-      services:
-          (json['services'] as List).map((e) => Service.fromJson(e)).toList(),
-      currencies: (json['currencies'] as List)
-          .map((e) => Currency.fromJson(e))
-          .toList(),
-      adultTitles: List<String>.from(json['adult_title']),
-      financialAccounting: (json['financial_accounting'] as List)
-          .map((e) => FinancialAccounting.fromJson(e))
-          .toList(),
-      taxes: (json['taxes'] as List).map((e) => Tax.fromJson(e)).toList(),
-      customers: (json['customers'] as List)
-          .map((e) => Customer.fromJson(e))
-          .toList(), // Parse customers
-      suppliers: (json['suppliers'] as List)
-          .map((e) => Supplier.fromJson(e))
-          .toList(), // Parse suppliers
-      emploees: (json['employees'] as List)
-          .map((e) => Employees.fromJson(e))
-          .toList(), // Parse employees
-    );
+        cities: (json['cities'] as List).map((e) => City.fromJson(e)).toList(),
+        countries:
+            (json['contries'] as List).map((e) => Country.fromJson(e)).toList(),
+        services:
+            (json['services'] as List).map((e) => Service.fromJson(e)).toList(),
+        currencies: (json['currencies'] as List)
+            .map((e) => Currency.fromJson(e))
+            .toList(),
+        adultTitles: List<String>.from(json['adult_title']),
+        financialAccounting: (json['financial_accounting'] as List)
+            .map((e) => FinancialAccounting.fromJson(e))
+            .toList(),
+        taxes: (json['taxes'] as List).map((e) => Tax.fromJson(e)).toList(),
+        customers: (json['customers'] as List)
+            .map((e) => Customer.fromJson(e))
+            .toList(), // Parse customers
+        suppliers: (json['suppliers'] as List)
+            .map((e) => Supplier.fromJson(e))
+            .toList(), // Parse suppliers
+        emploees: (json['employees'] as List)
+            .map((e) => Employees.fromJson(e))
+            .toList(), // Parse employees
+        sources:
+            (json['sources'] as List).map((e) => Source.fromJson(e)).toList(),
+        nationalities: (json['nationalities'] as List)
+            .map((e) => Nationality.fromJson(e))
+            .toList());
   }
+}
+
+class Nationality {
+  final String name;
+  final int id;
+
+  Nationality({required this.name, required this.id});
+
+  factory Nationality.fromJson(Map<String, dynamic> json) =>
+      Nationality(name: json['name'], id: json['id']);
+}
+
+class Source {
+  final String name;
+  final int id;
+
+  Source({required this.name, required this.id});
+
+  factory Source.fromJson(Map<String, dynamic> json) =>
+      Source(name: json['source'], id: json['id']);
 }
 
 class Employees {

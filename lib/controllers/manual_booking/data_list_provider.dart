@@ -70,9 +70,8 @@ class DataListProvider extends ChangeNotifier {
     const String url =
         "https://travelta.online/agent/manual_booking/mobile_lists";
 
-    _isLoading = true;
     _errorMessage = null;
-    notifyListeners();
+    
 
     try {
       final response = await http.get(
@@ -85,9 +84,12 @@ class DataListProvider extends ChangeNotifier {
       if (response.statusCode == 200) {
         final jsonData = json.decode(response.body);
         _travelData = TravelData.fromJson(jsonData);
+        // _isLoading = true;
+        notifyListeners();
       } else {
         log(response.statusCode.toString());
         _errorMessage = "Failed to load data: ${response.statusCode}";
+        notifyListeners();
       }
     } catch (e) {
       log(e.toString());

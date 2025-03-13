@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_travelta/controllers/leads/leads_provider.dart';
+import 'package:flutter_travelta/view/screens/lead/add_lead_screen.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_travelta/constants/colors.dart';
@@ -38,7 +39,16 @@ class LeadScreenState extends State<LeadScreen> {
     final leadsProvider = Provider.of<LeadsProvider>(context);
 
     return Scaffold(
-      appBar: const CustomAppBar(title: 'Leads'),
+      appBar: CustomAppBar(
+        title: 'Leads',
+        action: IconButton(onPressed: () {
+          Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (context) => const AddLeadScreen(),
+            )
+          );
+        }, icon: Icon(Icons.add, color: mainColor,),),
+      ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
@@ -120,6 +130,7 @@ class LeadScreenState extends State<LeadScreen> {
           buildRow('Name:', lead.name),
           buildRow('Email:', lead.email),
           buildRow('Phone Number:', lead.phone),
+          buildRow('Whatsapp Number:', lead.wpNum),
           buildRow('Role:', 'Lead'),
           buildRow('Gender:', lead.gender),
           buildRow('Created At:', formatDate(lead.createdAt)),
@@ -127,6 +138,13 @@ class LeadScreenState extends State<LeadScreen> {
             'Emergency Phone:',
             lead.emergencyPhone ?? 'N/A',
           ),
+          buildRow("country:", lead.country),
+          buildRow('city', lead.city),
+          buildRow('stage', lead.stages),
+          buildRow('Priority', lead.priority),
+          buildRow('Service', lead.serviceName),
+          buildRow(
+              'Agent sales', '${lead.agentSalesName} | ${lead.agentSalesDep}'),
         ],
       ),
     );
