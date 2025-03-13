@@ -181,7 +181,7 @@ class TourDetailsScreenState extends State<TourDetailsScreen> {
                       child: TabBarView(
                         children: [
                           TourDetailsWidget(tour: widget.tour),
-                          TourPricingScreen(
+                          TourPricingWidget(
                             tour: widget.tour,
                             adultsCount: widget.adultsCount,
                           ),

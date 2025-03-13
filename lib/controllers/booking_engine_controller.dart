@@ -9,6 +9,7 @@ import 'package:flutter_travelta/model/booking_engine_model.dart';
 import 'package:flutter_travelta/model/customer_booking.dart';
 import 'package:flutter_travelta/model/result_model.dart';
 import 'package:flutter_travelta/view/screens/NewBooking/booking_engine/hotel/voucher_hotel_booking_engine.dart';
+import 'package:flutter_travelta/view/screens/NewBooking/booking_engine/tour/voucher_tour_booking_engine_screen.dart';
 import 'package:flutter_travelta/view/widgets/custom_snackbar.dart';
 import 'package:provider/provider.dart';
 import 'package:http/http.dart' as http;
@@ -44,8 +45,12 @@ class BookingEngineController with ChangeNotifier {
   List<TourType> _tourTypes = [];
   List<TourType> get tourTypes => _tourTypes;
 
+  List<Nationaility> _nationalities = [];
+  List<Nationaility> get nationalities => _nationalities;
+
   final TourBooking _tourBooking = TourBooking();
   TourBooking get tourBooking => _tourBooking;
+
   void updateTotalPrice(double price) {
     _tourBooking.totalPrice = price;
     notifyListeners();
@@ -55,67 +60,77 @@ class BookingEngineController with ChangeNotifier {
     _tourBooking.updateRoomCount(roomType, count);
     notifyListeners();
   }
+Future<void> booktour(
+  BuildContext context, {
+  int? tourId,
+  int? noOfPeople,
+  int? currencyId,
+  double? totalPrice,
+  int? customerId,
+  String? specialRequest,
+  int? agentsId,
+  String status = "confirmed",
+  int? toHotelId,
+  int? singleRoomCount,
+  int? doubleRoomCount,
+  int? tripleRoomCount,
+  int? quadRoomCount,
+  List<Map<String, dynamic>>? extras,
+}) async {
+  try {
+    final loginProvider = Provider.of<LoginProvider>(context, listen: false);
+    final token = loginProvider.token;
+    final url = Uri.parse('https://travelta.online/agent/agent/bookTour');
 
-  Future<void> booktour(
-    BuildContext context, {
-    int? tourId,
-    int? noOfPeople,
-    int? currencyId,
-    double? totalPrice,
-    String? customerId,
-    String? specialRequest,
-    String? agentsId,
-    String status = "confirmed",
-    int? toHotelId,
-    int? singleRoomCount,
-    int? doubleRoomCount,
-    int? tripleRoomCount,
-    int? quadRoomCount,
-    List<Map<String, dynamic>>? extras,
-  }) async {
-    try {
-      final loginProvider = Provider.of<LoginProvider>(context, listen: false);
-      final token = loginProvider.token;
-      final url = Uri.parse('https://travelta.online/agent/agent/bookTour');
+    Map<String, dynamic> requestBody = {
+      "tour_id": tourId,
+      "no_of_people": noOfPeople,
+      "special_request": specialRequest,
+      "currency_id": currencyId,
+      "total_price": totalPrice,
+      "status": status,
+      "to_hotel_id": toHotelId,
+      "single_room_count": singleRoomCount,
+      "double_room_count": doubleRoomCount,
+      "triple_room_count": tripleRoomCount,
+      "quad_room_count": quadRoomCount,
+      "extras": extras ?? [],
+    };
 
-      final response = await http.post(
-        url,
-        headers: {
-          'Content-Type': 'application/json',
-          'accept': 'application/json',
-          'Authorization': 'Bearer $token',
-        },
-        body: jsonEncode({
-          "tour_id": tourId,
-          "no_of_people": noOfPeople,
-          "special_request": specialRequest,
-          "currency_id": currencyId,
-          "total_price": totalPrice,
-          "customer_id": customerId,
-          "agents_id": agentsId,
-          "status": status,
-          "to_hotel_id": toHotelId,
-          "single_room_count": singleRoomCount,
-          "double_room_count": doubleRoomCount,
-          "triple_room_count": tripleRoomCount,
-          "quad_room_count": quadRoomCount,
-          "extras": extras ?? [],
-        }),
+    if (customerId != null) requestBody["customer_id"] = customerId;
+    if (agentsId != null) requestBody["agents_id"] = agentsId;
+
+    log(requestBody.toString());
+
+    final response = await http.post(
+      url,
+      headers: {
+        'Content-Type': 'application/json',
+        'accept': 'application/json',
+        'Authorization': 'Bearer $token',
+      },
+      body: jsonEncode(requestBody),
+    );
+
+    if (response.statusCode == 200) {
+      log('Tour booking successful: ${response.body}');
+      final responseData = jsonDecode(response.body);
+
+      // Navigate to VoucherTourBookingEngine with response data
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => VoucherTourBookingEngine(responseData: responseData),
+        ),
       );
-
-      if (response.statusCode == 200) {
-        log('Tour booking successful: ${response.body}');
-      } else {
-        log('Failed to post tour booking. Status Code: ${response.statusCode}');
-        log('Response: ${response.body}');
-      }
-    } catch (e) {
-      log('Error in posting tour booking: $e');
+    } else {
+      log('Failed to post tour booking. Status Code: ${response.statusCode}');
+      log('Response: ${response.body}');
     }
+  } catch (e) {
+    log('Error in posting tour booking: $e');
   }
-
-  List<Nationaility> _nationalities = [];
-  List<Nationaility> get nationalities => _nationalities;
+}
 
   Future<void> fetchTourTypes(BuildContext context) async {
     try {
@@ -344,22 +359,22 @@ class BookingEngineController with ChangeNotifier {
 
       final url =
           Uri.parse('https://travelta.online/agent/agent/bookingEngine');
-          // log('${bookRoom.roomId}');
-          // log('${bookRoom.checkIn}');
-          // log('${bookRoom.checkOut}');
-          // log('${bookRoom.quantity}');
-          // log('${bookRoom.fromSupplierId}');
-          // log('${bookRoom.countryId}');
-          // log('${bookRoom.cityId}');
-          // log('${bookRoom.hotelId}');
-          // log('${bookRoom.toAgentId}');
-          // log('${bookRoom.toCustomerId}');
-          // log('${bookRoom.roomType}');
-          // log('${bookRoom.adults}');
-          // log('${bookRoom.children}');
-          // log('${bookRoom.noOfNights}');
-          // log('1');
-          // log(bookRoom.amount.toString());
+      // log('${bookRoom.roomId}');
+      // log('${bookRoom.checkIn}');
+      // log('${bookRoom.checkOut}');
+      // log('${bookRoom.quantity}');
+      // log('${bookRoom.fromSupplierId}');
+      // log('${bookRoom.countryId}');
+      // log('${bookRoom.cityId}');
+      // log('${bookRoom.hotelId}');
+      // log('${bookRoom.toAgentId}');
+      // log('${bookRoom.toCustomerId}');
+      // log('${bookRoom.roomType}');
+      // log('${bookRoom.adults}');
+      // log('${bookRoom.children}');
+      // log('${bookRoom.noOfNights}');
+      // log('1');
+      // log(bookRoom.amount.toString());
 
       final response = await http.post(url,
           headers: {
@@ -390,10 +405,11 @@ class BookingEngineController with ChangeNotifier {
         final responsedata = json.decode(response.body);
         _bookRoom = BookRoom.fromJson(responsedata['booking_list']);
         Navigator.of(context).push(
-          MaterialPageRoute(builder: (ctx)=> const VoucherHotelBookingEngine()),
+          MaterialPageRoute(
+              builder: (ctx) => const VoucherHotelBookingEngine()),
         );
         notifyListeners();
-      }else{
+      } else {
         log('Failed to post room booking. Status Code: ${response.statusCode}');
         log('Response: ${response.body}');
       }
@@ -442,7 +458,6 @@ class BookingEngineController with ChangeNotifier {
 
       if (response.statusCode == 200) {
         final responseData = json.decode(response.body);
-        log('Tour booking successful: $responseData');
         return responseData;
       } else {
         log('Failed to post tour booking. Status Code: ${response.statusCode}');
@@ -455,23 +470,28 @@ class BookingEngineController with ChangeNotifier {
     }
   }
 
-  Future<void> fetchNationalities(BuildContext context) async{
+  Future<void> fetchNationalities(BuildContext context) async {
     final loginProvider = Provider.of<LoginProvider>(context, listen: false);
     final token = loginProvider.token;
     final url = Uri.parse('https://travelta.online/agent/getNationalties');
 
-    final response = await http.get(url,
-    headers: {
+    final response = await http.get(
+      url,
+      headers: {
         'Content-Type': 'application/json',
         'accept': 'application/json',
         'Authorization': 'Bearer $token',
-    },
+      },
     );
-    if(response.statusCode == 200){
+    if (response.statusCode == 200) {
       final responseData = jsonDecode(response.body);
       NationailityList nationalities = NationailityList.fromJson(responseData);
-      _nationalities = nationalities.nationailities.map((e) => Nationaility.fromJson(e),).toList();
-    }else{
+      _nationalities = nationalities.nationailities
+          .map(
+            (e) => Nationaility.fromJson(e),
+          )
+          .toList();
+    } else {
       log('Failed to get nationalities: ${response.statusCode}');
       log('Response: ${response.body}');
     }

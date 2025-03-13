@@ -86,8 +86,8 @@ class LastBookTourScreenState extends State<LastBookTourScreen> {
 
                       await bookingProvider.booktour(
                         context,
-                        agentsId: selectedAgentId.toString(),
-                        customerId: selectedCustomerId.toString(),
+                        agentsId: selectedAgentId,
+                        customerId: selectedCustomerId,
                         noOfPeople: widget.adultsCount,
                         tourId: widget.tour['id'],
                         currencyId: widget.tour['tour_pricing_items'][0]

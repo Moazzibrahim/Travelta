@@ -4,21 +4,21 @@ import 'package:flutter_travelta/controllers/booking_engine_controller.dart';
 import 'package:flutter_travelta/model/book_tour.dart';
 import 'package:provider/provider.dart';
 
-class TourPricingScreen extends StatefulWidget {
+class TourPricingWidget extends StatefulWidget {
   final Map<String, dynamic> tour;
   final int adultsCount;
 
-  const TourPricingScreen({
+  const TourPricingWidget({
     super.key,
     required this.tour,
     required this.adultsCount,
   });
 
   @override
-  TourPricingScreenState createState() => TourPricingScreenState();
+  TourPricingWidgetState createState() => TourPricingWidgetState();
 }
 
-class TourPricingScreenState extends State<TourPricingScreen> {
+class TourPricingWidgetState extends State<TourPricingWidget> {
   Map<int, int> itemCounts = {};
   double totalPrice = 0.0;
   double appliedDiscount = 0.0;
